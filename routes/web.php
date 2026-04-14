@@ -6,14 +6,15 @@ use App\Http\Controllers\TurmaController;
 use App\Http\Controllers\ImportacaoController;
 use App\Http\Controllers\AtribuicaoController;
 use App\Http\Controllers\DiarioController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
