@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Imports;
+
+use App\Models\Aluno;
+use App\Models\User; // Importado para criar o login
+use Illuminate\Support\Facades\Hash; // Importado para criptografar a senha
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
+
+class AlunosImport implements ToModel, WithStartRow, WithValidation
+{
+    protected $turma_id;
+
+    public function __construct($turma_id)
+    {
+        $this->turma_id = $turma_id;
+    }
+
+    public function startRow(): int
+    {
+        return 2; // Pula o cabeçalho
+    }
+
+    public function prepareForValidation($data, $index)
+    {
+        // Se a coluna 2 (Data) for um número serial do Excel, converte para DD/MM/AAAA
+        if (isset($data[2]) && is_numeric($data[2])) {
+            $data[2] = Date::excelToDateTimeObject($data[2])->format('d/m/Y');
+        }
+
+        return $data;
+    }
+
+    public function model(array $row)
+    {
+        if (!isset($row[0]) || !isset($row[1])) {
+            return null;
+        }
+
+        // --- LÓGICA DE CRIAÇÃO DE LOGIN (OPÇÃO A) ---
+        
+        // 1. Gera a senha limpando a data de nascimento (ex: 15/05/2010 vira 15052010)
+        $dataNascimento = $row[2] ?? '';
+        $senhaPadrao = preg_replace('/[^0-9]/', '', $dataNascimento); 
+        
+        // Caso a planilha esteja sem data, define uma senha de segurança
+        if(empty($senhaPadrao)) {
+            $senhaPadrao = 'mudar123';
+        }
+
+        // 2. Cria ou Atualiza a conta de acesso na tabela 'users'
+        User::updateOrCreate(
+            ['ra' => $row[0]], // Busca pelo RA único
+            [
+                'name'         => trim($row[1]),
+                'email'        => $row[0] . '@aluno.sigae.com', // E-mail interno obrigatório pelo Laravel
+                'password'     => Hash::make($senhaPadrao), // Senha criptografada
+                'tipo_usuario' => 'Estudante',
+            ]
+        );
+
+        // 3. Cria ou Atualiza o registro do aluno na tabela 'alunos'
+        return Aluno::updateOrCreate(
+            ['ra' => $row[0]], 
+            [
+                'turma_id'   => $this->turma_id,
+                'nome'       => trim($row[1]),
+                'nascimento' => $row[2] ?? null,
+                'sexo'       => isset($row[3]) ? strtoupper(trim($row[3])) : null,
+                'telefone'   => $row[4] ?? null,
+            ]
+        );
+    }
+
+    public function rules(): array
+    {
+        return [
+            '0' => 'required',
+            '1' => 'required|string|regex:/^[a-zA-ZÀ-ÿ\s\'\.\-]+$/',
+            '2' => 'nullable|regex:/^\d{2}[\/\-]\d{2}[\/\-]\d{4}$/',
+            '3' => 'nullable|in:M,F,m,f',
+        ];
+    }
+
+    public function customValidationMessages()
+    {
+        return [
+            '0.required' => 'A coluna ID (RA) não pode estar vazia na planilha.',
+            '1.required' => 'A coluna NOME é obrigatória em todas as linhas.',
+            '1.regex'    => 'Formato inválido: O NOME não pode conter números ou símbolos especiais.',
+            '2.regex'    => 'Formato inválido: A DATA DE NASCIMENTO deve estar no padrão DD/MM/AAAA (ex: 15/05/2010).',
+            '3.in'       => 'Formato inválido: A coluna SEXO aceita apenas as letras "M" ou "F".',
+        ];
+    }
+}

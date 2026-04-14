@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Models;
+
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+// --- A MUDANÇA ACONTECE AQUI NESTA LINHA ---
+// Adicionamos o 'ra' e o 'tipo_usuario' dentro do Atributo Fillable
+#[Fillable(['ra', 'name', 'email', 'password', 'tipo_usuario'])]
+#[Hidden(['password', 'remember_token'])]
+class User extends Authenticatable
+{
+    /** @use HasFactory<UserFactory> */
+    use HasFactory, Notifiable;
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    // Um professor tem muitas turmas
+    public function turmas()
+    {
+        return $this->belongsToMany(Turma::class, 'professor_turma')
+                    ->withPivot('disciplina')
+                    ->withTimestamps();
+    }
+}
