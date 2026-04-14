@@ -7,6 +7,7 @@ use App\Http\Controllers\ImportacaoController;
 use App\Http\Controllers\AtribuicaoController;
 use App\Http\Controllers\DiarioController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\RelatorioController; // <-- NOVA IMPORTAÇÃO AQUI
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,9 @@ Route::middleware(['auth', 'restrito'])->group(function () {
     Route::post('/importar-alunos', [ImportacaoController::class, 'store'])->name('importar.store');
     Route::get('/atribuir-aulas', [AtribuicaoController::class, 'create'])->name('atribuicoes.create');
     Route::post('/atribuir-aulas', [AtribuicaoController::class, 'store'])->name('atribuicoes.store');
+    
+    // Rota de Geração de Relatórios PDF
+    Route::get('/relatorios/evasao', [RelatorioController::class, 'evasao'])->name('relatorios.evasao');
 
 });
 
@@ -39,6 +43,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/meu-diario/{id}', [DiarioController::class, 'show'])->name('diario.show');
     Route::post('/meu-diario/salvar', [DiarioController::class, 'store'])->name('diario.store');
 });
-
 
 require __DIR__.'/auth.php';

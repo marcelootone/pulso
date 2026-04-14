@@ -25,9 +25,15 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow">
-                    <h3 class="text-lg font-bold text-red-600 mb-4 flex items-center">
-                        ⚠️ Alerta de Evasão (Abaixo de 75%)
-                    </h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-red-600 flex items-center">
+                            ⚠️ Alerta de Evasão
+                        </h3>
+                        <a href="{{ route('relatorios.evasao') }}" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded shadow">
+                            📄 BAIXAR PDF
+                        </a>
+                    </div>
+                    
                     <table class="w-full text-left">
                         <thead>
                             <tr class="text-xs uppercase text-gray-400 border-b">
