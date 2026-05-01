@@ -8,6 +8,7 @@ use App\Http\Controllers\AtribuicaoController;
 use App\Http\Controllers\DiarioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RelatorioController; // <-- NOVA IMPORTAÇÃO AQUI
+use App\Http\Controllers\EletivaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +26,15 @@ Route::middleware('auth')->group(function () {
 
 // Grupo de rotas protegidas APENAS para funcionários
 Route::middleware(['auth', 'restrito'])->group(function () {
+
+    Route::get('/eletivas', [EletivaController::class, 'index'])->name('eletivas.index');
+    Route::post('/eletivas', [EletivaController::class, 'store'])->name('eletivas.store');
+    Route::get('/eletivas/{id}', [EletivaController::class, 'show'])->name('eletivas.show');
+    Route::post('/eletivas/{id}/matricular', [EletivaController::class, 'matricular'])->name('eletivas.matricular');
+    Route::delete('/eletivas/{id}/remover/{aluno}', [EletivaController::class, 'remover'])->name('eletivas.remover');
+    Route::get('/eletivas/{id}/editar', [EletivaController::class, 'edit'])->name('eletivas.edit');
+    Route::put('/eletivas/{id}', [EletivaController::class, 'update'])->name('eletivas.update');
+    Route::delete('/eletivas/{id}', [EletivaController::class, 'destroy'])->name('eletivas.destroy');
     
     // O comando 'resource' cria magicamente as rotas /turmas, /turmas/create, etc.
     Route::resource('turmas', TurmaController::class);

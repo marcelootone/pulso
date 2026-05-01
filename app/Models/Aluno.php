@@ -21,4 +21,10 @@ class Aluno extends Model
     { 
         return $this->hasMany(Frequencia::class); 
     }
+
+    // Um aluno pode estar matriculado em várias eletivas
+    public function eletivas()
+    {
+        return $this->belongsToMany(Eletiva::class, 'aluno_eletiva')->withTimestamps();
+    }
 }
