@@ -23,6 +23,7 @@
                         <th class="p-3">Nº</th>
                         <th class="p-3">RA</th>
                         <th class="p-3">Nome do Estudante</th>
+                        <th class="p-3 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,10 +32,13 @@
                             <td class="p-3 font-bold text-gray-500">{{ $index + 1 }}</td>
                             <td class="p-3">{{ $aluno->ra }}</td>
                             <td class="p-3 font-medium text-gray-800">{{ $aluno->nome }}</td>
+                            <td class="p-3 text-center">
+                                <a href="{{ route('alunos.edit', $aluno->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">✏️ Editar</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
+                            <td colspan="4" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
                         </tr>
                     @endforelse
                 </tbody>

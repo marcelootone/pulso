@@ -39,6 +39,7 @@ Route::middleware(['auth', 'restrito'])->group(function () {
     
     // O comando 'resource' cria magicamente as rotas /turmas, /turmas/create, etc.
     Route::resource('turmas', TurmaController::class);
+    Route::resource('alunos', \App\Http\Controllers\AlunoController::class)->only(['edit', 'update']);
     Route::get('/importar-alunos', [ImportacaoController::class, 'create'])->name('importar.create');
     Route::post('/importar-alunos', [ImportacaoController::class, 'store'])->name('importar.store');
     Route::get('/atribuir-aulas', [AtribuicaoController::class, 'create'])->name('atribuicoes.create');

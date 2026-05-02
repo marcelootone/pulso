@@ -9,7 +9,10 @@ class Aluno extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['turma_id', 'ra', 'nome', 'nascimento', 'sexo', 'telefone'];
+    protected $fillable = [
+        'turma_id', 'ra', 'nome', 'nascimento', 'sexo', 'telefone',
+        'nome_mae', 'telefone_responsavel', 'cep', 'logradouro', 'status_matricula'
+    ];
 
     // Um aluno pertence a uma turma
     public function turma()

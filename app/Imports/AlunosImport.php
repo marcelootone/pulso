@@ -71,6 +71,11 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation
                 'nascimento' => $row[2] ?? null,
                 'sexo'       => isset($row[3]) ? strtoupper(trim($row[3])) : null,
                 'telefone'   => $row[4] ?? null,
+                'nome_mae'   => isset($row[5]) ? trim($row[5]) : null,
+                'telefone_responsavel' => isset($row[6]) ? trim($row[6]) : null,
+                'cep'        => isset($row[7]) ? trim($row[7]) : null,
+                'logradouro' => isset($row[8]) ? trim($row[8]) : null,
+                'status_matricula' => isset($row[9]) && trim($row[9]) !== '' ? trim($row[9]) : 'Ativo',
             ]
         );
     }
@@ -82,6 +87,11 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation
             '1' => 'required|string|regex:/^[a-zA-ZÀ-ÿ\s\'\.\-]+$/',
             '2' => 'nullable|regex:/^\d{2}[\/\-]\d{2}[\/\-]\d{4}$/',
             '3' => 'nullable|in:M,F,m,f',
+            '5' => 'nullable|string',
+            '6' => 'nullable|string',
+            '7' => 'nullable|string',
+            '8' => 'nullable|string',
+            '9' => 'required|string|in:Novato,Transferido,Ativo',
         ];
     }
 
