@@ -51,9 +51,12 @@ class TurmaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        // O "with('alunos')" faz um Eager Loading, puxando a turma e a lista de alunos de uma vez só com alta performance
+        $turma = Turma::with('alunos')->findOrFail($id);
+        
+        return view('turmas.show', compact('turma'));
     }
 
     /**

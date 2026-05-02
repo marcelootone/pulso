@@ -1,0 +1,44 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Detalhes da Turma: {{ $turma->serie }}º {{ $turma->complemento }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white p-6 rounded-lg shadow mb-6 flex justify-between items-center">
+            <div>
+                <p class="text-sm text-gray-500 uppercase font-bold">Total de Estudantes Matriculados</p>
+                <p class="text-3xl font-black text-indigo-600">{{ $turma->alunos->count() }}</p>
+            </div>
+            <a href="{{ route('turmas.index') }}" class="text-gray-600 font-bold hover:underline">⬅ Voltar para Turmas</a>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="font-bold text-lg mb-4 border-b pb-2">Lista de Chamada Oficial</h3>
+            
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-gray-50 text-gray-600 text-sm uppercase">
+                        <th class="p-3">Nº</th>
+                        <th class="p-3">RA</th>
+                        <th class="p-3">Nome do Estudante</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($turma->alunos as $index => $aluno)
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3 font-bold text-gray-500">{{ $index + 1 }}</td>
+                            <td class="p-3">{{ $aluno->ra }}</td>
+                            <td class="p-3 font-medium text-gray-800">{{ $aluno->nome }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</x-app-layout>

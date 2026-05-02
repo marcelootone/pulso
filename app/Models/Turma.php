@@ -31,4 +31,10 @@ class Turma extends Model
                     ->withPivot('disciplina')
                     ->withTimestamps();
     }
+
+    // Uma turma tem muitas avaliações
+    public function avaliacoes()
+    {
+        return $this->hasMany(Avaliacao::class);
+    }
 }

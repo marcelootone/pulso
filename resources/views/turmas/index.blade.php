@@ -37,10 +37,9 @@
                                 </span>
                             </td>
                             <td>
+                                <a href="{{ route('turmas.show', $turma->id) }}" class="text-indigo-600 hover:underline mr-3 font-medium">Ver Detalhes</a>
                                 @if(auth()->user()->tipo_usuario === 'Secretaria')
                                     <button class="text-red-600 hover:underline">Desativar</button>
-                                @else
-                                    <span class="text-gray-400 text-sm">Sem permissão</span>
                                 @endif
                             </td>
                         </tr>

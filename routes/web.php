@@ -9,6 +9,7 @@ use App\Http\Controllers\DiarioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RelatorioController; // <-- NOVA IMPORTAÇÃO AQUI
 use App\Http\Controllers\EletivaController;
+use App\Http\Controllers\NotaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,9 +50,17 @@ Route::middleware(['auth', 'restrito'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/meu-diario', [DiarioController::class, 'index'])->name('diario.index');
-    Route::get('/meu-diario/{id}', [DiarioController::class, 'show'])->name('diario.show');
-    Route::post('/meu-diario/salvar', [DiarioController::class, 'store'])->name('diario.store');
+    Route::get('/meu-diario', [\App\Http\Controllers\DiarioController::class, 'index'])->name('diario.index');
+    Route::get('/meu-diario/{id}', [\App\Http\Controllers\DiarioController::class, 'show'])->name('diario.show');
+    Route::post('/meu-diario/salvar', [\App\Http\Controllers\DiarioController::class, 'store'])->name('diario.store');
+    
+    // Rotas de Avaliações
+    Route::get('/turmas/{turma}/disciplinas/{disciplina}/avaliacoes', [\App\Http\Controllers\AvaliacaoController::class, 'index'])->name('avaliacoes.index');
+    Route::post('/turmas/{turma}/disciplinas/{disciplina}/avaliacoes', [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('avaliacoes.store');
+
+    // Rotas de Lançamento de Notas em Lote (por avaliação)
+    Route::get('/avaliacoes/{avaliacao}/notas', [\App\Http\Controllers\NotaController::class, 'create'])->name('notas.create');
+    Route::post('/avaliacoes/{avaliacao}/notas', [\App\Http\Controllers\NotaController::class, 'store'])->name('notas.store');
 });
 
 require __DIR__.'/auth.php';
