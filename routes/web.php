@@ -62,6 +62,12 @@ Route::middleware(['auth'])->group(function () {
     // Rotas de Lançamento de Notas em Lote (por avaliação)
     Route::get('/avaliacoes/{avaliacao}/notas', [\App\Http\Controllers\NotaController::class, 'create'])->name('notas.create');
     Route::post('/avaliacoes/{avaliacao}/notas', [\App\Http\Controllers\NotaController::class, 'store'])->name('notas.store');
+
+    // Agendamento de Espaços
+    Route::resource('espacos', \App\Http\Controllers\EspacoController::class)->except(['show', 'destroy']);
+    Route::get('/agendamentos', [\App\Http\Controllers\AgendamentoController::class, 'index'])->name('agendamentos.index');
+    Route::get('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'create'])->name('agendamentos.create');
+    Route::post('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'store'])->name('agendamentos.store');
 });
 
 require __DIR__.'/auth.php';

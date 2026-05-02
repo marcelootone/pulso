@@ -34,7 +34,13 @@ class DiarioController extends Controller
             ->get()
             ->keyBy('aluno_id'); // Organiza por ID do aluno para facilitar a busca na View
 
-        return view('diario.show', compact('turma', 'dataSelecionada', 'frequenciasExistentes'));
+        // 3. Busca os conteúdos ministrados nesta turma nesta data
+        $conteudosExistentes = \App\Models\ConteudoMinistrado::where('turma_id', $id)
+            ->where('data', $dataSelecionada)
+            ->get()
+            ->keyBy('aula_numero');
+
+        return view('diario.show', compact('turma', 'dataSelecionada', 'frequenciasExistentes', 'conteudosExistentes'));
     }
 
     // Salva a frequência em lote
@@ -44,6 +50,7 @@ class DiarioController extends Controller
             'turma_id' => 'required|exists:turmas,id',
             'data' => 'required|date',
             'presencas' => 'required|array', // Recebe RA => Status
+            'conteudos' => 'nullable|array',
         ]);
 
         foreach ($request->presencas as $aluno_id => $status) {
@@ -60,6 +67,29 @@ class DiarioController extends Controller
             );
         }
 
-        return redirect()->route('diario.index')->with('success', 'Chamada realizada com sucesso!');
+        if ($request->has('conteudos')) {
+            foreach ($request->conteudos as $aula_numero => $descricao) {
+                if (!empty(trim($descricao))) {
+                    \App\Models\ConteudoMinistrado::updateOrCreate(
+                        [
+                            'turma_id' => $request->turma_id,
+                            'data' => $request->data,
+                            'aula_numero' => $aula_numero,
+                        ],
+                        [
+                            'descricao' => $descricao,
+                            'disciplina' => null,
+                        ]
+                    );
+                } else {
+                    \App\Models\ConteudoMinistrado::where('turma_id', $request->turma_id)
+                        ->where('data', $request->data)
+                        ->where('aula_numero', $aula_numero)
+                        ->delete();
+                }
+            }
+        }
+
+        return redirect()->route('diario.index')->with('success', 'Chamada e conteúdo salvos com sucesso!');
     }
 }

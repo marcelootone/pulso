@@ -20,9 +20,26 @@
                                    onchange="window.location.href='/meu-diario/{{ $turma->id }}?data=' + this.value"
                                    class="rounded-md border-gray-300 shadow-sm focus:border-blue-500">
                         </div>
-                        <button type="submit" class="bg-green-700 text-black px-6 py-2 rounded-md font-bold hover:bg-green-800 shadow-sm">
-                            SALVAR CHAMADA
+                        <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-md font-bold hover:bg-green-800 shadow-sm">
+                            SALVAR DIÁRIO
                         </button>
+                    </div>
+
+                    <!-- Seção: Conteúdo Ministrado -->
+                    <div class="mb-8 p-4 bg-gray-50 border rounded-lg shadow-inner">
+                        <h3 class="font-bold text-lg text-gray-700 mb-4 border-b pb-2">Conteúdo Ministrado</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-indigo-700 uppercase mb-2">1ª Aula</label>
+                                <textarea name="conteudos[1]" rows="3" placeholder="Ex: Álgebra e Equações..." 
+                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ $conteudosExistentes['1']->descricao ?? '' }}</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-indigo-700 uppercase mb-2">2ª Aula</label>
+                                <textarea name="conteudos[2]" rows="3" placeholder="Ex: Resolução de Exercícios..." 
+                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ $conteudosExistentes['2']->descricao ?? '' }}</textarea>
+                            </div>
+                        </div>
                     </div>
 
                     <table class="w-full text-left border-collapse">
