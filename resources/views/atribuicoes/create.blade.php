@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="flex justify-end mt-8">
-                        <button type="submit" class="bg-indigo-600 text-white px-8 py-2 rounded-md hover:bg-indigo-700 font-bold shadow-md">
+                        <button type="submit" class="bg-indigo-600 text-black px-8 py-2 rounded-md hover:bg-indigo-700 font-bold shadow-md">
                             VINCULAR PROFESSOR
                         </button>
                     </div>

@@ -33,7 +33,7 @@
                             </option>
                         @endforeach
                     </select>
-                    <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded font-bold hover:bg-green-700 shadow">
+                    <button type="submit" class="w-full bg-green-600 text-black px-4 py-2 rounded font-bold hover:bg-green-700 shadow">
                         + ADICIONAR À LISTA
                     </button>
                 </form>

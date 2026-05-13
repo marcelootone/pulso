@@ -112,7 +112,7 @@
 
                     <!-- Botão de Salvar -->
                     <div class="flex justify-end mt-6 pt-6 border-t">
-                        <button type="submit" class="bg-indigo-600 text-white px-8 py-3 rounded-md hover:bg-indigo-700 font-black shadow-lg hover:shadow-xl transition duration-150 flex items-center gap-2">
+                        <button type="submit" class="bg-indigo-600 text-black px-8 py-3 rounded-md hover:bg-indigo-700 font-black shadow-lg hover:shadow-xl transition duration-150 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                             </svg>

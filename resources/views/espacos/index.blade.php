@@ -6,7 +6,7 @@
             </h2>
             <div class="space-x-4">
                 <a href="{{ route('agendamentos.index') }}" class="text-sm text-gray-600 hover:underline font-bold">⬅ Voltar aos Agendamentos</a>
-                <a href="{{ route('espacos.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-bold text-sm transition-colors shadow-sm">
+                <a href="{{ route('espacos.create') }}" class="bg-green-600 hover:bg-green-700 text-black px-4 py-2 rounded-md font-bold text-sm transition-colors shadow-sm">
                     + Criar Novo Espaço
                 </a>
             </div>

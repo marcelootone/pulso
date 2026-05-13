@@ -45,7 +45,7 @@
 
                         <div class="flex items-center justify-end space-x-4">
                             <a href="{{ route('espacos.index') }}" class="text-gray-600 hover:text-gray-900 font-bold text-sm">Cancelar</a>
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md shadow-sm transition-colors">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-bold py-2 px-6 rounded-md shadow-sm transition-colors">
                                 Salvar Espaço
                             </button>
                         </div>

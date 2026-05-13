@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="flex justify-end mt-6">
-                        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 font-bold">
+                        <button type="submit" class="bg-red-600 text-black px-6 py-2 rounded-md hover:bg-red-700 font-bold">
                             CRIAR
                         </button>
                     </div>

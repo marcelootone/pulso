@@ -20,7 +20,7 @@
                                    onchange="window.location.href='/meu-diario/{{ $turma->id }}?data=' + this.value"
                                    class="rounded-md border-gray-300 shadow-sm focus:border-blue-500">
                         </div>
-                        <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-md font-bold hover:bg-green-800 shadow-sm">
+                        <button type="submit" class="bg-green-700 text-black px-6 py-2 rounded-md font-bold hover:bg-green-800 shadow-sm">
                             SALVAR DIÁRIO
                         </button>
                     </div>

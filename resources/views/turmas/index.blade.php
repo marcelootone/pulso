@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <div class="mb-4 flex justify-end">
-                <a href="{{ route('turmas.create') }}" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-bold">
+                <a href="{{ route('turmas.create') }}" class="bg-red-600 text-black px-4 py-2 rounded-md hover:bg-red-700 font-bold">
                     + NOVA TURMA
                 </a>
             </div>

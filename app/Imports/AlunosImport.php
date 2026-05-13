@@ -87,11 +87,12 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation
             '1' => 'required|string|regex:/^[a-zA-ZÀ-ÿ\s\'\.\-]+$/',
             '2' => 'nullable|regex:/^\d{2}[\/\-]\d{2}[\/\-]\d{4}$/',
             '3' => 'nullable|in:M,F,m,f',
-            '5' => 'nullable|string',
-            '6' => 'nullable|string',
-            '7' => 'nullable|string',
-            '8' => 'nullable|string',
-            '9' => 'required|string|in:Novato,Transferido,Ativo',
+            '4' => 'nullable',
+            '5' => 'nullable',
+            '6' => 'nullable',
+            '7' => 'nullable',
+            '8' => 'nullable',
+            '9' => 'nullable|in:Novato,Transferido,Ativo',
         ];
     }
 

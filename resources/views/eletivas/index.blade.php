@@ -27,7 +27,7 @@
                         @foreach($professores as $prof) <option value="{{ $prof->id }}">{{ $prof->name }}</option> @endforeach
                     </select>
                 </div>
-                <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md font-bold hover:bg-indigo-700">CRIAR</button>
+                <button type="submit" class="bg-indigo-600 text-black px-6 py-2 rounded-md font-bold hover:bg-indigo-700">CRIAR</button>
             </form>
         </div>
 
@@ -45,19 +45,19 @@
                 </div>
                 
                 <div class="flex flex-col gap-2 mt-2">
-                    <a href="{{ route('eletivas.show', $eletiva->id) }}" class="block w-full text-center bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900 font-bold text-sm">
+                    <a href="{{ route('eletivas.show', $eletiva->id) }}" class="block w-full text-center bg-gray-800 text-black px-4 py-2 rounded hover:bg-gray-900 font-bold text-sm">
                         👥 MATRÍCULAS
                     </a>
                     
                     <div class="flex gap-2">
-                        <a href="{{ route('eletivas.edit', $eletiva->id) }}" class="flex-1 text-center bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 font-bold text-xs flex items-center justify-center">
+                        <a href="{{ route('eletivas.edit', $eletiva->id) }}" class="flex-1 text-center bg-yellow-500 text-black px-2 py-1 rounded hover:bg-yellow-600 font-bold text-xs flex items-center justify-center">
                             ✏️ EDITAR
                         </a>
                         
                         <form action="{{ route('eletivas.destroy', $eletiva->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Tem certeza que deseja apagar esta Eletiva inteira?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="w-full bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 font-bold text-xs h-full min-h-[32px]">
+                            <button type="submit" class="w-full bg-red-600 text-black px-2 py-1 rounded hover:bg-red-700 font-bold text-xs h-full min-h-[32px]">
                                 🗑️ EXCLUIR
                             </button>
                         </form>

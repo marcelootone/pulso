@@ -38,7 +38,7 @@
 
                 <div class="flex justify-between items-center">
                     <a href="{{ route('eletivas.index') }}" class="text-gray-600 hover:text-gray-900 font-bold">Voltar</a>
-                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md font-bold hover:bg-indigo-700">SALVAR ALTERAÇÕES</button>
+                    <button type="submit" class="bg-indigo-600 text-black px-6 py-2 rounded-md font-bold hover:bg-indigo-700">SALVAR ALTERAÇÕES</button>
                 </div>
             </form>
         </div>
