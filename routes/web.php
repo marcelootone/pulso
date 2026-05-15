@@ -7,13 +7,11 @@ use App\Http\Controllers\ImportacaoController;
 use App\Http\Controllers\AtribuicaoController;
 use App\Http\Controllers\DiarioController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\RelatorioController; // <-- NOVA IMPORTAÇÃO AQUI
+use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\EletivaController;
 use App\Http\Controllers\NotaController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -23,6 +21,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Gerenciamento de Usuários (Acesso restrito ao Administrador)
+    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['store']);
 });
 
 // Grupo de rotas protegidas APENAS para funcionários

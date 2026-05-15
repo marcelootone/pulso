@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Hash; // Importado para criptografar a senha
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class AlunosImport implements ToModel, WithStartRow, WithValidation
+class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyRows
 {
     protected $turma_id;
 

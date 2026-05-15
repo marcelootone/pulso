@@ -16,7 +16,8 @@ test.describe('Importação de Alunos', () => {
         // Criar uma planilha dummy para teste
         const dummyCsvContent = `ID,Nome,Data Nascimento,Sexo,Telefones
 9991,Aluno Teste 1,01/01/2010,M,11999999999
-9992,Aluno Teste 2,02/02/2010,F,11888888888`;
+9992,Aluno Teste 2,02/02/2010,F,11888888888
+,,,,`; // Linha vazia no final
         const filePath = path.join(__dirname, 'dummy_alunos.csv');
         fs.writeFileSync(filePath, dummyCsvContent);
 
