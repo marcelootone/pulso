@@ -21,13 +21,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Gerenciamento de Usuários (Acesso restrito ao Administrador)
-    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['store']);
 });
 
 // Grupo de rotas protegidas APENAS para funcionários
 Route::middleware(['auth', 'restrito'])->group(function () {
+
+    // Gerenciamento de Usuários (Acesso restrito)
+    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['create', 'store']);
 
     Route::get('/eletivas', [EletivaController::class, 'index'])->name('eletivas.index');
     Route::post('/eletivas', [EletivaController::class, 'store'])->name('eletivas.store');

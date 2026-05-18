@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 // --- A MUDANÇA ACONTECE AQUI NESTA LINHA ---
 // Adicionamos o 'ra' e o 'tipo_usuario' dentro do Atributo Fillable
-#[Fillable(['ra', 'name', 'email', 'password', 'tipo_usuario'])]
+#[Fillable(['ra', 'name', 'email', 'password', 'tipo_usuario', 'username', 'cpf', 'nascimento', 'sexo', 'telefone', 'cidade', 'rua', 'numero', 'bairro'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -30,6 +30,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Um usuário pode ser um aluno
+    public function aluno()
+    {
+        return $this->hasOne(Aluno::class);
     }
 
     // Um professor tem muitas turmas

@@ -8,6 +8,21 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
+            <div class="mb-6 flex gap-4">
+                <a href="{{ route('users.create') }}" class="bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded shadow flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Criar Usuário
+                </a>
+                <a href="{{ route('importar.index') }}" class="bg-white hover:bg-gray-50 text-blue-600 border border-gray-300 font-semibold py-2 px-4 rounded shadow flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Importar Estudantes
+                </a>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
                     <p class="text-sm font-bold text-gray-500 uppercase">Total de Estudantes</p>
@@ -29,7 +44,7 @@
                         <h3 class="text-lg font-bold text-red-600 flex items-center">
                             ⚠️ Alerta de Evasão
                         </h3>
-                        <a href="{{ route('relatorios.evasao') }}" class="bg-red-600 hover:bg-red-700 text-white text-sm font-bold py-2 px-4 rounded shadow">
+                        <a href="{{ route('relatorios.evasao') }}" class="bg-red-600 hover:bg-red-700 text-black text-sm font-bold py-2 px-4 rounded shadow">
                             📄 BAIXAR PDF
                         </a>
                     </div>

@@ -10,9 +10,15 @@ class Aluno extends Model
     use HasFactory;
 
     protected $fillable = [
-        'turma_id', 'ra', 'nome', 'nascimento', 'sexo', 'telefone',
+        'user_id', 'turma_id', 'ra', 'nome', 'nascimento', 'sexo', 'telefone',
         'nome_mae', 'telefone_responsavel', 'cep', 'logradouro', 'status_matricula'
     ];
+
+    // Um aluno pertence a um usuário (credenciais)
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Um aluno pertence a uma turma
     public function turma()
