@@ -35,7 +35,7 @@
             @endif
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-t-4 border-gray-600">
-                <form action="{{ route('importar.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('importar.preview') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="grid grid-cols-2 gap-8">
@@ -53,7 +53,7 @@
 
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Arquivo CSV</label>
-                            <input type="file" name="arquivo_csv" accept=".csv, .xlsx, .xls" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-1" required>
+                            <input type="file" name="planilha" accept=".csv, .xlsx, .xls" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-1" required>
                         </div>
                     </div>
 

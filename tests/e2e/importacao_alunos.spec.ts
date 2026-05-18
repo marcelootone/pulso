@@ -34,14 +34,27 @@ test.describe('Importação de Alunos', () => {
         }
 
         // Fazer upload do arquivo
-        await page.setInputFiles('input[name="arquivo_csv"]', filePath);
+        await page.setInputFiles('input[name="planilha"]', filePath);
 
-        // Submeter o formulário
+        // Submeter o formulário para ir ao preview
         await page.click('button[type="submit"]');
 
-        // Aguardar e verificar a mensagem de sucesso
-        await expect(page.locator('.alert-success, .text-green-600')).toBeVisible({ timeout: 10000 });
-        await expect(page.locator('.alert-success, .text-green-600')).toContainText('Estudantes importados com sucesso');
+        // Aguardar o carregamento da tela de preview
+        await expect(page).toHaveURL(/\/importar-alunos\/preview/);
+        await expect(page.locator('text=Atenção: Os dados abaixo ainda não foram salvos!')).toBeVisible();
+
+        // Verificar se os dados carregaram na tabela (editamos o nome do aluno 1 para testar a edição)
+        const primeiroNomeInput = page.locator('input[name="alunos[0][1]"]');
+        await expect(primeiroNomeInput).toHaveValue('Aluno Teste 1');
+        await primeiroNomeInput.fill('Aluno Teste Editado');
+
+        // Confirmar e Salvar
+        await page.click('button:has-text("Confirmar e Salvar Alunos")');
+
+        // Aguardar e verificar a mensagem de sucesso na tela inicial
+        await expect(page).toHaveURL('/importar-alunos');
+        await expect(page.locator('.text-green-700')).toBeVisible({ timeout: 10000 });
+        await expect(page.locator('.text-green-700')).toContainText('Estudantes importados com sucesso');
 
         // Limpar o arquivo dummy
         fs.unlinkSync(filePath);
