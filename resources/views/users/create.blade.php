@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-2" x-data="{ tipoUsuario: '{{ old('tipo_usuario', 'ESTUDANTE') }}' }">
+    <div class="py-2" x-data="{ tipoUsuario: '{{ old('tipo_usuario', \App\Models\User::TIPO_ESTUDANTE) }}' }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <!-- ALERTA DE DUPLICATA -->
@@ -64,13 +64,13 @@
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user-circle mr-1"></i> Tipo de Usuário</label>
                             <select name="tipo_usuario" x-model="tipoUsuario" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm uppercase font-semibold text-blue-600 bg-blue-50 border-blue-200 py-1.5">
-                                <option value="ESTUDANTE">ESTUDANTE</option>
-                                <option value="PROFESSOR(A)">PROFESSOR(A)</option>
-                                <option value="GESTOR">GESTOR</option>
-                                <option value="COORDENADOR">COORDENADOR</option>
-                                <option value="SECRETARIA">SECRETARIA</option>
-                                <option value="PROFESSOR EDUCAÇÃO ESPECIAL">PROFESSOR EDUCAÇÃO ESPECIAL</option>
-                                <option value="PROFESSOR DE ESTUDO ORIENTADO">PROFESSOR DE ESTUDO ORIENTADO</option>
+                                <option value="{{ \App\Models\User::TIPO_ESTUDANTE }}">ESTUDANTE</option>
+                                <option value="{{ \App\Models\User::TIPO_PROFESSOR }}">PROFESSOR(A)</option>
+                                <option value="{{ \App\Models\User::TIPO_GESTOR }}">GESTOR</option>
+                                <option value="{{ \App\Models\User::TIPO_COORDENADOR }}">COORDENADOR</option>
+                                <option value="{{ \App\Models\User::TIPO_SECRETARIA }}">SECRETARIA</option>
+                                <option value="{{ \App\Models\User::TIPO_PROF_ESPECIAL }}">PROFESSOR EDUCAÇÃO ESPECIAL</option>
+                                <option value="{{ \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO }}">PROFESSOR DE ESTUDO ORIENTADO</option>
                             </select>
                         </div>
                         <div>
@@ -79,7 +79,7 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-qrcode mr-1"></i> Número RA</label>
-                            <input type="text" name="ra" value="{{ old('ra') }}" x-bind:required="tipoUsuario === 'ESTUDANTE' || tipoUsuario === 'Estudante'" x-bind:readonly="tipoUsuario !== 'ESTUDANTE' && tipoUsuario !== 'Estudante'" :class="{'bg-gray-200': tipoUsuario !== 'ESTUDANTE' && tipoUsuario !== 'Estudante', 'bg-gray-50': tipoUsuario === 'ESTUDANTE' || tipoUsuario === 'Estudante'}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <input type="text" name="ra" value="{{ old('ra') }}" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-bind:readonly="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" :class="{'bg-gray-200': tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}', 'bg-gray-50': tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-venus-mars mr-1"></i> Sexo</label>
-                            <select name="sexo" x-bind:required="tipoUsuario === 'ESTUDANTE' || tipoUsuario === 'Estudante'" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm text-center py-1.5">
+                            <select name="sexo" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm text-center py-1.5">
                                 <option value="">Selecione...</option>
                                 <option value="M" {{ old('sexo') == 'M' ? 'selected' : '' }}>M</option>
                                 <option value="F" {{ old('sexo') == 'F' ? 'selected' : '' }}>F</option>
@@ -101,14 +101,14 @@
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-birthday-cake mr-1"></i> Nascimento</label>
-                            <input type="date" name="nascimento" x-bind:required="tipoUsuario === 'ESTUDANTE' || tipoUsuario === 'Estudante'" value="{{ old('nascimento') }}" max="{{ date('Y-m-d') }}" class="date-light mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <input type="date" name="nascimento" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('nascimento') }}" max="{{ date('Y-m-d') }}" class="date-light mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
                         </div>
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-phone mr-1"></i> Telefone</label>
-                            <input type="text" name="telefone" x-bind:required="tipoUsuario === 'ESTUDANTE' || tipoUsuario === 'Estudante'" value="{{ old('telefone') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <input type="text" name="telefone" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('telefone') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-city mr-1"></i> Cidade</label>
@@ -133,7 +133,7 @@
                 </div>
 
                 <!-- BLOCO 3: DADOS FILIAÇÃO (SÓ ESTUDANTE) -->
-                <div x-show="tipoUsuario === 'ESTUDANTE'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #e11d48;" x-cloak>
+                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #e11d48;" x-cloak>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
                         <div>
                             <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user mr-1"></i> Nome Pai</label>
@@ -158,7 +158,7 @@
                 </div>
 
                 <!-- BLOCO 4: VINCULAR TURMA (SÓ ESTUDANTE) -->
-                <div x-show="tipoUsuario === 'ESTUDANTE'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #06b6d4;" x-cloak>
+                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #06b6d4;" x-cloak>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
                         <div class="col-span-1">
                             <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">
@@ -181,7 +181,7 @@
                 </div>
 
                 <!-- BLOCO 5: USUÁRIO E SENHA + CADASTRAR -->
-                <div x-show="tipoUsuario !== 'ESTUDANTE'" class="mb-2 relative" style="border-left: 3px solid #6b7280;" x-cloak>
+                <div x-show="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="mb-2 relative" style="border-left: 3px solid #6b7280;" x-cloak>
                     <div class="border border-gray-200 p-2 relative bg-gray-50 rounded-r-md">
                         <div class="text-[11px] font-bold text-gray-700 uppercase mb-2">
                             <i class="fas fa-key mr-1"></i> E-MAIL DE ACESSO E SENHA
@@ -196,7 +196,7 @@
                                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                     </svg>
                                 </div>
-                                <input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== 'ESTUDANTE' && tipoUsuario !== 'Estudante'" placeholder="E-mail de Acesso" class="block w-full pl-10 bg-red-600 text-white placeholder-red-200 border-none rounded-md py-2 focus:ring-2 focus:ring-red-400 focus:outline-none text-sm">
+                                <input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="E-mail de Acesso" class="block w-full pl-10 bg-red-600 text-white placeholder-red-200 border-none rounded-md py-2 focus:ring-2 focus:ring-red-400 focus:outline-none text-sm">
                             </div>
 
                             <!-- Yellow Password Box -->
@@ -206,7 +206,7 @@
                                         <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 0 1 1 0 100-2 2 2 0 00-2 0z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input x-bind:type="showPass ? 'text' : 'password'" name="password" autocomplete="new-password" x-bind:required="tipoUsuario !== 'ESTUDANTE' && tipoUsuario !== 'Estudante'" placeholder="Senha" class="block w-full pl-10 pr-10 bg-yellow-400 text-gray-800 placeholder-gray-600 border-none rounded-md py-2 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-sm">
+                                <input x-bind:type="showPass ? 'text' : 'password'" name="password" autocomplete="new-password" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="Senha" class="block w-full pl-10 pr-10 bg-yellow-400 text-gray-800 placeholder-gray-600 border-none rounded-md py-2 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-sm">
                                 <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-700 hover:text-black">
                                     <i class="fas" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
                                 </button>

@@ -10,8 +10,12 @@ class AtribuicaoController extends Controller
 {
     public function create()
     {
-        // Pega apenas os usuários que são "Professor"
-        $professores = User::where('tipo_usuario', 'Professor')->get();
+        // Pega os usuários que são tipos de Professor
+        $professores = User::whereIn('tipo_usuario', [
+            User::TIPO_PROFESSOR, 
+            User::TIPO_PROF_ESPECIAL, 
+            User::TIPO_PROF_ESTUDO_ORIENTADO
+        ])->get();
         // Pega as turmas ativas
         $turmas = Turma::where('ativa', true)->get();
         

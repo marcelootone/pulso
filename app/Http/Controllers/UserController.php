@@ -38,7 +38,8 @@ class UserController extends Controller
         ];
 
         // Validação Dinâmica
-        if ($request->tipo_usuario === 'ESTUDANTE' || $request->tipo_usuario === 'Aluno' || $request->tipo_usuario === 'Estudante') {
+        $tipoIngresso = strtoupper($request->tipo_usuario);
+        if (in_array($tipoIngresso, ['ESTUDANTE', 'ALUNO'])) {
             $rules['ra'] = 'required|string|unique:users,ra';
             $rules['nascimento'] = 'required|date';
             $rules['sexo'] = 'required|in:M,F';

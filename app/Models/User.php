@@ -16,6 +16,13 @@ use Illuminate\Notifications\Notifiable;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+    const TIPO_ESTUDANTE = 'Estudante';
+    const TIPO_PROFESSOR = 'Professor';
+    const TIPO_GESTOR = 'Gestor';
+    const TIPO_COORDENADOR = 'Coordenador';
+    const TIPO_SECRETARIA = 'Secretaria';
+    const TIPO_PROF_ESPECIAL = 'Professor Educação Especial';
+    const TIPO_PROF_ESTUDO_ORIENTADO = 'Professor de Estudo Orientado';
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 

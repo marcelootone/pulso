@@ -59,7 +59,7 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyR
                 'name'         => trim($row[1]),
                 'email'        => $row[0] . '@aluno.sigae.com', // E-mail interno obrigatório pelo Laravel
                 'password'     => Hash::make($senhaPadrao), // Senha criptografada
-                'tipo_usuario' => 'Estudante',
+                'tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE,
             ]
         );
 
