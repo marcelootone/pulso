@@ -23,7 +23,8 @@ class DashboardController extends Controller
         // 3. Alunos em Risco (Frequência < 75%)
         // Agrupamos por aluno, contamos presenças e calculamos a média
         $alunosEmRisco = Aluno::select('alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-            ->join('turmas', 'alunos.turma_id', '=', 'turmas.id')
+            ->join('aluno_turma', 'alunos.id', '=', 'aluno_turma.aluno_id')
+            ->join('turmas', 'aluno_turma.turma_id', '=', 'turmas.id')
             ->join('frequencias', 'alunos.id', '=', 'frequencias.aluno_id')
             ->selectRaw('COUNT(CASE WHEN frequencias.status = "P" THEN 1 END) * 100 / COUNT(frequencias.id) as percentual')
             ->groupBy('alunos.id', 'alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')

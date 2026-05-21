@@ -21,7 +21,7 @@ class Turma extends Model
     // Uma turma tem muitos alunos
     public function alunos()
     {
-        return $this->hasMany(Aluno::class);
+        return $this->belongsToMany(Aluno::class, 'aluno_turma')->withTimestamps();
     }
 
     // Uma turma tem muitos professores

@@ -44,6 +44,10 @@ Route::middleware(['auth', 'restrito'])->group(function () {
     Route::get('/importar-alunos', [ImportacaoController::class, 'index'])->name('importar.index');
     Route::post('/importar-alunos/preview', [ImportacaoController::class, 'preview'])->name('importar.preview');
     Route::post('/importar-alunos/confirmar', [ImportacaoController::class, 'confirm'])->name('importar.confirm');
+    
+    // Vinculação Manual de Aluno a Turma
+    Route::get('/vinculo-aluno-turma', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'create'])->name('vinculo.create');
+    Route::post('/vinculo-aluno-turma', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'store'])->name('vinculo.store');
     Route::get('/atribuir-aulas', [AtribuicaoController::class, 'create'])->name('atribuicoes.create');
     Route::post('/atribuir-aulas', [AtribuicaoController::class, 'store'])->name('atribuicoes.store');
     

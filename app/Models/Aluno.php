@@ -20,10 +20,10 @@ class Aluno extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Um aluno pertence a uma turma
-    public function turma()
+    // Um aluno pode estar matriculado em várias turmas
+    public function turmas()
     {
-        return $this->belongsTo(Turma::class);
+        return $this->belongsToMany(Turma::class, 'aluno_turma')->withTimestamps();
     }
     
     public function frequencias() 
