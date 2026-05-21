@@ -75,6 +75,20 @@ class ImportacaoController extends Controller
             $sexo = isset($row[3]) ? strtoupper(trim($row[3])) : null;
             $telefone = $row[4] ?? null;
 
+            // Converter data de nascimento de DD/MM/YYYY para YYYY-MM-DD
+            $nascimento_db = null;
+            if ($nascimento) {
+                try {
+                    if (strpos($nascimento, '/') !== false) {
+                        $nascimento_db = \Carbon\Carbon::createFromFormat('d/m/Y', $nascimento)->format('Y-m-d');
+                    } else {
+                        $nascimento_db = clone \Carbon\Carbon::parse($nascimento)->format('Y-m-d');
+                    }
+                } catch (\Exception $e) {
+                    $nascimento_db = null; // Em caso de formato inválido
+                }
+            }
+
             // Gera a senha (remove caracteres não numéricos do nascimento)
             $senhaPadrao = preg_replace('/[^0-9]/', '', $nascimento); 
             if (empty($senhaPadrao)) {
@@ -82,13 +96,21 @@ class ImportacaoController extends Controller
             }
 
             // Cria ou Atualiza a conta de acesso na tabela 'users'
-            User::updateOrCreate(
+            $user = User::updateOrCreate(
                 ['ra' => $ra],
                 [
                     'name'         => $nome,
-                    'email'        => $ra . '@aluno.sigae.com',
+                    'email'        => null,
                     'password'     => Hash::make($senhaPadrao),
-                    'tipo_usuario' => 'Estudante',
+                    'tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE,
+                    'nascimento'   => $nascimento_db,
+                    'sexo'         => $sexo,
+                    'telefone'     => $telefone,
+                    'cpf'          => null,
+                    'cidade'       => null,
+                    'rua'          => null,
+                    'numero'       => null,
+                    'bairro'       => null,
                 ]
             );
 
@@ -96,9 +118,10 @@ class ImportacaoController extends Controller
             Aluno::updateOrCreate(
                 ['ra' => $ra],
                 [
+                    'user_id'    => $user->id,
                     'turma_id'   => $turma_id,
                     'nome'       => $nome,
-                    'nascimento' => $nascimento,
+                    'nascimento' => $nascimento_db,
                     'sexo'       => $sexo,
                     'telefone'   => $telefone,
                 ]

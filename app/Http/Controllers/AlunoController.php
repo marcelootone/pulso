@@ -35,4 +35,13 @@ class AlunoController extends Controller
 
         return redirect()->route('turmas.show', $aluno->turma_id)->with('success', 'Aluno atualizado com sucesso!');
     }
+    public function destroy($id)
+    {
+        $aluno = Aluno::findOrFail($id);
+        $turma_id = $aluno->turma_id;
+        
+        $aluno->update(['turma_id' => null]);
+
+        return redirect()->route('turmas.show', $turma_id)->with('success', 'Aluno removido da turma com sucesso!');
+    }
 }

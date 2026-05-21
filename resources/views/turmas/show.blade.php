@@ -32,8 +32,13 @@
                             <td class="p-3 font-bold text-gray-500">{{ $index + 1 }}</td>
                             <td class="p-3">{{ $aluno->ra }}</td>
                             <td class="p-3 font-medium text-gray-800">{{ $aluno->nome }}</td>
-                            <td class="p-3 text-center">
+                            <td class="p-3 text-center flex justify-center gap-2">
                                 <a href="{{ route('alunos.edit', $aluno->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">✏️ Editar</a>
+                                <form action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este aluno desta turma? Ele ainda continuará no sistema.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-semibold transition">🗑️ Remover</button>
+                                </form>
                             </td>
                         </tr>
                     @empty

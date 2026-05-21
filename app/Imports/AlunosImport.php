@@ -52,14 +52,36 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyR
             $senhaPadrao = 'mudar123';
         }
 
+        // Converte a data de nascimento para o banco de dados (YYYY-MM-DD)
+        $nascimento_db = null;
+        if ($dataNascimento) {
+            try {
+                if (strpos($dataNascimento, '/') !== false) {
+                    $nascimento_db = \Carbon\Carbon::createFromFormat('d/m/Y', $dataNascimento)->format('Y-m-d');
+                } else {
+                    $nascimento_db = clone \Carbon\Carbon::parse($dataNascimento)->format('Y-m-d');
+                }
+            } catch (\Exception $e) {
+                $nascimento_db = null;
+            }
+        }
+
         // 2. Cria ou Atualiza a conta de acesso na tabela 'users'
         User::updateOrCreate(
             ['ra' => $row[0]], // Busca pelo RA único
             [
                 'name'         => trim($row[1]),
-                'email'        => $row[0] . '@aluno.sigae.com', // E-mail interno obrigatório pelo Laravel
+                'email'        => null,
                 'password'     => Hash::make($senhaPadrao), // Senha criptografada
                 'tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE,
+                'nascimento'   => $nascimento_db,
+                'sexo'         => isset($row[3]) ? strtoupper(trim($row[3])) : null,
+                'telefone'     => $row[4] ?? null,
+                'cpf'          => null,
+                'cidade'       => null,
+                'rua'          => null,
+                'numero'       => null,
+                'bairro'       => null,
             ]
         );
 
@@ -69,7 +91,7 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyR
             [
                 'turma_id'   => $this->turma_id,
                 'nome'       => trim($row[1]),
-                'nascimento' => $row[2] ?? null,
+                'nascimento' => $nascimento_db,
                 'sexo'       => isset($row[3]) ? strtoupper(trim($row[3])) : null,
                 'telefone'   => $row[4] ?? null,
                 'nome_mae'   => isset($row[5]) ? trim($row[5]) : null,
