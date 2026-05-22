@@ -12,7 +12,9 @@ class RelatorioController extends Controller
     {
         // 1. Busca os alunos com menos de 75% de frequência (A mesma lógica do Dashboard)
         $alunosEmRisco = Aluno::select('alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-            ->join('turmas', 'alunos.turma_id', '=', 'turmas.id')
+            ->join('matriculas', 'alunos.id', '=', 'matriculas.aluno_id')
+            ->join('enturmacoes', 'matriculas.id', '=', 'enturmacoes.matricula_id')
+            ->join('turmas', 'enturmacoes.turma_id', '=', 'turmas.id')
             ->join('frequencias', 'alunos.id', '=', 'frequencias.aluno_id')
             ->selectRaw('COUNT(CASE WHEN frequencias.status = "P" THEN 1 END) * 100 / COUNT(frequencias.id) as percentual')
             ->groupBy('alunos.id', 'alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')

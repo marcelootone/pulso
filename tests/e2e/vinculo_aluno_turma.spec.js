@@ -28,6 +28,10 @@ test.describe('Vinculação de Aluno a Turma', () => {
         const turmaSelect = page.locator('select#turma_id');
         await turmaSelect.selectOption({ index: 1 });
 
+        // Selecionar o tipo de vínculo (ELETIVA) para não conflitar caso ele já tenha uma REGULAR
+        const tipoSelect = page.locator('select#tipo_vinculo');
+        await tipoSelect.selectOption({ value: 'ELETIVA' });
+
         // Clicar no botão de vincular
         await page.click('button:has-text("Vincular Aluno")');
 

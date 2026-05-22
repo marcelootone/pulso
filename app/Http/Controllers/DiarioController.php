@@ -19,8 +19,9 @@ class DiarioController extends Controller
 
     public function show(Request $request, $id)
     {
-        $turma = Turma::with('alunos')->findOrFail($id);
-        
+        $turma = Turma::with(['enturmacoes' => function($q) {
+            $q->where('status', 'Ativo')->with('matricula.aluno');
+        }])->findOrFail($id);
         // 1. Pega a data da URL ou usa a data de hoje
         $dataSelecionada = $request->get('data', date('Y-m-d'));
 

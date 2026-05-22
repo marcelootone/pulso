@@ -21,8 +21,9 @@ class NotaController extends Controller
         $avaliacao = Avaliacao::with('turma')->findOrFail($avaliacao_id);
         $turma = $avaliacao->turma;
         
-        // Busca os alunos ordenados por nome
-        $alunos = $turma->alunos()->orderBy('nome')->get();
+        // Busca os alunos ordenados por nome via enturmações ativas
+        $enturmacoes = $turma->enturmacoes()->where('status', 'Ativo')->with('matricula.aluno')->get();
+        $alunos = $enturmacoes->pluck('matricula.aluno')->sortBy('nome');
         
         // Busca as notas já lançadas para esta avaliação
         $notasLancadas = Nota::where('avaliacao_id', $avaliacao_id)

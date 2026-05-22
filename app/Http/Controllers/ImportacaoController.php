@@ -23,7 +23,20 @@ class ImportacaoController extends Controller
     {
         $request->validate([
             'turma_id' => 'required|exists:turmas,id',
-            'planilha' => 'required|file|extensions:csv,txt,xlsx,xls|max:5120',
+            'planilha' => [
+                'required',
+                'file',
+                'extensions:csv,txt,xlsx,xls',
+                'max:5120',
+                function ($attribute, $value, $fail) {
+                    $nameWithoutExtension = pathinfo($value->getClientOriginalName(), PATHINFO_FILENAME);
+                    if ($nameWithoutExtension !== 'ImportarUsuariosSIGAE') {
+                        $fail('O nome do arquivo deve ser obrigatoriamente "ImportarUsuariosSIGAE" (ex: ImportarUsuariosSIGAE.xlsx). Planilha incorreta rejeitada.');
+                    }
+                },
+            ],
+        ], [
+            'planilha.extensions' => 'A planilha deve ter uma das seguintes extensões: csv, txt, xlsx, xls.',
         ]);
 
         $file = $request->file('planilha');
@@ -115,17 +128,35 @@ class ImportacaoController extends Controller
             );
 
             // Cria ou Atualiza o registro do aluno
-            Aluno::updateOrCreate(
+            $aluno = Aluno::updateOrCreate(
                 ['ra' => $ra],
                 [
                     'user_id'    => $user->id,
-                    'turma_id'   => $turma_id,
                     'nome'       => $nome,
                     'nascimento' => $nascimento_db,
                     'sexo'       => $sexo,
                     'telefone'   => $telefone,
                 ]
             );
+
+            // Vincula o aluno à turma importada sem remover vínculos anteriores
+            $anoLetivo = date('Y');
+            
+            $matricula = \App\Models\Matricula::firstOrCreate([
+                'aluno_id' => $aluno->id,
+                'ano_letivo' => $anoLetivo,
+            ], [
+                'status' => 'Ativa',
+            ]);
+
+            \App\Models\Enturmacao::firstOrCreate([
+                'matricula_id' => $matricula->id,
+                'turma_id' => $turma_id,
+            ], [
+                'tipo_vinculo' => 'REGULAR',
+                'data_entrada' => now(),
+                'status' => 'Ativo',
+            ]);
         }
 
         // Apaga o arquivo temporário

@@ -48,6 +48,20 @@
                             <x-input-error :messages="$errors->get('turma_id')" class="mt-2" />
                         </div>
 
+                        <!-- Tipo de Vínculo -->
+                        <div>
+                            <x-input-label for="tipo_vinculo" :value="__('Tipo de Vínculo')" />
+                            <select id="tipo_vinculo" name="tipo_vinculo" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                                <option value="REGULAR" {{ old('tipo_vinculo') == 'REGULAR' ? 'selected' : '' }}>Regular (Principal)</option>
+                                <option value="ELETIVA" {{ old('tipo_vinculo') == 'ELETIVA' ? 'selected' : '' }}>Eletiva</option>
+                                <option value="ITINERARIO" {{ old('tipo_vinculo') == 'ITINERARIO' ? 'selected' : '' }}>Itinerário Formativo</option>
+                                <option value="REFORCO" {{ old('tipo_vinculo') == 'REFORCO' ? 'selected' : '' }}>Reforço</option>
+                                <option value="AEE" {{ old('tipo_vinculo') == 'AEE' ? 'selected' : '' }}>Atendimento Educacional Especializado (AEE)</option>
+                                <option value="DEPENDENCIA" {{ old('tipo_vinculo') == 'DEPENDENCIA' ? 'selected' : '' }}>Dependência</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('tipo_vinculo')" class="mt-2" />
+                        </div>
+
                         <div class="flex items-center justify-end mt-4">
                             <x-primary-button class="ml-4">
                                 {{ __('Vincular Aluno') }}

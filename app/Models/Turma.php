@@ -11,6 +11,8 @@ class Turma extends Model
 
     // Colunas que o Laravel tem permissão para preencher via formulário
     protected $fillable = [
+        'ano_letivo',
+        'tipo',
         'modalidade',
         'turno',
         'serie',
@@ -18,10 +20,9 @@ class Turma extends Model
         'ativa'
     ];
 
-    // Uma turma tem muitos alunos
-    public function alunos()
+    public function enturmacoes()
     {
-        return $this->belongsToMany(Aluno::class, 'aluno_turma')->withTimestamps();
+        return $this->hasMany(Enturmacao::class);
     }
 
     // Uma turma tem muitos professores

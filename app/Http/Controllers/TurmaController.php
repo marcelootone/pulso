@@ -33,6 +33,8 @@ class TurmaController extends Controller
             'turno' => 'required|string',
             'serie' => 'required|string',
             'complemento' => 'nullable|string|max:3',
+            'ano_letivo' => 'nullable|integer',
+            'tipo' => 'nullable|string'
         ]);
 
         // 2. Salva no banco de dados
@@ -41,6 +43,8 @@ class TurmaController extends Controller
             'turno' => $request->turno,
             'serie' => $request->serie,
             'complemento' => strtoupper($request->complemento),
+            'ano_letivo' => $request->ano_letivo ?? date('Y'),
+            'tipo' => $request->tipo ?? 'REGULAR',
             'ativa' => true, // Toda turma nasce ativa
         ]);
 
@@ -53,8 +57,10 @@ class TurmaController extends Controller
      */
     public function show($id)
     {
-        // O "with('alunos')" faz um Eager Loading, puxando a turma e a lista de alunos de uma vez só com alta performance
-        $turma = Turma::with('alunos')->findOrFail($id);
+        // Puxando a turma e as enturmações ativas do ano com os alunos
+        $turma = Turma::with(['enturmacoes' => function($q) {
+            $q->where('status', 'Ativo')->with('matricula.aluno');
+        }])->findOrFail($id);
         
         return view('turmas.show', compact('turma'));
     }

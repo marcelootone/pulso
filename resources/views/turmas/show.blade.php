@@ -9,7 +9,7 @@
         <div class="bg-white p-6 rounded-lg shadow mb-6 flex justify-between items-center">
             <div>
                 <p class="text-sm text-gray-500 uppercase font-bold">Total de Estudantes Matriculados</p>
-                <p class="text-3xl font-black text-indigo-600">{{ $turma->alunos->count() }}</p>
+                <p class="text-3xl font-black text-indigo-600">{{ $turma->enturmacoes->count() }}</p>
             </div>
             <a href="{{ route('turmas.index') }}" class="text-gray-600 font-bold hover:underline">⬅ Voltar para Turmas</a>
         </div>
@@ -23,15 +23,18 @@
                         <th class="p-3">Nº</th>
                         <th class="p-3">RA</th>
                         <th class="p-3">Nome do Estudante</th>
+                        <th class="p-3">Vínculo</th>
                         <th class="p-3 text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($turma->alunos as $index => $aluno)
+                    @forelse($turma->enturmacoes as $index => $enturmacao)
+                        @php $aluno = $enturmacao->matricula->aluno; @endphp
                         <tr class="border-b hover:bg-gray-50">
                             <td class="p-3 font-bold text-gray-500">{{ $index + 1 }}</td>
                             <td class="p-3">{{ $aluno->ra }}</td>
                             <td class="p-3 font-medium text-gray-800">{{ $aluno->nome }}</td>
+                            <td class="p-3 text-sm text-gray-600">{{ $enturmacao->tipo_vinculo }}</td>
                             <td class="p-3 text-center flex justify-center gap-2">
                                 <a href="{{ route('alunos.edit', $aluno->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">✏️ Editar</a>
                                 <form action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este aluno desta turma? Ele ainda continuará no sistema.');">
@@ -43,7 +46,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
+                            <td colspan="5" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
                         </tr>
                     @endforelse
                 </tbody>

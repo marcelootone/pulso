@@ -72,9 +72,8 @@ class UserService
 
             // Se for aluno, cria o registro correspondente
             if ($tipoUsuario === User::TIPO_ESTUDANTE) {
-                Aluno::create([
+                $aluno = Aluno::create([
                     'user_id' => $user->id,
-                    'turma_id' => $data['turma_id'] ?? null,
                     'ra' => $data['ra'],
                     'nome' => $data['nome'],
                     'nascimento' => $data['nascimento'] ?? null,
@@ -83,6 +82,25 @@ class UserService
                     'nome_mae' => $data['nome_mae'] ?? null,
                     'telefone_responsavel' => $data['tel_mae'] ?? null,
                 ]);
+
+                // Se houver turma informada, cria a matrícula e a enturmação principal
+                if (!empty($data['turma_id'])) {
+                    $anoLetivo = date('Y');
+                    
+                    $matricula = \App\Models\Matricula::create([
+                        'aluno_id' => $aluno->id,
+                        'ano_letivo' => $anoLetivo,
+                        'status' => 'Ativa',
+                    ]);
+
+                    \App\Models\Enturmacao::create([
+                        'matricula_id' => $matricula->id,
+                        'turma_id' => $data['turma_id'],
+                        'tipo_vinculo' => 'REGULAR',
+                        'data_entrada' => now(),
+                        'status' => 'Ativo',
+                    ]);
+                }
             }
 
             return $user;
