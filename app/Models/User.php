@@ -52,4 +52,10 @@ class User extends Authenticatable
                     ->withPivot('disciplina')
                     ->withTimestamps();
     }
+
+    // Um usuário tem muitos planejamentos semanais
+    public function planejamentos()
+    {
+        return $this->hasMany(PlanejamentoSemanal::class);
+    }
 }

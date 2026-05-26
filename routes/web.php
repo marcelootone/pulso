@@ -67,6 +67,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/agendamentos', [\App\Http\Controllers\AgendamentoController::class, 'index'])->name('agendamentos.index');
     Route::get('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'create'])->name('agendamentos.create');
     Route::post('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'store'])->name('agendamentos.store');
+
+    // Planejamento Semanal
+    Route::get('/planejamento-semanal', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'index'])->name('planejamento.index');
+    Route::post('/planejamento-semanal/salvar', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'salvar'])->name('planejamento.salvar');
+    Route::post('/planejamento-semanal/reordenar', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'reordenar'])->name('planejamento.reordenar');
+    Route::post('/planejamento-semanal/horario', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'adicionarHorario'])->name('planejamento.adicionar-horario');
+    Route::delete('/planejamento-semanal/horario/{id}', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'removerHorario'])->name('planejamento.remover-horario');
 });
 
 require __DIR__.'/auth.php';

@@ -30,7 +30,7 @@
 
                     <div class="overflow-x-auto pb-4">
                         <table class="w-full text-sm text-left text-gray-700 border-separate" style="border-spacing: 0 10px;">
-                            <thead class="text-xs text-white uppercase bg-[#343a40]">
+                            <thead class="text-xs text-black uppercase bg-[#343a40]">
                                 <tr>
                                     <th scope="col" class="px-4 py-4 border-r border-gray-500 w-32 font-medium">ID (RA)</th>
                                     <th scope="col" class="px-4 py-4 border-r border-gray-500 font-medium">NOME</th>
@@ -76,7 +76,7 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4 mb-4">
-                        <button type="submit" class="px-6 py-2 border border-transparent rounded shadow-sm text-sm font-bold text-white bg-[#28a745] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center">
+                        <button type="submit" class="px-6 py-2 border border-transparent rounded shadow-sm text-sm font-bold text-black bg-[#28a745] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5.414A1 1 0 0017.586 4L16 2.414A1 1 0 0015.293 2H4zm3 1h6v4H7V4zm8 8H5v4h10v-4z"></path></svg>
                             SALVAR
                         </button>

@@ -18,7 +18,7 @@
 
             <!-- TABS -->
             <div class="flex mb-2">
-                <a href="{{ route('users.create') }}" class="bg-blue-500 text-white px-6 py-2 rounded-t-md font-semibold flex items-center">
+                <a href="{{ route('users.create') }}" class="bg-blue-500 text-black px-6 py-2 rounded-t-md font-semibold flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -190,13 +190,13 @@
                         <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                             <!-- Red Email Box -->
                             <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-white">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-black">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                     </svg>
                                 </div>
-                                <input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="E-mail de Acesso" class="block w-full pl-10 bg-red-600 text-white placeholder-red-200 border-none rounded-md py-2 focus:ring-2 focus:ring-red-400 focus:outline-none text-sm">
+                                <input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="E-mail de Acesso" class="block w-full pl-10 bg-red-600 text-black placeholder-red-200 border-none rounded-md py-2 focus:ring-2 focus:ring-red-400 focus:outline-none text-sm">
                             </div>
 
                             <!-- Yellow Password Box -->
@@ -216,7 +216,7 @@
                 </div>
 
                 <div class="mt-4 flex justify-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-6 rounded shadow flex items-center text-sm">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-black font-bold py-1.5 px-6 rounded shadow flex items-center text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                         </svg>
