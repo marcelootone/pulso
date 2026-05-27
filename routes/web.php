@@ -29,6 +29,13 @@ Route::middleware(['auth', 'restrito'])->group(function () {
     // Gerenciamento de Usuários (Acesso restrito)
     Route::resource('users', \App\Http\Controllers\UserController::class);
 
+    // Módulo de Frequência e Busca Ativa
+    Route::get('/frequencia', [\App\Http\Controllers\FrequenciaController::class, 'index'])->name('frequencia.index');
+    Route::get('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'monitorar'])->name('frequencia.monitorar');
+    Route::post('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'store'])->name('frequencia.store');
+    Route::get('/frequencia/busca-ativa', [\App\Http\Controllers\FrequenciaController::class, 'buscaAtiva'])->name('frequencia.busca_ativa');
+    Route::post('/frequencia/busca-ativa/registrar', [\App\Http\Controllers\FrequenciaController::class, 'registrarBuscaAtiva'])->name('frequencia.registrar_busca_ativa');
+
 
     
     // O comando 'resource' cria magicamente as rotas /turmas, /turmas/create, etc.
