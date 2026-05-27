@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'restrito'])->group(function () {
 
     // Gerenciamento de Usuários (Acesso restrito)
-    Route::resource('users', \App\Http\Controllers\UserController::class)->only(['create', 'store']);
+    Route::resource('users', \App\Http\Controllers\UserController::class);
 
 
     

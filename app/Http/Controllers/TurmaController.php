@@ -2,90 +2,119 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TurmaRequest;
 use App\Models\Turma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TurmaController extends Controller
 {
-    public function index()
+    /**
+     * Lista todas as turmas com filtros opcionais.
+     */
+    public function index(Request $request)
     {
-        // Busca todas as turmas no banco
-        $turmas = Turma::all();
-        
-        // Retorna a tela 'index' passando as turmas para ela
+        $query = Turma::query();
+
+        if ($request->filled('status')) {
+            if ($request->status === 'ativas') {
+                $query->where('ativa', true);
+            } elseif ($request->status === 'inativas') {
+                $query->where('ativa', false);
+            }
+        }
+
+        $turmas = $query->orderBy('modalidade')->orderBy('serie')->orderBy('complemento')->get();
+
         return view('turmas.index', compact('turmas'));
     }
 
+    /**
+     * Exibe formulário de criação.
+     */
     public function create()
     {
-        // Apenas retorna a tela com o formulário
         return view('turmas.create');
-    }
-    
-    // ... (as outras funções store, edit, update, destroy deixamos para o próximo passo)
-
-    public function store(Request $request)
-    {
-        // 1. Valida se a Secretaria preencheu tudo certo
-        $request->validate([
-            'modalidade' => 'required|string',
-            'turno' => 'required|string',
-            'serie' => 'required|string',
-            'complemento' => 'nullable|string|max:3',
-            'ano_letivo' => 'nullable|integer',
-            'tipo' => 'nullable|string'
-        ]);
-
-        // 2. Salva no banco de dados
-        Turma::create([
-            'modalidade' => $request->modalidade,
-            'turno' => $request->turno,
-            'serie' => $request->serie,
-            'complemento' => strtoupper($request->complemento),
-            'ano_letivo' => $request->ano_letivo ?? date('Y'),
-            'tipo' => $request->tipo ?? 'REGULAR',
-            'ativa' => true, // Toda turma nasce ativa
-        ]);
-
-        // 3. Redireciona de volta para a lista com mensagem de sucesso
-        return redirect()->route('turmas.index')->with('success', 'Turma criada com sucesso!');
     }
 
     /**
-     * Display the specified resource.
+     * Persiste uma nova turma.
      */
-    public function show($id)
+    public function store(TurmaRequest $request)
     {
-        // Puxando a turma e as enturmações ativas do ano com os alunos
-        $turma = Turma::with(['enturmacoes' => function($q) {
+        Turma::create([
+            'modalidade'  => $request->modalidade,
+            'turno'       => $request->turno,
+            'serie'       => $request->serie,
+            'complemento' => $request->complemento ? strtoupper($request->complemento) : null,
+            'ano_letivo'  => $request->ano_letivo ?? date('Y'),
+            'tipo'        => $request->tipo ?? 'REGULAR',
+            'ativa'       => true,
+        ]);
+
+        return redirect()->route('turmas.index')
+            ->with('success', 'Turma criada com sucesso!');
+    }
+
+    /**
+     * Exibe detalhes da turma com alunos matriculados.
+     */
+    public function show(string $id)
+    {
+        $turma = Turma::with(['enturmacoes' => function ($q) {
             $q->where('status', 'Ativo')->with('matricula.aluno');
         }])->findOrFail($id);
-        
+
         return view('turmas.show', compact('turma'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe formulário de edição da turma.
      */
     public function edit(string $id)
     {
-        //
+        $turma = Turma::findOrFail($id);
+
+        return view('turmas.edit', compact('turma'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza os dados da turma.
+     * Não permite alterar 'ativa' por aqui — use destroy() para desativar.
      */
-    public function update(Request $request, string $id)
+    public function update(TurmaRequest $request, string $id)
     {
-        //
+        $turma = Turma::findOrFail($id);
+
+        $turma->update([
+            'modalidade'  => $request->modalidade,
+            'turno'       => $request->turno,
+            'serie'       => $request->serie,
+            'complemento' => $request->complemento ? strtoupper($request->complemento) : null,
+            'ano_letivo'  => $request->ano_letivo ?? $turma->ano_letivo,
+            'tipo'        => $request->tipo ?? $turma->tipo,
+        ]);
+
+        return redirect()->route('turmas.show', $turma->id)
+            ->with('success', 'Turma atualizada com sucesso!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Desativa a turma (soft-disable).
+     * Não exclui o registro para preservar histórico de frequências e notas.
      */
     public function destroy(string $id)
     {
-        //
+        $turma = Turma::findOrFail($id);
+
+        // Alterna o estado: se ativa, desativa; se inativa, reativa
+        $novoEstado = !$turma->ativa;
+        $turma->update(['ativa' => $novoEstado]);
+
+        $mensagem = $novoEstado
+            ? 'Turma reativada com sucesso!'
+            : 'Turma desativada com sucesso! O histórico foi preservado.';
+
+        return redirect()->route('turmas.index')->with('success', $mensagem);
     }
 }

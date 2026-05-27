@@ -106,4 +106,90 @@ class UserService
             return $user;
         });
     }
+
+    /**
+     * Atualiza um usuário existente.
+     * 
+     * @param int $id
+     * @param array $data
+     * @return User
+     */
+    public function updateUser(int $id, array $data)
+    {
+        return DB::transaction(function () use ($id, $data) {
+            $user = User::findOrFail($id);
+            
+            $tipoIngresso = strtoupper($data['tipo_usuario']);
+            $tipoUsuario = User::TIPO_ESTUDANTE;
+            if (in_array($tipoIngresso, ['ESTUDANTE', 'ALUNO'])) {
+                $tipoUsuario = User::TIPO_ESTUDANTE;
+            } elseif (in_array($tipoIngresso, ['PROFESSOR(A)', 'PROFESSOR', 'PROFESSORA'])) {
+                $tipoUsuario = User::TIPO_PROFESSOR;
+            } elseif ($tipoIngresso === 'GESTOR') {
+                $tipoUsuario = User::TIPO_GESTOR;
+            } elseif ($tipoIngresso === 'COORDENADOR') {
+                $tipoUsuario = User::TIPO_COORDENADOR;
+            } elseif ($tipoIngresso === 'SECRETARIA') {
+                $tipoUsuario = User::TIPO_SECRETARIA;
+            } elseif ($tipoIngresso === 'PROFESSOR EDUCAÇÃO ESPECIAL') {
+                $tipoUsuario = User::TIPO_PROF_ESPECIAL;
+            } elseif ($tipoIngresso === 'PROFESSOR DE ESTUDO ORIENTADO') {
+                $tipoUsuario = User::TIPO_PROF_ESTUDO_ORIENTADO;
+            } else {
+                $tipoUsuario = $data['tipo_usuario'];
+            }
+
+            $userData = [
+                'name' => $data['nome'],
+                'email' => $data['email'] ?? $user->email,
+                'cpf' => $data['cpf'] ?? $user->cpf,
+                'nascimento' => $data['nascimento'] ?? $user->nascimento,
+                'sexo' => $data['sexo'] ?? $user->sexo,
+                'telefone' => $data['telefone'] ?? $user->telefone,
+                'cidade' => $data['cidade'] ?? $user->cidade,
+                'rua' => $data['rua'] ?? $user->rua,
+                'numero' => $data['numero'] ?? $user->numero,
+                'bairro' => $data['bairro'] ?? $user->bairro,
+                'tipo_usuario' => $tipoUsuario,
+            ];
+
+            if (!empty($data['password'])) {
+                $userData['password'] = Hash::make($data['password']);
+            }
+
+            if ($tipoUsuario === User::TIPO_ESTUDANTE && isset($data['ra'])) {
+                $userData['ra'] = $data['ra'];
+            }
+
+            $user->update($userData);
+
+            if ($tipoUsuario === User::TIPO_ESTUDANTE && $user->aluno) {
+                $user->aluno->update([
+                    'ra' => $data['ra'] ?? $user->aluno->ra,
+                    'nome' => $data['nome'],
+                    'nascimento' => $data['nascimento'] ?? $user->aluno->nascimento,
+                    'sexo' => $data['sexo'] ?? $user->aluno->sexo,
+                    'telefone' => $data['telefone'] ?? $user->aluno->telefone,
+                    'nome_mae' => $data['nome_mae'] ?? $user->aluno->nome_mae,
+                    'telefone_responsavel' => $data['tel_mae'] ?? $user->aluno->telefone_responsavel,
+                ]);
+            }
+
+            return $user;
+        });
+    }
+
+    /**
+     * Desativa um usuário, preservando-o no banco de dados.
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function deactivateUser(int $id)
+    {
+        $user = User::findOrFail($id);
+        $novoEstado = !($user->ativo ?? true);
+        $user->ativo = $novoEstado;
+        $user->save();
+    }
 }

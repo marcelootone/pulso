@@ -11,7 +11,11 @@
                 
                 <div class="mb-6 flex justify-between items-center border-b pb-4">
                     <h3 class="text-2xl font-black text-gray-800">Ficha do Aluno</h3>
-                    <a href="{{ route('turmas.show', $aluno->turma_id) }}" class="text-sm text-indigo-600 hover:underline font-bold bg-indigo-50 px-3 py-2 rounded-md">⬅ Voltar para Turma</a>
+                    @if($turmaId)
+                        <a href="{{ route('turmas.show', $turmaId) }}" class="text-sm text-indigo-600 hover:underline font-bold bg-indigo-50 px-3 py-2 rounded-md">⬅ Voltar para Turma</a>
+                    @else
+                        <a href="{{ route('turmas.index') }}" class="text-sm text-indigo-600 hover:underline font-bold bg-indigo-50 px-3 py-2 rounded-md">⬅ Voltar para Turmas</a>
+                    @endif
                 </div>
 
                 @if ($errors->any())
