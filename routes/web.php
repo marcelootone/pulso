@@ -51,8 +51,11 @@ Route::middleware(['auth', 'restrito'])->group(function () {
     Route::get('/atribuir-aulas', [AtribuicaoController::class, 'create'])->name('atribuicoes.create');
     Route::post('/atribuir-aulas', [AtribuicaoController::class, 'store'])->name('atribuicoes.store');
     
-    // Rota de Geração de Relatórios PDF
-    Route::get('/relatorios/evasao', [RelatorioController::class, 'evasao'])->name('relatorios.evasao');
+    // Relatórios (Acesso restrito)
+    Route::get('/relatorios', [\App\Http\Controllers\RelatorioController::class, 'index'])->name('relatorios.index');
+    Route::get('/relatorio-evasao', [\App\Http\Controllers\RelatorioController::class, 'evasao'])->name('relatorios.evasao');
+    Route::get('/relatorios/frequencia-mensal', [\App\Http\Controllers\RelatorioController::class, 'frequenciaMensal'])->name('relatorios.frequencia_mensal');
+    Route::get('/relatorios/turmas-faltas', [\App\Http\Controllers\RelatorioController::class, 'turmasComMaisFaltas'])->name('relatorios.turmas_faltas');
 
 });
 

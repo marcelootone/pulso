@@ -28,6 +28,10 @@
                         <x-nav-link :href="route('frequencia.index')" :active="request()->routeIs('frequencia.*')">
                             {{ __('Monitoramento') }}
                         </x-nav-link>
+
+                        <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')">
+                            {{ __('Relatórios') }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -96,6 +100,10 @@
 
                 <x-responsive-nav-link :href="route('frequencia.index')" :active="request()->routeIs('frequencia.*')">
                     {{ __('Monitoramento') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')">
+                    {{ __('Relatórios') }}
                 </x-responsive-nav-link>
             @endif
         </div>
