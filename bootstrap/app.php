@@ -11,11 +11,19 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Registrando o nosso middleware com o apelido 'restrito'
         $middleware->alias([
-            'restrito' => \App\Http\Middleware\AcessoRestrito::class,
+            'restrito' => \App\Http\Middleware\RestritoMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (\Spatie\Permission\Exceptions\UnauthorizedException $e, \Illuminate\Http\Request $request) {
+            $roles = $e->getRequiredRoles();
+            $rolesStr = !empty($roles) ? implode(', ', $roles) : 'autorizados';
+            
+            // Aborta com o código 403 (Forbidden) e a mensagem customizada solicitada
+            abort(403, "Apenas usuários [$rolesStr] podem acessar este módulo.");
+        });
     })->create();

@@ -24,9 +24,14 @@ class TurmaController extends Controller
             }
         }
 
-        $turmas = $query->orderBy('modalidade')->orderBy('serie')->orderBy('complemento')->get();
+        $turmasPorModalidade = $query->orderBy('modalidade')
+                                     ->orderBy('ano_letivo', 'desc')
+                                     ->orderBy('serie')
+                                     ->orderBy('complemento')
+                                     ->get()
+                                     ->groupBy('modalidade');
 
-        return view('turmas.index', compact('turmas'));
+        return view('turmas.index', compact('turmasPorModalidade'));
     }
 
     /**

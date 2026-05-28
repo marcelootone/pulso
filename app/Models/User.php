@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 // --- A MUDANÇA ACONTECE AQUI NESTA LINHA ---
 // Adicionamos o 'ra' e o 'tipo_usuario' dentro do Atributo Fillable
@@ -24,7 +25,7 @@ class User extends Authenticatable
     const TIPO_PROF_ESPECIAL = 'Professor Educação Especial';
     const TIPO_PROF_ESTUDO_ORIENTADO = 'Professor de Estudo Orientado';
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * Get the attributes that should be cast.

@@ -29,7 +29,7 @@
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="grid grid-cols-4 gap-4 mb-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">TURNO</label>
                             <select name="turno" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
@@ -47,7 +47,12 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">COMPLEMENTO</label>
-                            <input type="text" name="complemento" maxlength="3" placeholder="Ex: COM" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm uppercase">
+                            <input type="text" name="complemento" maxlength="3" placeholder="Ex: A" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm uppercase">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">ANO LETIVO</label>
+                            <input type="number" name="ano_letivo" min="2000" max="2099" value="{{ date('Y') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
                         </div>
                     </div>
 

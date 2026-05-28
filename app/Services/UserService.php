@@ -69,6 +69,11 @@ class UserService
 
             // Cria o usuário
             $user = User::create($userData);
+            
+            // Atribui a Role do Spatie
+            if (\Spatie\Permission\Models\Role::where('name', $tipoUsuario)->exists()) {
+                $user->assignRole($tipoUsuario);
+            }
 
             // Se for aluno, cria o registro correspondente
             if ($tipoUsuario === User::TIPO_ESTUDANTE) {
@@ -162,6 +167,11 @@ class UserService
             }
 
             $user->update($userData);
+            
+            // Atualiza a Role do Spatie
+            if (\Spatie\Permission\Models\Role::where('name', $tipoUsuario)->exists()) {
+                $user->syncRoles([$tipoUsuario]);
+            }
 
             if ($tipoUsuario === User::TIPO_ESTUDANTE && $user->aluno) {
                 $user->aluno->update([

@@ -51,8 +51,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($turma->alunos as $aluno)
+                            @foreach($turma->enturmacoes as $enturmacao)
                             @php
+                                $aluno = $enturmacao->matricula->aluno;
                                 // Verifica se já existe um registro para este aluno hoje
                                 $registro = $frequenciasExistentes[$aluno->id] ?? null;
                                 $statusAtual = $registro ? $registro->status : 'P';

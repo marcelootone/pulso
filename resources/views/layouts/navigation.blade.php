@@ -16,11 +16,13 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    @if(in_array(auth()->user()->tipo_usuario, ['Secretaria', 'Gestor', 'Coordenador']))
+                    @unlessrole('Estudante')
                         <x-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
                             {{ __('Turmas') }}
                         </x-nav-link>
-                        
+                    @endunlessrole
+                    
+                    @hasrole('Gestor|Secretaria|Coordenador')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                             {{ __('Funcionários') }}
                         </x-nav-link>
@@ -32,7 +34,7 @@
                         <x-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')">
                             {{ __('Relatórios') }}
                         </x-nav-link>
-                    @endif
+                    @endhasrole
                 </div>
             </div>
 
@@ -89,11 +91,13 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @if(in_array(auth()->user()->tipo_usuario, ['Secretaria', 'Gestor', 'Coordenador']))
+            @unlessrole('Estudante')
                 <x-responsive-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
                     {{ __('Turmas') }}
                 </x-responsive-nav-link>
-                
+            @endunlessrole
+            
+            @hasrole('Gestor|Secretaria|Coordenador')
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                     {{ __('Funcionários') }}
                 </x-responsive-nav-link>
@@ -105,7 +109,7 @@
                 <x-responsive-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')">
                     {{ __('Relatórios') }}
                 </x-responsive-nav-link>
-            @endif
+            @endhasrole
         </div>
 
         <!-- Responsive Settings Options -->

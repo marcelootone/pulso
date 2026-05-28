@@ -37,81 +37,86 @@
                         Inativas
                     </a>
                 </div>
-                @if(auth()->user()->tipo_usuario !== \App\Models\User::TIPO_ESTUDANTE)
+                @hasrole('Gestor|Secretaria|Coordenador')
                     <a href="{{ route('turmas.create') }}" id="btn-nova-turma"
                        class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-bold transition">
                         + NOVA TURMA
                     </a>
-                @endif
+                @endhasrole
             </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <table class="w-full text-left border-collapse" id="tabela-turmas">
-                    <thead>
-                        <tr class="border-b-2 text-gray-600 text-sm uppercase">
-                            <th class="py-3 px-2">Modalidade</th>
-                            <th class="py-3 px-2">Turno</th>
-                            <th class="py-3 px-2">Série / Compl.</th>
-                            <th class="py-3 px-2">Ano Letivo</th>
-                            <th class="py-3 px-2">Alunos</th>
-                            <th class="py-3 px-2">Status</th>
-                            <th class="py-3 px-2 text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($turmas as $turma)
-                            <tr class="border-b hover:bg-gray-50 transition {{ $turma->ativa ? '' : 'opacity-60' }}">
-                                <td class="py-3 px-2 text-sm">{{ $turma->modalidade }}</td>
-                                <td class="py-3 px-2 text-sm">{{ $turma->turno }}</td>
-                                <td class="py-3 px-2 font-bold">
-                                    {{ $turma->serie }}º {{ $turma->complemento }}
-                                </td>
-                                <td class="py-3 px-2 text-sm text-gray-500">{{ $turma->ano_letivo }}</td>
-                                <td class="py-3 px-2 text-sm font-semibold text-indigo-600">
-                                    {{ $turma->enturmacoes->count() }}
-                                </td>
-                                <td class="py-3 px-2">
-                                    <span class="px-2 py-1 rounded-full text-xs font-bold {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                        {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
-                                    </span>
-                                </td>
-                                <td class="py-3 px-2">
-                                    <div class="flex justify-center items-center gap-2">
-                                        <a href="{{ route('turmas.show', $turma->id) }}"
-                                           class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">
-                                            Ver
-                                        </a>
+                @forelse ($turmasPorModalidade as $modalidade => $turmas)
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2 uppercase tracking-wide">
+                            {{ $modalidade }}
+                        </h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse" id="tabela-turmas-{{ Str::slug($modalidade) }}">
+                                <thead>
+                                    <tr class="border-b-2 text-gray-600 text-sm uppercase bg-gray-50">
+                                        <th class="py-3 px-2">Turno</th>
+                                        <th class="py-3 px-2">Série / Compl.</th>
+                                        <th class="py-3 px-2">Ano Letivo</th>
+                                        <th class="py-3 px-2">Alunos</th>
+                                        <th class="py-3 px-2">Status</th>
+                                        <th class="py-3 px-2 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($turmas as $turma)
+                                        <tr class="border-b hover:bg-gray-50 transition {{ $turma->ativa ? '' : 'opacity-60' }}">
+                                            <td class="py-3 px-2 text-sm">{{ $turma->turno }}</td>
+                                            <td class="py-3 px-2 font-bold">
+                                                {{ $turma->serie }}º {{ $turma->complemento }}
+                                            </td>
+                                            <td class="py-3 px-2 text-sm text-gray-500">{{ $turma->ano_letivo }}</td>
+                                            <td class="py-3 px-2 text-sm font-semibold text-indigo-600">
+                                                {{ $turma->enturmacoes->count() }}
+                                            </td>
+                                            <td class="py-3 px-2">
+                                                <span class="px-2 py-1 rounded-full text-xs font-bold {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                                    {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-2">
+                                                <div class="flex justify-center items-center gap-2">
+                                                    <a href="{{ route('turmas.show', $turma->id) }}"
+                                                       class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">
+                                                        Ver
+                                                    </a>
 
-                                        @if(auth()->user()->tipo_usuario !== \App\Models\User::TIPO_ESTUDANTE)
-                                            <a href="{{ route('turmas.edit', $turma->id) }}"
-                                               id="btn-editar-turma-{{ $turma->id }}"
-                                               class="text-yellow-700 hover:text-yellow-900 bg-yellow-50 hover:bg-yellow-100 px-3 py-1 rounded-md text-sm font-semibold transition">
-                                                ✏️ Editar
-                                            </a>
+                                                    @hasrole('Gestor|Secretaria|Coordenador')
+                                                        <a href="{{ route('turmas.edit', $turma->id) }}"
+                                                           id="btn-editar-turma-{{ $turma->id }}"
+                                                           class="text-yellow-700 hover:text-yellow-900 bg-yellow-50 hover:bg-yellow-100 px-3 py-1 rounded-md text-sm font-semibold transition">
+                                                            Editar
+                                                        </a>
 
-                                            <form action="{{ route('turmas.destroy', $turma->id) }}" method="POST"
-                                                  onsubmit="return confirm('{{ $turma->ativa ? 'Desativar esta turma? O histórico será preservado.' : 'Reativar esta turma?' }}')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                        id="btn-toggle-turma-{{ $turma->id }}"
-                                                        class="{{ $turma->ativa ? 'text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100' : 'text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100' }} px-3 py-1 rounded-md text-sm font-semibold transition">
-                                                    {{ $turma->ativa ? '🚫 Desativar' : '✅ Reativar' }}
-                                                </button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="py-8 text-center text-gray-400 italic">
-                                    Nenhuma turma encontrada.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                                        <form action="{{ route('turmas.destroy', $turma->id) }}" method="POST" class="inline"
+                                                              onsubmit="return confirm('Deseja realmente alterar o status desta turma?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                    id="btn-status-turma-{{ $turma->id }}"
+                                                                    class="{{ $turma->ativa ? 'text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100' : 'text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100' }} px-3 py-1 rounded-md text-sm font-semibold transition">
+                                                                {{ $turma->ativa ? '🚫 Desativar' : '✅ Reativar' }}
+                                                            </button>
+                                                        </form>
+                                                    @endhasrole
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @empty
+                    <div class="py-8 text-center text-gray-400 italic">
+                        Nenhuma turma encontrada.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>
