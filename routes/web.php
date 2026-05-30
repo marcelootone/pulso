@@ -98,9 +98,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'create'])->name('atribuicoes.create');
         Route::post('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'store'])->name('atribuicoes.store');
         
-        // Enturmações (Comentado pois o controller ainda não existe)
-        // Route::get('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'index'])->name('enturmacoes.index');
-        // Route::post('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'store'])->name('enturmacoes.store');
+        // Enturmações
+        Route::get('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'index'])->name('enturmacoes.index');
+        Route::post('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'store'])->name('enturmacoes.store');
     });
 
     // 4. FREQUÊNCIA E RELATÓRIOS (Gestor, Secretaria, Coordenador)
