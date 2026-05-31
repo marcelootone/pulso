@@ -65,4 +65,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Eletiva::class, 'eletiva_professor', 'user_id', 'eletiva_id')
                     ->withTimestamps();
     }
+
+    // Atividades de Estudo Orientado que este professor solicitou
+    public function atividadesEstudoOrientadoSolicitadas()
+    {
+        return $this->hasMany(EstudoOrientadoAtividade::class, 'professor_solicitante_id');
+    }
 }

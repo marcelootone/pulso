@@ -57,6 +57,7 @@
                                     <tr class="border-b-2 text-gray-600 text-sm uppercase bg-gray-50">
                                         <th class="py-3 px-2">Turno</th>
                                         <th class="py-3 px-2">Série / Compl.</th>
+                                        <th class="py-3 px-2">Docentes</th>
                                         <th class="py-3 px-2">Ano Letivo</th>
                                         <th class="py-3 px-2">Alunos</th>
                                         <th class="py-3 px-2">Status</th>
@@ -65,10 +66,24 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($turmas as $turma)
+                                        @php
+                                            $professoresRegulares = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROFESSOR)->pluck('name')->join(', ');
+                                            $professoresEO = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO)->pluck('name')->join(', ');
+                                        @endphp
                                         <tr class="border-b hover:bg-gray-50 transition {{ $turma->ativa ? '' : 'opacity-60' }}">
                                             <td class="py-3 px-2 text-sm">{{ $turma->turno }}</td>
                                             <td class="py-3 px-2 font-bold">
                                                 {{ $turma->serie }}º {{ $turma->complemento }}
+                                            </td>
+                                            <td class="py-3 px-2 text-sm text-gray-600">
+                                                <div class="mb-1">
+                                                    <span class="font-semibold text-gray-700">Professor:</span> 
+                                                    {{ $professoresRegulares ?: '—' }}
+                                                </div>
+                                                <div>
+                                                    <span class="font-semibold text-gray-700">Professor Orientado:</span> 
+                                                    {{ $professoresEO ?: '—' }}
+                                                </div>
                                             </td>
                                             <td class="py-3 px-2 text-sm text-gray-500">{{ $turma->ano_letivo }}</td>
                                             <td class="py-3 px-2 text-sm font-semibold text-indigo-600">

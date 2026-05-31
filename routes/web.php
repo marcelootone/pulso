@@ -188,6 +188,22 @@ Route::middleware(['auth'])->group(function () {
         Route::post('eletivas/{id}/frequencia', [\App\Http\Controllers\DiarioEletivaController::class, 'salvarFrequencia'])->name('eletivas.diario.frequencia');
         Route::post('eletivas/{id}/notas', [\App\Http\Controllers\DiarioEletivaController::class, 'salvarNota'])->name('eletivas.diario.notas');
     });
+
+    // 8. ESTUDO ORIENTADO
+    // Solicitações: Professores regulares criam atividades para o Prof. de EO aplicar
+    Route::group(['middleware' => ['role:Gestor|Coordenador|Secretaria|Professor|Professor Educação Especial']], function () {
+        Route::get('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexSolicitacoes'])->name('estudo-orientado.solicitacoes.index');
+        Route::get('/estudo-orientado/solicitacoes/nova', [\App\Http\Controllers\EstudoOrientadoController::class, 'createSolicitacao'])->name('estudo-orientado.solicitacoes.create');
+        Route::post('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeSolicitacao'])->name('estudo-orientado.solicitacoes.store');
+        Route::get('/estudo-orientado/solicitacoes/{id}/resultado', [\App\Http\Controllers\EstudoOrientadoController::class, 'showResultado'])->name('estudo-orientado.solicitacoes.show');
+    });
+
+    // Avaliações: Professor de EO aplica e registra cumprimento dos alunos
+    Route::group(['middleware' => ['role:Gestor|Coordenador|Professor de Estudo Orientado']], function () {
+        Route::get('/estudo-orientado/avaliacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexAvaliacoes'])->name('estudo-orientado.avaliacoes.index');
+        Route::get('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showAvaliacao'])->name('estudo-orientado.avaliacoes.show');
+        Route::post('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeAvaliacao'])->name('estudo-orientado.avaliacoes.store');
+    });
 });
 
 require __DIR__.'/auth.php';

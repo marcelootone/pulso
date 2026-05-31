@@ -35,6 +35,18 @@
                             {{ __('Relatórios') }}
                         </x-nav-link>
                     @endhasrole
+
+                    @hasrole('Gestor|Coordenador|Professor|Professor Educação Especial')
+                        <x-nav-link :href="route('estudo-orientado.solicitacoes.index')" :active="request()->routeIs('estudo-orientado.solicitacoes.*')">
+                            {{ __('Est. Orientado') }}
+                        </x-nav-link>
+                    @endhasrole
+
+                    @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
+                        <x-nav-link :href="route('estudo-orientado.avaliacoes.index')" :active="request()->routeIs('estudo-orientado.avaliacoes.*')">
+                            {{ __('Avaliar EO') }}
+                        </x-nav-link>
+                    @endhasrole
                 </div>
             </div>
 
@@ -108,6 +120,18 @@
 
                 <x-responsive-nav-link :href="route('relatorios.index')" :active="request()->routeIs('relatorios.*')">
                     {{ __('Relatórios') }}
+                </x-responsive-nav-link>
+            @endhasrole
+
+            @hasrole('Gestor|Coordenador|Professor|Professor Educação Especial')
+                <x-responsive-nav-link :href="route('estudo-orientado.solicitacoes.index')" :active="request()->routeIs('estudo-orientado.solicitacoes.*')">
+                    {{ __('Est. Orientado') }}
+                </x-responsive-nav-link>
+            @endhasrole
+
+            @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
+                <x-responsive-nav-link :href="route('estudo-orientado.avaliacoes.index')" :active="request()->routeIs('estudo-orientado.avaliacoes.*')">
+                    {{ __('Avaliar EO') }}
                 </x-responsive-nav-link>
             @endhasrole
         </div>

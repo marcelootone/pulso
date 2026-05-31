@@ -14,7 +14,13 @@ class TurmaController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Turma::query();
+        $user = Auth::user();
+
+        if ($user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
+            $query = Turma::with('professores');
+        } else {
+            $query = $user->turmas()->with('professores');
+        }
 
         if ($request->filled('status')) {
             if ($request->status === 'ativas') {
@@ -66,9 +72,19 @@ class TurmaController extends Controller
      */
     public function show(string $id)
     {
-        $turma = Turma::with(['enturmacoes' => function ($q) {
+        $user = Auth::user();
+
+        $query = Turma::with(['enturmacoes' => function ($q) {
             $q->where('status', 'Ativo')->with('matricula.aluno');
-        }])->findOrFail($id);
+        }]);
+
+        if (!$user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
+            $query->whereHas('professores', function($q) use ($user) {
+                $q->where('users.id', $user->id);
+            });
+        }
+
+        $turma = $query->findOrFail($id);
 
         return view('turmas.show', compact('turma'));
     }
