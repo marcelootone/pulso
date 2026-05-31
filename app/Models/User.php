@@ -59,4 +59,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(PlanejamentoSemanal::class);
     }
+
+    public function eletivas()
+    {
+        return $this->belongsToMany(Eletiva::class, 'eletiva_professor', 'user_id', 'eletiva_id')
+                    ->withTimestamps();
+    }
 }

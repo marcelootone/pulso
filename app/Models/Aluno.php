@@ -29,4 +29,11 @@ class Aluno extends Model
     { 
         return $this->hasMany(Frequencia::class); 
     }
+
+    public function eletivas()
+    {
+        return $this->belongsToMany(Eletiva::class, 'aluno_eletiva', 'aluno_id', 'eletiva_id')
+                    ->withPivot('data_inscricao', 'data_saida', 'status')
+                    ->withTimestamps();
+    }
 }

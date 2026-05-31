@@ -158,6 +158,36 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/planejamento-semanal/horario', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'adicionarHorario'])->name('planejamento.adicionar-horario');
         Route::delete('/planejamento-semanal/horario/{id}', [\App\Http\Controllers\PlanejamentoSemanalController::class, 'removerHorario'])->name('planejamento.remover-horario');
     });
+
+    // 7. ELETIVAS E CLUBES
+    // Criar/Editar (Gestor, Secretaria, Coordenador)
+    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+        Route::get('eletivas/create', [\App\Http\Controllers\EletivaController::class, 'create'])->name('eletivas.create');
+        Route::post('eletivas', [\App\Http\Controllers\EletivaController::class, 'store'])->name('eletivas.store');
+        Route::get('eletivas/{eletiva}/edit', [\App\Http\Controllers\EletivaController::class, 'edit'])->name('eletivas.edit');
+        Route::put('eletivas/{eletiva}', [\App\Http\Controllers\EletivaController::class, 'update'])->name('eletivas.update');
+
+        // Inscrições
+        Route::post('eletivas/{eletiva}/inscrever', [\App\Http\Controllers\InscricaoEletivaController::class, 'store'])->name('inscricao-eletiva.store');
+        Route::delete('eletivas/{eletiva}/alunos/{aluno}', [\App\Http\Controllers\InscricaoEletivaController::class, 'destroy'])->name('inscricao-eletiva.destroy');
+        Route::post('eletivas/trocar-clube', [\App\Http\Controllers\InscricaoEletivaController::class, 'trocar'])->name('inscricao-eletiva.trocar');
+    });
+
+    // Excluir/Desativar (Apenas Gestor)
+    Route::group(['middleware' => ['role:Gestor']], function () {
+        Route::delete('eletivas/{eletiva}', [\App\Http\Controllers\EletivaController::class, 'destroy'])->name('eletivas.destroy');
+    });
+
+    // Visualizar (Gestor, Secretaria, Coordenador, Professor)
+    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador|Professor|Professor Educação Especial|Professor de Estudo Orientado']], function () {
+        Route::get('eletivas', [\App\Http\Controllers\EletivaController::class, 'index'])->name('eletivas.index');
+        Route::get('eletivas/{eletiva}', [\App\Http\Controllers\EletivaController::class, 'show'])->name('eletivas.show');
+
+        // Diário de Eletivas (Frequência e Notas)
+        Route::get('eletivas/{id}/diario', [\App\Http\Controllers\DiarioEletivaController::class, 'show'])->name('eletivas.diario.show');
+        Route::post('eletivas/{id}/frequencia', [\App\Http\Controllers\DiarioEletivaController::class, 'salvarFrequencia'])->name('eletivas.diario.frequencia');
+        Route::post('eletivas/{id}/notas', [\App\Http\Controllers\DiarioEletivaController::class, 'salvarNota'])->name('eletivas.diario.notas');
+    });
 });
 
 require __DIR__.'/auth.php';
