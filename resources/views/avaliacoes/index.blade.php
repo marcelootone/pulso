@@ -1,86 +1,114 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Avaliações') }} - {{ $turma->serie }}º {{ $turma->complemento }} ({{ $disciplina }})
-        </h2>
+        {{ __('Avaliações') }} - {{ $turma->serie }}º {{ $turma->complemento }} ({{ $disciplina }})
     </x-slot>
 
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Pedagógico', 'url' => '#'],
+            ['label' => 'Minhas Turmas', 'url' => route('diario.index')],
+            ['label' => 'Avaliações']
+        ]" />
+    </x-slot>
+
+    <div class="max-w-7xl mx-auto">
         
         @if(session('success'))
-            <div class="mb-6 font-medium text-sm text-green-600 bg-green-100 p-4 rounded-lg shadow">
-                {{ session('success') }}
+            <div class="mb-6">
+                <x-alert type="success" message="{{ session('success') }}" />
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="mb-6 bg-red-100 p-4 rounded-lg shadow">
-                <ul class="list-disc list-inside text-sm text-red-600">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+            <div class="mb-6">
+                <x-alert type="error">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </x-alert>
             </div>
         @endif
 
         <!-- Formulário de Criação -->
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
-            <div class="p-6 text-gray-900 border-b border-gray-200 bg-gray-50">
-                <h3 class="text-lg font-bold mb-4 text-indigo-600">Nova Avaliação</h3>
-                <form action="{{ route('avaliacoes.store', ['turma' => $turma->id, 'disciplina' => $disciplina]) }}" method="POST">
-                    @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Nome (ex: Prova Mensal)</label>
-                            <input type="text" name="nome" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Período (ex: 1º Bimestre)</label>
-                            <input type="text" name="periodo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Valor Máximo</label>
-                            <input type="number" name="valor_maximo" step="0.1" min="0" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Data (Opcional)</label>
-                            <input type="date" name="data" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
+        <x-card class="mb-8 border-l-4 border-l-primary-500">
+            <x-slot name="header">
+                <h3 class="text-lg font-bold flex items-center text-gray-900">
+                    <x-heroicon-o-plus-circle class="w-5 h-5 mr-2 text-primary-600" />
+                    Nova Avaliação
+                </h3>
+            </x-slot>
+            
+            <form action="{{ route('avaliacoes.store', ['turma' => $turma->id, 'disciplina' => $disciplina]) }}" method="POST">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome (ex: Prova Mensal)</label>
+                        <x-input type="text" name="nome" required class="w-full" />
                     </div>
-                    <div class="mt-4 flex justify-end">
-                        <x-primary-button>Criar Avaliação</x-primary-button>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Período (ex: 1º Bimestre)</label>
+                        <x-input type="text" name="periodo" required class="w-full" />
                     </div>
-                </form>
-            </div>
-        </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Valor Máximo</label>
+                        <x-input type="number" name="valor_maximo" step="0.1" min="0" required class="w-full" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Data (Opcional)</label>
+                        <x-input type="date" name="data" class="w-full" />
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <x-button variant="primary" type="submit">
+                        Criar Avaliação
+                    </x-button>
+                </div>
+            </form>
+        </x-card>
 
         <!-- Listagem de Avaliações -->
-        <h3 class="text-xl font-bold mb-4 text-gray-800">Avaliações Cadastradas</h3>
+        <h3 class="text-xl font-bold mb-6 text-gray-900">Avaliações Cadastradas</h3>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($avaliacoes as $avaliacao)
-                <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-100 flex flex-col">
-                    <div class="p-6 flex-grow">
-                        <div class="flex justify-between items-start mb-2">
-                            <h4 class="text-lg font-bold text-gray-900">{{ $avaliacao->nome }}</h4>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <x-card class="flex flex-col h-full border-t-4 border-t-purple-500">
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-black text-gray-900">{{ $avaliacao->nome }}</h4>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-100 text-purple-800 uppercase tracking-wider">
                                 {{ $avaliacao->periodo }}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4">
-                            <strong>Valor:</strong> {{ number_format($avaliacao->valor_maximo, 1, ',', '.') }} pontos <br>
-                            <strong>Data:</strong> {{ $avaliacao->data ? \Carbon\Carbon::parse($avaliacao->data)->format('d/m/Y') : 'Não definida' }}
-                        </p>
+                        
+                        <div class="space-y-2 mb-6">
+                            <div class="flex items-center text-sm">
+                                <span class="w-24 font-bold text-gray-500 uppercase tracking-wider text-xs">Valor:</span>
+                                <span class="font-bold text-gray-900">{{ number_format($avaliacao->valor_maximo, 1, ',', '.') }} pontos</span>
+                            </div>
+                            <div class="flex items-center text-sm">
+                                <span class="w-24 font-bold text-gray-500 uppercase tracking-wider text-xs">Data:</span>
+                                <span class="text-gray-700">{{ $avaliacao->data ? \Carbon\Carbon::parse($avaliacao->data)->format('d/m/Y') : 'Não definida' }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-gray-50 px-6 py-3 border-t border-gray-100">
-                        <a href="{{ route('notas.create', $avaliacao->id) }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            Lançar Notas
-                        </a>
-                    </div>
-                </div>
+                    
+                    <x-slot name="footer">
+                        <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t">
+                            <x-button variant="secondary" class="w-full justify-center" onclick="window.location='{{ route('notas.create', $avaliacao->id) }}'">
+                                Lançar Notas
+                            </x-button>
+                        </div>
+                    </x-slot>
+                </x-card>
             @empty
-                <div class="col-span-3 bg-white p-6 rounded-lg shadow-sm text-center text-gray-500">
-                    Nenhuma avaliação cadastrada para esta turma e disciplina ainda.
+                <div class="col-span-full bg-white p-12 rounded-xl shadow-sm text-center border border-dashed border-gray-300">
+                    <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                    <h3 class="text-lg font-medium text-gray-900">Nenhuma avaliação cadastrada</h3>
+                    <p class="mt-1 text-sm text-gray-500">Crie a primeira avaliação utilizando o formulário acima.</p>
                 </div>
             @endforelse
         </div>

@@ -1,56 +1,107 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalhes da Turma: {{ $turma->serie }}º {{ $turma->complemento }}
-        </h2>
+        Detalhes da Turma: {{ $turma->serie }}º {{ $turma->complemento }}
     </x-slot>
 
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white p-6 rounded-lg shadow mb-6 flex justify-between items-center">
-            <div>
-                <p class="text-sm text-gray-500 uppercase font-bold">Total de Estudantes Matriculados</p>
-                <p class="text-3xl font-black text-indigo-600">{{ $turma->enturmacoes->count() }}</p>
-            </div>
-            <a href="{{ route('turmas.index') }}" class="text-gray-600 font-bold hover:underline">⬅ Voltar para Turmas</a>
-        </div>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Acadêmico', 'url' => '#'],
+            ['label' => 'Turmas', 'url' => route('turmas.index')],
+            ['label' => $turma->serie . 'º ' . $turma->complemento]
+        ]" />
+    </x-slot>
 
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h3 class="font-bold text-lg mb-4 border-b pb-2">Lista de Chamada Oficial</h3>
-            
-            <table class="w-full text-left">
-                <thead>
-                    <tr class="bg-gray-50 text-gray-600 text-sm uppercase">
-                        <th class="p-3">Nº</th>
-                        <th class="p-3">RA</th>
-                        <th class="p-3">Nome do Estudante</th>
-                        <th class="p-3">Vínculo</th>
-                        <th class="p-3 text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
+    <x-slot name="actions">
+        @can('gerenciar turmas')
+            <x-button variant="secondary" onclick="window.location='{{ route('vinculo.create') }}?turma_id={{ $turma->id }}'">
+                <x-heroicon-o-user-plus class="w-4 h-4 mr-2" />
+                Matricular Aluno
+            </x-button>
+        @endhasrole
+    </x-slot>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <x-card class="border-l-4 border-l-primary-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-primary-100 text-primary-600 mr-4">
+                    <x-heroicon-o-users class="w-8 h-8" />
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Estudantes Matriculados</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $turma->enturmacoes->count() }}</p>
+                </div>
+            </div>
+        </x-card>
+        
+        <x-card class="border-l-4 border-l-purple-500 md:col-span-2">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
+                    <x-heroicon-o-information-circle class="w-8 h-8" />
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Informações da Turma</p>
+                    <p class="text-base text-gray-900 mt-1">
+                        <strong>Turno:</strong> {{ $turma->turno }} &bull; 
+                        <strong>Ano Letivo:</strong> {{ $turma->ano_letivo }} &bull; 
+                        <strong>Status:</strong> 
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </x-card>
+    </div>
+
+    <x-card>
+        <x-slot name="header">
+            <h3 class="text-lg font-bold text-gray-900">Lista de Chamada Oficial</h3>
+        </x-slot>
+
+        <div class="-mx-6 -my-6">
+            <x-table>
+                <x-slot name="head">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">Nº</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RA</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome do Estudante</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vínculo</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                </x-slot>
+                <x-slot name="body">
                     @forelse($turma->enturmacoes as $index => $enturmacao)
                         @php $aluno = $enturmacao->matricula->aluno; @endphp
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-3 font-bold text-gray-500">{{ $index + 1 }}</td>
-                            <td class="p-3">{{ $aluno->ra }}</td>
-                            <td class="p-3 font-medium text-gray-800">{{ $aluno->nome }}</td>
-                            <td class="p-3 text-sm text-gray-600">{{ $enturmacao->tipo_vinculo }}</td>
-                            <td class="p-3 text-center flex justify-center gap-2">
-                                <a href="{{ route('alunos.edit', $aluno->id) }}" class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">✏️ Editar</a>
-                                <form action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este aluno desta turma? Ele ainda continuará no sistema.');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md text-sm font-semibold transition">🗑️ Remover</button>
-                                </form>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-400">{{ $index + 1 }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $aluno->ra }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $aluno->nome }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    {{ $enturmacao->tipo_vinculo }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                @can('gerenciar estudantes')
+                                    <div class="flex justify-end items-center gap-3">
+                                        <a href="{{ route('alunos.edit', $aluno->id) }}" class="text-primary-600 hover:text-primary-900">Editar</a>
+                                        <form action="{{ route('alunos.destroy', $aluno->id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja remover este aluno desta turma? Ele ainda continuará no sistema.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Remover</button>
+                                        </form>
+                                    </div>
+                                @endhasrole
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-6 text-center text-gray-500 italic">Nenhum estudante matriculado nesta turma.</td>
+                            <td colspan="5" class="px-6 py-8 text-center text-gray-500 italic">
+                                Nenhum estudante matriculado nesta turma.
+                            </td>
                         </tr>
                     @endforelse
-                </tbody>
-            </table>
+                </x-slot>
+            </x-table>
         </div>
-    </div>
+    </x-card>
 </x-app-layout>

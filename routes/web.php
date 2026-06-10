@@ -24,14 +24,20 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/api/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
+    
+    // Notificações
+    Route::get('/api/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
+    Route::post('/api/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
+    Route::post('/api/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
 
     // ==========================================
     // MÓDULO 3.6: MATRIZ DE ACESSO GRANULAR
     // ==========================================
 
     // 1. FUNCIONÁRIOS E USUÁRIOS
-    // Criar e Editar funcionários (Gestor, Secretaria)
-    Route::group(['middleware' => ['role:Gestor|Secretaria']], function () {
+    // Criar e Editar funcionários (Secretaria/Gestor)
+    Route::group(['middleware' => ['permission:gerenciar professores']], function () {
         Route::get('users/create', [\App\Http\Controllers\UserController::class, 'create'])->name('users.create');
         Route::post('users', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
         Route::get('users/{user}/edit', [\App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
@@ -39,20 +45,20 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('users/{user}', [\App\Http\Controllers\UserController::class, 'update']);
     });
 
-    // Visualizar funcionários (Gestor, Secretaria, Coordenador)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // Visualizar funcionários
+    Route::group(['middleware' => ['permission:gerenciar professores']], function () {
         Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->name('users.index');
         Route::get('users/{user}', [\App\Http\Controllers\UserController::class, 'show'])->name('users.show');
     });
 
-    // Excluir/Inativar funcionários (Apenas Gestor)
-    Route::group(['middleware' => ['role:Gestor']], function () {
+    // Excluir/Inativar funcionários
+    Route::group(['middleware' => ['permission:gerenciar professores']], function () {
         Route::delete('users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
     });
 
     // 2. TURMAS E ESTUDANTES
-    // Turmas - Criar/Editar/Excluir (Gestor, Secretaria, Coordenador)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // Turmas - Criar/Editar/Excluir
+    Route::group(['middleware' => ['permission:gerenciar turmas']], function () {
         Route::get('turmas/create', [\App\Http\Controllers\TurmaController::class, 'create'])->name('turmas.create');
         Route::post('turmas', [\App\Http\Controllers\TurmaController::class, 'store'])->name('turmas.store');
         Route::get('turmas/{turma}/edit', [\App\Http\Controllers\TurmaController::class, 'edit'])->name('turmas.edit');
@@ -65,16 +71,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('turmas', [\App\Http\Controllers\TurmaController::class, 'index'])->name('turmas.index');
     Route::get('turmas/{turma}', [\App\Http\Controllers\TurmaController::class, 'show'])->name('turmas.show');
     
-    // Alunos - Visualizar (Gestor, Secretaria, Coordenador - assumindo que todos pedagógicos/admin podem ver)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // Alunos - Visualizar
+    Route::group(['middleware' => ['permission:gerenciar estudantes|ver estudantes']], function () {
         Route::get('alunos', [\App\Http\Controllers\AlunoController::class, 'index'])->name('alunos.index');
         Route::get('alunos/{aluno}', [\App\Http\Controllers\AlunoController::class, 'show'])->name('alunos.show');
     });
 
 
 
-    // Alunos - Editar/Criar/Excluir e Importar (Gestor e Secretaria)
-    Route::group(['middleware' => ['role:Gestor|Secretaria']], function () {
+    // Alunos - Editar/Criar/Excluir e Importar
+    Route::group(['middleware' => ['permission:gerenciar estudantes']], function () {
         Route::get('alunos/create', [\App\Http\Controllers\AlunoController::class, 'create'])->name('alunos.create');
         Route::post('alunos', [\App\Http\Controllers\AlunoController::class, 'store'])->name('alunos.store');
         Route::get('alunos/{aluno}/edit', [\App\Http\Controllers\AlunoController::class, 'edit'])->name('alunos.edit');
@@ -92,8 +98,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/vinculo-aluno-turma', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'store'])->name('vinculo.store');
     });
 
-    // 3. ATRIBUIÇÕES E ENTURMAÇÃO (Gestor, Secretaria, Coordenador)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // 3. ATRIBUIÇÕES E ENTURMAÇÃO
+    Route::group(['middleware' => ['permission:gerenciar turmas|realizar matriculas']], function () {
         // Atribuir Aulas
         Route::get('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'create'])->name('atribuicoes.create');
         Route::post('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'store'])->name('atribuicoes.store');
@@ -103,8 +109,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'store'])->name('enturmacoes.store');
     });
 
-    // 4. FREQUÊNCIA E RELATÓRIOS (Gestor, Secretaria, Coordenador)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // 4. FREQUÊNCIA E RELATÓRIOS
+    Route::group(['middleware' => ['permission:ver frequencia geral|acompanhar frequencia|ver relatorios administrativos|ver relatorios pedagogicos']], function () {
         Route::get('/frequencia', [\App\Http\Controllers\FrequenciaController::class, 'index'])->name('frequencia.index');
         Route::get('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'monitorar'])->name('frequencia.monitorar');
         Route::post('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'store'])->name('frequencia.store');
@@ -118,8 +124,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // 5. ESPAÇOS E AGENDAMENTOS
-    // Espaços - Criar/Editar/Excluir (Gestor, Secretaria)
-    Route::group(['middleware' => ['role:Gestor|Secretaria']], function () {
+    // Espaços - Criar/Editar/Excluir
+    Route::group(['middleware' => ['permission:gerenciar espacos']], function () {
         Route::get('espacos/create', [\App\Http\Controllers\EspacoController::class, 'create'])->name('espacos.create');
         Route::post('espacos', [\App\Http\Controllers\EspacoController::class, 'store'])->name('espacos.store');
         Route::get('espacos/{espaco}/edit', [\App\Http\Controllers\EspacoController::class, 'edit'])->name('espacos.edit');
@@ -136,8 +142,8 @@ Route::middleware(['auth'])->group(function () {
     
 
 
-    // 6. MEU DIÁRIO E PLANEJAMENTO SEMANAL (Professor, Coordenador, Gestor)
-    Route::group(['middleware' => ['role:Gestor|Coordenador|Professor|Professor Educação Especial|Professor de Estudo Orientado']], function () {
+    // 6. MEU DIÁRIO E PLANEJAMENTO SEMANAL
+    Route::group(['middleware' => ['permission:acessar turmas vinculadas|ver todos diarios']], function () {
         // Meu Diário
         Route::get('/meu-diario', [\App\Http\Controllers\DiarioController::class, 'index'])->name('diario.index');
         Route::get('/meu-diario/{id}', [\App\Http\Controllers\DiarioController::class, 'show'])->name('diario.show');
@@ -160,8 +166,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // 7. ELETIVAS E CLUBES
-    // Criar/Editar (Gestor, Secretaria, Coordenador)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador']], function () {
+    // Criar/Editar
+    Route::group(['middleware' => ['permission:gerenciar eletivas']], function () {
         Route::get('eletivas/create', [\App\Http\Controllers\EletivaController::class, 'create'])->name('eletivas.create');
         Route::post('eletivas', [\App\Http\Controllers\EletivaController::class, 'store'])->name('eletivas.store');
         Route::get('eletivas/{eletiva}/edit', [\App\Http\Controllers\EletivaController::class, 'edit'])->name('eletivas.edit');
@@ -173,13 +179,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('eletivas/trocar-clube', [\App\Http\Controllers\InscricaoEletivaController::class, 'trocar'])->name('inscricao-eletiva.trocar');
     });
 
-    // Excluir/Desativar (Apenas Gestor)
-    Route::group(['middleware' => ['role:Gestor']], function () {
+    // Excluir/Desativar
+    Route::group(['middleware' => ['permission:gerenciar eletivas']], function () {
         Route::delete('eletivas/{eletiva}', [\App\Http\Controllers\EletivaController::class, 'destroy'])->name('eletivas.destroy');
     });
 
-    // Visualizar (Gestor, Secretaria, Coordenador, Professor)
-    Route::group(['middleware' => ['role:Gestor|Secretaria|Coordenador|Professor|Professor Educação Especial|Professor de Estudo Orientado']], function () {
+    // Visualizar
+    Route::group(['middleware' => ['permission:acessar proprias eletivas|gerenciar eletivas']], function () {
         Route::get('eletivas', [\App\Http\Controllers\EletivaController::class, 'index'])->name('eletivas.index');
         Route::get('eletivas/{eletiva}', [\App\Http\Controllers\EletivaController::class, 'show'])->name('eletivas.show');
 
@@ -191,7 +197,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 8. ESTUDO ORIENTADO
     // Solicitações: Professores regulares criam atividades para o Prof. de EO aplicar
-    Route::group(['middleware' => ['role:Gestor|Coordenador|Secretaria|Professor|Professor Educação Especial']], function () {
+    Route::group(['middleware' => ['permission:lancar avaliacoes|validar lancamentos']], function () {
         Route::get('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexSolicitacoes'])->name('estudo-orientado.solicitacoes.index');
         Route::get('/estudo-orientado/solicitacoes/nova', [\App\Http\Controllers\EstudoOrientadoController::class, 'createSolicitacao'])->name('estudo-orientado.solicitacoes.create');
         Route::post('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeSolicitacao'])->name('estudo-orientado.solicitacoes.store');
@@ -199,7 +205,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Avaliações: Professor de EO aplica e registra cumprimento dos alunos
-    Route::group(['middleware' => ['role:Gestor|Coordenador|Professor de Estudo Orientado']], function () {
+    Route::group(['middleware' => ['permission:lancar avaliacoes|validar lancamentos']], function () {
         Route::get('/estudo-orientado/avaliacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexAvaliacoes'])->name('estudo-orientado.avaliacoes.index');
         Route::get('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showAvaliacao'])->name('estudo-orientado.avaliacoes.show');
         Route::post('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeAvaliacao'])->name('estudo-orientado.avaliacoes.store');

@@ -1,151 +1,177 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-red-600 leading-tight flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+        <div class="flex items-center text-red-600">
+            <x-heroicon-o-exclamation-triangle class="w-6 h-6 mr-2" />
             {{ __('Busca Ativa (Alerta de Frequência)') }}
-        </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            {{-- Navegação Secundária --}}
-            <div class="mb-6 flex space-x-4">
-                <a href="{{ route('frequencia.index') }}" class="px-4 py-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md font-bold shadow transition">Visão Geral</a>
-                <a href="{{ route('frequencia.monitorar') }}" class="px-4 py-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-md font-bold shadow transition">Lançar Chamada</a>
-                <a href="{{ route('frequencia.busca_ativa') }}" class="px-4 py-2 bg-red-600 text-white rounded-md font-bold shadow transition">Busca Ativa (Faltas)</a>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Pedagógico', 'url' => '#'],
+            ['label' => 'Frequência', 'url' => route('frequencia.index')],
+            ['label' => 'Busca Ativa']
+        ]" />
+    </x-slot>
+
+    <div class="max-w-7xl mx-auto">
+        {{-- Navegação Secundária --}}
+        <div class="mb-6 flex flex-wrap gap-3">
+            <x-button variant="secondary" onclick="window.location='{{ route('frequencia.index') }}'">
+                Visão Geral
+            </x-button>
+            <x-button variant="secondary" onclick="window.location='{{ route('frequencia.monitorar') }}'">
+                Lançar Chamada
+            </x-button>
+            <x-button variant="danger" onclick="window.location='{{ route('frequencia.busca_ativa') }}'">
+                Busca Ativa (Faltas)
+            </x-button>
+        </div>
+
+        @if(session('success'))
+            <div class="mb-6">
+                <x-alert type="success" message="{{ session('success') }}" />
             </div>
+        @endif
 
-            @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative shadow-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            {{-- Filtro --}}
-            <div class="bg-white p-4 rounded-lg shadow-sm mb-6 border-l-4 border-red-500 flex flex-col md:flex-row items-center justify-between">
-                <div class="mb-4 md:mb-0">
-                    <h3 class="text-lg font-bold text-gray-800">Alunos com Menos de 75% de Frequência</h3>
+        {{-- Filtro --}}
+        <x-card class="mb-8 border-l-4 border-l-red-500">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900">Alunos com Menos de 75% de Frequência</h3>
                     <p class="text-sm text-gray-500">Mês de referência: {{ str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano }}</p>
                 </div>
                 
-                <form method="GET" action="{{ route('frequencia.busca_ativa') }}" class="flex space-x-4 items-end">
+                <form method="GET" action="{{ route('frequencia.busca_ativa') }}" class="flex flex-wrap items-end gap-4 w-full md:w-auto">
                     <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Mês</label>
-                        <select name="mes" class="rounded-md border-gray-300 shadow-sm text-sm">
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Mês</label>
+                        <x-select name="mes" class="w-full md:w-28">
                             @for($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}" {{ $mes == $i ? 'selected' : '' }}>{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
                             @endfor
-                        </select>
+                        </x-select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Ano</label>
-                        <select name="ano" class="rounded-md border-gray-300 shadow-sm text-sm">
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Ano</label>
+                        <x-select name="ano" class="w-full md:w-28">
                             @for($i = date('Y'); $i >= date('Y') - 2; $i--)
                                 <option value="{{ $i }}" {{ $ano == $i ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
-                        </select>
+                        </x-select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 uppercase mb-1">Filtrar Turma</label>
-                        <select name="turma_id" class="rounded-md border-gray-300 shadow-sm text-sm">
+                    <div class="flex-grow md:flex-grow-0">
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Turma</label>
+                        <x-select name="turma_id" class="w-full md:w-48">
                             <option value="">Todas as Turmas</option>
                             @foreach($turmas as $turma)
                                 <option value="{{ $turma->id }}" {{ $turmaId == $turma->id ? 'selected' : '' }}>
                                     {{ $turma->serie }}º {{ $turma->complemento }}
                                 </option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded shadow font-bold text-sm">Filtrar</button>
+                    <div class="w-full md:w-auto mt-2 md:mt-0 pb-0">
+                        <x-button variant="primary" type="submit" class="w-full justify-center md:w-auto">
+                            <x-heroicon-o-funnel class="w-5 h-5 mr-2" /> Filtrar
+                        </x-button>
+                    </div>
                 </form>
             </div>
+        </x-card>
 
-            {{-- Lista de Alunos em Risco --}}
-            <div class="space-y-6">
-                @forelse($alunosRisco as $risco)
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-red-100">
-                        <div class="p-6">
-                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 mb-4">
-                                <div>
-                                    <h4 class="text-xl font-black text-gray-800">{{ $risco->aluno->nome }}</h4>
-                                    <p class="text-sm font-semibold text-gray-600 mt-1">Turma: {{ $risco->turma->serie }}º {{ $risco->turma->complemento }}</p>
-                                </div>
-                                <div class="mt-4 md:mt-0 text-right">
-                                    <div class="inline-block px-4 py-2 bg-red-50 rounded-lg border border-red-200">
-                                        <p class="text-xs uppercase font-bold text-red-800">Frequência Mensal</p>
-                                        <p class="text-2xl font-black text-red-600">{{ number_format($risco->percentual, 1) }}%</p>
-                                        <p class="text-xs font-medium text-red-700 mt-1">{{ $risco->total_faltas }} faltas no mês</p>
-                                    </div>
-                                </div>
+        {{-- Lista de Alunos em Risco --}}
+        <div class="space-y-6">
+            @forelse($alunosRisco as $risco)
+                <x-card class="border-t-4 border-t-red-500 overflow-hidden">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-6 mb-6">
+                        <div>
+                            <h4 class="text-2xl font-black text-gray-900">{{ $risco->aluno->nome }}</h4>
+                            <p class="text-sm font-medium text-gray-500 mt-1 flex items-center">
+                                <x-heroicon-o-academic-cap class="w-4 h-4 mr-1 text-gray-400" />
+                                Turma: {{ $risco->turma->serie }}º {{ $risco->turma->complemento }}
+                            </p>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <div class="inline-flex flex-col items-end px-5 py-3 bg-red-50 rounded-xl border border-red-100">
+                                <p class="text-xs uppercase font-bold text-red-800 tracking-wider">Frequência Mensal</p>
+                                <p class="text-3xl font-black text-red-600 my-1">{{ number_format($risco->percentual, 1) }}%</p>
+                                <p class="text-xs font-semibold text-red-700">{{ $risco->total_faltas }} faltas no mês</p>
                             </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {{-- Histórico de Contatos --}}
-                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                    <h5 class="font-bold text-gray-700 mb-3 text-sm uppercase flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Histórico de Busca Ativa neste mês
-                                    </h5>
-                                    
-                                    @if($risco->registros->count() > 0)
-                                        <div class="space-y-3 max-h-48 overflow-y-auto pr-2">
-                                            @foreach($risco->registros as $registro)
-                                                <div class="bg-white p-3 rounded shadow-sm border border-gray-100 text-sm">
-                                                    <div class="flex justify-between items-start mb-1">
-                                                        <strong class="text-gray-800">{{ \Carbon\Carbon::parse($registro->data)->format('d/m/Y') }}</strong>
-                                                        <span class="text-xs text-gray-500">Por: {{ $registro->user->name }}</span>
-                                                    </div>
-                                                    <p class="text-gray-700 italic">"{{ $registro->observacao }}"</p>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        <p class="text-sm text-gray-500 italic text-center py-4">Nenhuma ação de busca ativa registrada para este aluno neste mês.</p>
-                                    @endif
-                                </div>
-
-                                {{-- Formulário de Novo Contato --}}
-                                <div>
-                                    <h5 class="font-bold text-gray-700 mb-3 text-sm uppercase">Registrar Nova Ação</h5>
-                                    <form action="{{ route('frequencia.registrar_busca_ativa') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="aluno_id" value="{{ $risco->aluno->id }}">
-                                        
-                                        <div class="mb-3">
-                                            <label class="block text-xs font-bold text-gray-600 mb-1">Data da Ação</label>
-                                            <input type="date" name="data" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required class="w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring focus:ring-red-200">
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label class="block text-xs font-bold text-gray-600 mb-1">Observação / Medida Tomada *</label>
-                                            <textarea name="observacao" rows="3" required placeholder="Ex: Entramos em contato com a mãe pelo WhatsApp. Ela informou que o aluno esteve doente." class="w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-red-500 focus:ring focus:ring-red-200"></textarea>
-                                        </div>
-                                        
-                                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded shadow transition text-sm">
-                                            Salvar Registro
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
-                @empty
-                    <div class="bg-white rounded-lg shadow-sm border-l-4 border-green-500 p-8 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3 class="text-xl font-bold text-gray-800 mb-2">Tudo em ordem!</h3>
-                        <p class="text-gray-600">Nenhum aluno está com a frequência abaixo de 75% com os filtros selecionados.</p>
-                    </div>
-                @endforelse
-            </div>
 
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {{-- Histórico de Contatos --}}
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <h5 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider flex items-center">
+                                <x-heroicon-o-clock class="h-5 w-5 mr-2 text-gray-500" />
+                                Histórico de Busca Ativa
+                            </h5>
+                            
+                            @if($risco->registros->count() > 0)
+                                <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                                    @foreach($risco->registros as $registro)
+                                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                    {{ \Carbon\Carbon::parse($registro->data)->format('d/m/Y') }}
+                                                </span>
+                                                <span class="text-xs font-medium text-gray-500">
+                                                    Por: {{ $registro->user->name }}
+                                                </span>
+                                            </div>
+                                            <p class="text-gray-700 text-sm mt-2">"{{ $registro->observacao }}"</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-8">
+                                    <x-heroicon-o-document-magnifying-glass class="w-10 h-10 mx-auto text-gray-300 mb-2" />
+                                    <p class="text-sm text-gray-500">Nenhuma ação registrada neste mês.</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Formulário de Novo Contato --}}
+                        <div>
+                            <h5 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider flex items-center">
+                                <x-heroicon-o-plus-circle class="h-5 w-5 mr-2 text-red-500" />
+                                Registrar Nova Ação
+                            </h5>
+                            <form action="{{ route('frequencia.registrar_busca_ativa') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="aluno_id" value="{{ $risco->aluno->id }}">
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Data da Ação</label>
+                                        <x-input type="date" name="data" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required class="w-full" />
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Observação / Medida Tomada <span class="text-red-500">*</span></label>
+                                        <textarea name="observacao" rows="4" required placeholder="Ex: Entramos em contato com a família..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"></textarea>
+                                    </div>
+                                    
+                                    <x-button variant="danger" type="submit" class="w-full justify-center">
+                                        <x-heroicon-o-document-plus class="w-5 h-5 mr-2" />
+                                        Salvar Registro
+                                    </x-button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </x-card>
+            @empty
+                <div class="bg-white rounded-xl shadow-sm border-2 border-dashed border-green-200 p-12 text-center">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                        <x-heroicon-o-check class="h-8 w-8 text-green-600" />
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Tudo em ordem!</h3>
+                    <p class="text-gray-500 max-w-sm mx-auto">Nenhum aluno está com a frequência abaixo de 75% de acordo com os filtros selecionados.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 </x-app-layout>

@@ -1,18 +1,34 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Nova Turma') }}
-        </h2>
+        {{ __('Nova Turma') }}
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-t-4 border-red-600">
-                
-                <form action="{{ route('turmas.store') }}" method="POST">
-                    @csrf <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700">MODALIDADE</label>
-                        <select name="modalidade" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500" required>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Acadêmico', 'url' => '#'],
+            ['label' => 'Turmas', 'url' => route('turmas.index')],
+            ['label' => 'Nova Turma']
+        ]" />
+    </x-slot>
+
+    <div class="max-w-4xl mx-auto">
+        <x-card class="border-t-4 border-t-primary-600">
+            <x-slot name="header">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-900">Preencha os dados da nova turma</h3>
+                    <a href="{{ route('turmas.index') }}" class="text-sm font-medium text-primary-600 hover:text-primary-800">
+                        Voltar
+                    </a>
+                </div>
+            </x-slot>
+
+            <form action="{{ route('turmas.store') }}" method="POST">
+                @csrf
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Modalidade</label>
+                        <x-select name="modalidade" required class="w-full">
                             <option value="">Selecione...</option>
                             <optgroup label="INFANTIL">
                                 <option value="EI - Educação Infantil">EI - Educação Infantil</option>
@@ -26,44 +42,48 @@
                                 <option value="EJA EF - Ensino de Jovens e Adultos Fundamental">EJA EF</option>
                                 <option value="EJA EM - Ensino de Jovens e Adultos Médio">EJA EM</option>
                             </optgroup>
-                        </select>
+                        </x-select>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-4 mb-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">TURNO</label>
-                            <select name="turno" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Turno</label>
+                            <x-select name="turno" required class="w-full">
                                 <option value="Matutino">Matutino</option>
                                 <option value="Vespertino">Vespertino</option>
                                 <option value="Noturno">Noturno</option>
                                 <option value="Integral">Integral</option>
-                            </select>
+                            </x-select>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">SÉRIE</label>
-                            <input type="number" name="serie" min="1" max="9" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Série</label>
+                            <x-input type="number" name="serie" min="1" max="9" required class="w-full" />
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">COMPLEMENTO</label>
-                            <input type="text" name="complemento" maxlength="3" placeholder="Ex: A" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm uppercase">
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Complemento</label>
+                            <x-input type="text" name="complemento" maxlength="3" placeholder="Ex: A" class="w-full uppercase" />
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">ANO LETIVO</label>
-                            <input type="number" name="ano_letivo" min="2000" max="2099" value="{{ date('Y') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                        <div class="md:col-span-1">
+                            <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Ano Letivo</label>
+                            <x-input type="number" name="ano_letivo" min="2000" max="2099" value="{{ date('Y') }}" required class="w-full" />
                         </div>
                     </div>
+                </div>
 
-                    <div class="flex justify-end mt-6">
-                        <button type="submit" class="bg-red-600 text-black px-6 py-2 rounded-md hover:bg-red-700 font-bold">
-                            CRIAR
-                        </button>
+                <x-slot name="footer">
+                    <div class="flex justify-end gap-3">
+                        <x-button variant="secondary" type="button" onclick="window.location='{{ route('turmas.index') }}'">
+                            Cancelar
+                        </x-button>
+                        <x-button variant="primary" type="submit">
+                            Criar Turma
+                        </x-button>
                     </div>
-                </form>
-
-            </div>
-        </div>
+                </x-slot>
+            </form>
+        </x-card>
     </div>
 </x-app-layout>

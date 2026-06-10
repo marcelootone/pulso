@@ -1,131 +1,145 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Perfil do Estudante: ') }} {{ $aluno->nome }}
-        </h2>
+        Perfil do Estudante: {{ $aluno->nome }}
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8 border-t-4 border-indigo-600">
-                
-                <div class="mb-6 flex justify-between items-center border-b pb-4">
-                    <h3 class="text-2xl font-black text-gray-800">Ficha do Aluno</h3>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Acadêmico', 'url' => '#'],
+            ['label' => 'Alunos', 'url' => route('alunos.index')],
+            ['label' => 'Editar Aluno']
+        ]" />
+    </x-slot>
+
+    <div class="max-w-5xl mx-auto">
+        @if ($errors->any())
+            <div class="mb-6">
+                <x-alert type="error">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </x-alert>
+            </div>
+        @endif
+
+        <x-card class="border-t-4 border-t-primary-600">
+            <x-slot name="header">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-gray-900">Ficha do Aluno</h3>
                     @if($turmaId)
-                        <a href="{{ route('turmas.show', $turmaId) }}" class="text-sm text-indigo-600 hover:underline font-bold bg-indigo-50 px-3 py-2 rounded-md">⬅ Voltar para Turma</a>
+                        <a href="{{ route('turmas.show', $turmaId) }}" class="text-sm font-medium text-primary-600 hover:text-primary-800">
+                            ⬅ Voltar para Turma
+                        </a>
                     @else
-                        <a href="{{ route('turmas.index') }}" class="text-sm text-indigo-600 hover:underline font-bold bg-indigo-50 px-3 py-2 rounded-md">⬅ Voltar para Turmas</a>
+                        <a href="{{ route('alunos.index') }}" class="text-sm font-medium text-primary-600 hover:text-primary-800">
+                            ⬅ Voltar para Alunos
+                        </a>
                     @endif
                 </div>
+            </x-slot>
 
-                @if ($errors->any())
-                    <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                        <strong class="font-bold">Oops!</strong>
-                        <span class="block sm:inline">Existem erros de preenchimento.</span>
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
+            <form action="{{ route('alunos.update', $aluno->id) }}" method="POST">
+                @csrf
+                @method('PUT')
 
-                <form action="{{ route('alunos.update', $aluno->id) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-
+                <div class="space-y-8">
                     <!-- Seção: Dados Pessoais -->
-                    <div class="mb-8">
-                        <h4 class="text-lg font-bold text-gray-700 mb-4 border-b-2 border-indigo-100 inline-block">1. Dados Pessoais</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">NOME COMPLETO</label>
-                                <input type="text" name="nome" value="{{ old('nome', $aluno->nome) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">1. Dados Pessoais</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Nome Completo</label>
+                                <x-input type="text" name="nome" value="{{ old('nome', $aluno->nome) }}" required class="w-full" />
                             </div>
 
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">DATA DE NASCIMENTO</label>
-                                    <input type="text" name="nascimento" placeholder="DD/MM/AAAA" value="{{ old('nascimento', $aluno->nascimento) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Data de Nascimento</label>
+                                    <x-input type="text" name="nascimento" placeholder="DD/MM/AAAA" value="{{ old('nascimento', $aluno->nascimento) }}" class="w-full" />
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">SEXO</label>
-                                    <select name="sexo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                    <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Sexo</label>
+                                    <x-select name="sexo" class="w-full">
                                         <option value="">Selecione...</option>
                                         <option value="M" {{ old('sexo', $aluno->sexo) == 'M' ? 'selected' : '' }}>Masculino (M)</option>
                                         <option value="F" {{ old('sexo', $aluno->sexo) == 'F' ? 'selected' : '' }}>Feminino (F)</option>
-                                    </select>
+                                    </x-select>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Seção: Contato e Endereço -->
-                    <div class="mb-8">
-                        <h4 class="text-lg font-bold text-gray-700 mb-4 border-b-2 border-indigo-100 inline-block">2. Contato e Endereço</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">2. Contato e Endereço</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">TELEFONE DO ESTUDANTE</label>
-                                <input type="text" name="telefone" value="{{ old('telefone', $aluno->telefone) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Telefone do Estudante</label>
+                                <x-input type="text" name="telefone" value="{{ old('telefone', $aluno->telefone) }}" class="w-full" />
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">TELEFONE DO RESPONSÁVEL</label>
-                                <input type="text" name="telefone_responsavel" value="{{ old('telefone_responsavel', $aluno->telefone_responsavel) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Telefone do Responsável</label>
+                                <x-input type="text" name="telefone_responsavel" value="{{ old('telefone_responsavel', $aluno->telefone_responsavel) }}" class="w-full" />
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700">NOME DA MÃE</label>
-                            <input type="text" name="nome_mae" value="{{ old('nome_mae', $aluno->nome_mae) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Nome da Mãe</label>
+                            <x-input type="text" name="nome_mae" value="{{ old('nome_mae', $aluno->nome_mae) }}" class="w-full" />
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">CEP</label>
-                                <input type="text" name="cep" value="{{ old('cep', $aluno->cep) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="md:col-span-1">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">CEP</label>
+                                <x-input type="text" name="cep" value="{{ old('cep', $aluno->cep) }}" class="w-full" />
                             </div>
-                            <div class="col-span-2">
-                                <label class="block text-sm font-medium text-gray-700">LOGRADOURO</label>
-                                <input type="text" name="logradouro" value="{{ old('logradouro', $aluno->logradouro) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Logradouro</label>
+                                <x-input type="text" name="logradouro" value="{{ old('logradouro', $aluno->logradouro) }}" class="w-full" />
                             </div>
                         </div>
                     </div>
 
                     <!-- Seção: Dados Acadêmicos -->
-                    <div class="mb-8">
-                        <h4 class="text-lg font-bold text-gray-700 mb-4 border-b-2 border-indigo-100 inline-block">3. Dados Acadêmicos</h4>
+                    <div>
+                        <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">3. Dados Acadêmicos</h4>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">R.A. (Registro do Aluno)</label>
-                                <input type="text" name="ra" value="{{ old('ra', $aluno->ra) }}" class="mt-1 block w-full rounded-md border-gray-300 bg-gray-100 shadow-sm" readonly title="O RA não pode ser alterado diretamente por aqui.">
+                                <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">R.A. (Registro do Aluno)</label>
+                                <x-input type="text" name="ra" value="{{ old('ra', $aluno->ra) }}" class="w-full bg-gray-100 cursor-not-allowed" readonly title="O RA não pode ser alterado diretamente por aqui." />
                             </div>
 
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <label class="block text-sm font-black text-indigo-700 uppercase">Status da Matrícula</label>
-                                <p class="text-xs text-gray-500 mb-2">Defina o estado atual do aluno nesta turma.</p>
-                                <select name="status_matricula" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 font-bold" required>
+                                <label class="block text-sm font-bold text-primary-700 uppercase tracking-wider mb-1">Status da Matrícula</label>
+                                <p class="text-xs text-gray-500 mb-3">Defina o estado atual do aluno nesta turma.</p>
+                                <x-select name="status_matricula" required class="w-full font-semibold">
                                     <option value="Ativo" {{ old('status_matricula', $aluno->status_matricula) == 'Ativo' ? 'selected' : '' }}>🟢 Ativo</option>
                                     <option value="Novato" {{ old('status_matricula', $aluno->status_matricula) == 'Novato' ? 'selected' : '' }}>🔵 Novato</option>
                                     <option value="Transferido" {{ old('status_matricula', $aluno->status_matricula) == 'Transferido' ? 'selected' : '' }}>🟠 Transferido</option>
                                     <option value="Evasão" {{ old('status_matricula', $aluno->status_matricula) == 'Evasão' ? 'selected' : '' }}>🔴 Evasão</option>
-                                </select>
+                                </x-select>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Botão de Salvar -->
-                    <div class="flex justify-end mt-6 pt-6 border-t">
-                        <button type="submit" class="bg-indigo-600 text-black px-8 py-3 rounded-md hover:bg-indigo-700 font-black shadow-lg hover:shadow-xl transition duration-150 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                            </svg>
-                            SALVAR ALTERAÇÕES
-                        </button>
+                <x-slot name="footer">
+                    <div class="flex justify-end gap-3">
+                        @if($turmaId)
+                            <x-button variant="secondary" type="button" onclick="window.location='{{ route('turmas.show', $turmaId) }}'">Cancelar</x-button>
+                        @else
+                            <x-button variant="secondary" type="button" onclick="window.location='{{ route('alunos.index') }}'">Cancelar</x-button>
+                        @endif
+                        <x-button variant="primary" type="submit">
+                            <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Alterações
+                        </x-button>
                     </div>
-                </form>
-
-            </div>
-        </div>
+                </x-slot>
+            </form>
+        </x-card>
     </div>
 </x-app-layout>

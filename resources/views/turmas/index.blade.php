@@ -1,138 +1,134 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Gestão de Turmas') }}
-        </h2>
+        {{ __('Gestão de Turmas') }}
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Acadêmico', 'url' => '#'],
+            ['label' => 'Turmas']
+        ]" />
+    </x-slot>
 
-            {{-- Feedback de sessão --}}
-            @if(session('success'))
-                <div id="alert-success" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if(session('error'))
-                <div id="alert-error" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                    {{ session('error') }}
-                </div>
-            @endif
+    <x-slot name="actions">
+        @can('gerenciar turmas')
+            <x-button variant="primary" onclick="window.location='{{ route('turmas.create') }}'">
+                <x-heroicon-o-plus class="w-4 h-4 mr-2" />
+                Nova Turma
+            </x-button>
+        @endhasrole
+    </x-slot>
 
-            {{-- Cabeçalho com botão de nova turma --}}
-            <div class="mb-4 flex justify-between items-center">
-                <div class="flex gap-3 items-center">
-                    {{-- Filtro por status --}}
-                    <a href="{{ request()->fullUrlWithQuery(['status' => 'todas']) }}"
-                       class="text-sm px-3 py-1 rounded-full border {{ !request('status') || request('status') === 'todas' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-                        Todas
-                    </a>
-                    <a href="{{ request()->fullUrlWithQuery(['status' => 'ativas']) }}"
-                       class="text-sm px-3 py-1 rounded-full border {{ request('status') === 'ativas' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-                        Ativas
-                    </a>
-                    <a href="{{ request()->fullUrlWithQuery(['status' => 'inativas']) }}"
-                       class="text-sm px-3 py-1 rounded-full border {{ request('status') === 'inativas' ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-                        Inativas
-                    </a>
-                </div>
-                @hasrole('Gestor|Secretaria|Coordenador')
-                    <a href="{{ route('turmas.create') }}" id="btn-nova-turma"
-                       class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 font-bold transition">
-                        + NOVA TURMA
-                    </a>
-                @endhasrole
-            </div>
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                @forelse ($turmasPorModalidade as $modalidade => $turmas)
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2 uppercase tracking-wide">
-                            {{ $modalidade }}
-                        </h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse" id="tabela-turmas-{{ Str::slug($modalidade) }}">
-                                <thead>
-                                    <tr class="border-b-2 text-gray-600 text-sm uppercase bg-gray-50">
-                                        <th class="py-3 px-2">Turno</th>
-                                        <th class="py-3 px-2">Série / Compl.</th>
-                                        <th class="py-3 px-2">Docentes</th>
-                                        <th class="py-3 px-2">Ano Letivo</th>
-                                        <th class="py-3 px-2">Alunos</th>
-                                        <th class="py-3 px-2">Status</th>
-                                        <th class="py-3 px-2 text-center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($turmas as $turma)
-                                        @php
-                                            $professoresRegulares = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROFESSOR)->pluck('name')->join(', ');
-                                            $professoresEO = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO)->pluck('name')->join(', ');
-                                        @endphp
-                                        <tr class="border-b hover:bg-gray-50 transition {{ $turma->ativa ? '' : 'opacity-60' }}">
-                                            <td class="py-3 px-2 text-sm">{{ $turma->turno }}</td>
-                                            <td class="py-3 px-2 font-bold">
-                                                {{ $turma->serie }}º {{ $turma->complemento }}
-                                            </td>
-                                            <td class="py-3 px-2 text-sm text-gray-600">
-                                                <div class="mb-1">
-                                                    <span class="font-semibold text-gray-700">Professor:</span> 
-                                                    {{ $professoresRegulares ?: '—' }}
-                                                </div>
-                                                <div>
-                                                    <span class="font-semibold text-gray-700">Professor Orientado:</span> 
-                                                    {{ $professoresEO ?: '—' }}
-                                                </div>
-                                            </td>
-                                            <td class="py-3 px-2 text-sm text-gray-500">{{ $turma->ano_letivo }}</td>
-                                            <td class="py-3 px-2 text-sm font-semibold text-indigo-600">
-                                                {{ $turma->enturmacoes->count() }}
-                                            </td>
-                                            <td class="py-3 px-2">
-                                                <span class="px-2 py-1 rounded-full text-xs font-bold {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                    {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
-                                                </span>
-                                            </td>
-                                            <td class="py-3 px-2">
-                                                <div class="flex justify-center items-center gap-2">
-                                                    <a href="{{ route('turmas.show', $turma->id) }}"
-                                                       class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm font-semibold transition">
-                                                        Ver
-                                                    </a>
-
-                                                    @hasrole('Gestor|Secretaria|Coordenador')
-                                                        <a href="{{ route('turmas.edit', $turma->id) }}"
-                                                           id="btn-editar-turma-{{ $turma->id }}"
-                                                           class="text-yellow-700 hover:text-yellow-900 bg-yellow-50 hover:bg-yellow-100 px-3 py-1 rounded-md text-sm font-semibold transition">
-                                                            Editar
-                                                        </a>
-
-                                                        <form action="{{ route('turmas.destroy', $turma->id) }}" method="POST" class="inline"
-                                                              onsubmit="return confirm('Deseja realmente alterar o status desta turma?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit"
-                                                                    id="btn-status-turma-{{ $turma->id }}"
-                                                                    class="{{ $turma->ativa ? 'text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100' : 'text-green-700 hover:text-green-900 bg-green-50 hover:bg-green-100' }} px-3 py-1 rounded-md text-sm font-semibold transition">
-                                                                {{ $turma->ativa ? '🚫 Desativar' : '✅ Reativar' }}
-                                                            </button>
-                                                        </form>
-                                                    @endhasrole
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                @empty
-                    <div class="py-8 text-center text-gray-400 italic">
-                        Nenhuma turma encontrada.
-                    </div>
-                @endforelse
-            </div>
-        </div>
+    <!-- Filtros de Status -->
+    <div class="mb-6 flex gap-3 items-center">
+        <a href="{{ request()->fullUrlWithQuery(['status' => 'todas']) }}"
+            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ !request('status') || request('status') === 'todas' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+            Todas
+        </a>
+        <a href="{{ request()->fullUrlWithQuery(['status' => 'ativas']) }}"
+            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'ativas' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+            Ativas
+        </a>
+        <a href="{{ request()->fullUrlWithQuery(['status' => 'inativas']) }}"
+            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'inativas' ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+            Inativas
+        </a>
     </div>
+
+    @forelse ($turmasPorModalidade as $modalidade => $turmas)
+        <x-card class="mb-8">
+            <x-slot name="header">
+                <h3 class="text-lg font-bold text-gray-900 uppercase tracking-wide">
+                    {{ $modalidade }}
+                </h3>
+            </x-slot>
+
+            <div class="-mx-6 -my-6">
+                <x-table>
+                    <x-slot name="head">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turno</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Série / Compl.</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Docentes</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ano Letivo</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Alunos</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </x-slot>
+                    <x-slot name="body">
+                        @foreach ($turmas as $turma)
+                            @php
+                                $professoresRegulares = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROFESSOR)->pluck('name')->join(', ');
+                                $professoresEO = $turma->professores->where('tipo_usuario', \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO)->pluck('name')->join(', ');
+                            @endphp
+                            <tr class="hover:bg-gray-50 transition {{ $turma->ativa ? '' : 'opacity-60' }}">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $turma->turno }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                                    {{ $turma->serie }}º {{ $turma->complemento }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-600">
+                                    @if($professoresRegulares)
+                                        <div class="mb-1">
+                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Prof:</span> 
+                                            {{ $professoresRegulares }}
+                                        </div>
+                                    @endif
+                                    @if($professoresEO)
+                                        <div>
+                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Orientador:</span> 
+                                            {{ $professoresEO }}
+                                        </div>
+                                    @endif
+                                    @if(!$professoresRegulares && !$professoresEO)
+                                        <span class="text-gray-400 italic">Nenhum</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{{ $turma->ano_letivo }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-primary-600">
+                                    {{ $turma->enturmacoes->count() }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-center">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                        {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex justify-end items-center gap-3">
+                                        <a href="{{ route('turmas.show', $turma->id) }}" class="text-primary-600 hover:text-primary-900 transition-colors">
+                                            Ver
+                                        </a>
+                                        @can('gerenciar turmas')
+                                            <a href="{{ route('turmas.edit', $turma->id) }}" class="text-yellow-600 hover:text-yellow-900 transition-colors">
+                                                Editar
+                                            </a>
+                                            <form action="{{ route('turmas.destroy', $turma->id) }}" method="POST" class="inline" onsubmit="return confirm('Deseja realmente alterar o status desta turma?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="{{ $turma->ativa ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900' }} transition-colors">
+                                                    {{ $turma->ativa ? 'Desativar' : 'Reativar' }}
+                                                </button>
+                                            </form>
+                                        @endhasrole
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-slot>
+                </x-table>
+            </div>
+        </x-card>
+    @empty
+        <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
+            <x-heroicon-o-academic-cap class="mx-auto h-12 w-12 text-gray-400" />
+            <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma turma encontrada</h3>
+            <p class="mt-1 text-sm text-gray-500">Comece criando uma nova turma para iniciar o ano letivo.</p>
+            @can('gerenciar turmas')
+                <div class="mt-6">
+                    <x-button variant="primary" onclick="window.location='{{ route('turmas.create') }}'">
+                        <x-heroicon-o-plus class="w-4 h-4 mr-2" /> Nova Turma
+                    </x-button>
+                </div>
+            @endhasrole
+        </div>
+    @endforelse
 </x-app-layout>

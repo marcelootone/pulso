@@ -1,69 +1,82 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Cadastro Manual de Usuário') }}
-        </h2>
+        {{ __('Cadastro Manual de Usuário') }}
     </x-slot>
 
-    <div class="py-2" x-data="{ tipoUsuario: '{{ old('tipo_usuario', \App\Models\User::TIPO_ESTUDANTE) }}' }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <!-- ALERTA DE DUPLICATA -->
-            <div class="bg-teal-50 border border-teal-200 text-teal-800 px-4 py-2 rounded mb-2 text-sm flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <strong>ATENÇÃO:</strong>&nbsp; Sempre verifique se o usuário já existe para que não ocorra duplicatas! Para verificar, <a href="#" class="text-blue-600 hover:underline">clique aqui</a> e faça uma busca pelo nome do usuário com base no seu perfil.
-            </div>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Central de Cadastros', 'url' => '#'],
+            ['label' => 'Funcionários', 'url' => route('users.index')],
+            ['label' => 'Novo Usuário']
+        ]" />
+    </x-slot>
 
-            <!-- TABS -->
-            <div class="flex mb-2">
-                <a href="{{ route('users.create') }}" class="bg-blue-500 text-black px-6 py-2 rounded-t-md font-semibold flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                    Criar Usuário
-                </a>
-                <a href="{{ route('importar.index') }}" class="bg-white text-blue-500 border border-gray-200 border-b-0 px-6 py-2 rounded-t-md font-semibold flex items-center hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Importar Estudantes
-                </a>
-            </div>
-
-            @if(session('success'))
-                <div class="mb-2 bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+    <div class="max-w-7xl mx-auto" x-data="{ tipoUsuario: '{{ old('tipo_usuario', \App\Models\User::TIPO_ESTUDANTE) }}' }">
+        
+        <!-- ALERTA DE DUPLICATA -->
+        <div class="mb-6">
+            <x-alert type="info">
+                <div class="flex items-center">
+                    <strong>ATENÇÃO:</strong>&nbsp; Sempre verifique se o usuário já existe para evitar duplicatas. Para verificar, faça uma busca pelo nome na listagem antes de criar um novo.
                 </div>
-            @endif
+            </x-alert>
+        </div>
 
-            @if(session('error'))
-                <div class="mb-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
+        <!-- TABS -->
+        <div class="flex mb-6 border-b border-gray-200">
+            <a href="{{ route('users.create') }}" class="text-primary-600 border-b-2 border-primary-600 px-6 py-3 font-bold text-sm flex items-center transition-colors">
+                <x-heroicon-o-user-plus class="w-5 h-5 mr-2" />
+                Criar Manualmente
+            </a>
+            <a href="{{ route('importar.index') }}" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent px-6 py-3 font-bold text-sm flex items-center transition-colors">
+                <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                Importar Planilha (Estudantes)
+            </a>
+        </div>
 
-            @if ($errors->any())
-                <div class="mb-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative" role="alert">
+        @if(session('success'))
+            <div class="mb-6">
+                <x-alert type="success" message="{{ session('success') }}" />
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6">
+                <x-alert type="error" message="{{ session('error') }}" />
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="mb-6">
+                <x-alert type="error">
                     <strong class="font-bold">Opa! Algum erro ocorreu:</strong>
-                    <ul class="mt-1 list-disc list-inside text-sm">
+                    <ul class="mt-2 list-disc list-inside text-sm font-medium">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
-                </div>
-            @endif
+                </x-alert>
+            </div>
+        @endif
 
-            <form action="{{ route('users.store') }}" method="POST" class="bg-white p-4 shadow-sm border border-gray-200">
-                @csrf
+        <form action="{{ route('users.store') }}" method="POST">
+            @csrf
 
+            <div class="space-y-6">
                 <!-- BLOCO 1: TIPO DE USUARIO E DOCUMENTOS -->
-                <div class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #22c55e;">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <x-card class="border-t-4 border-t-emerald-500">
+                    <x-slot name="header">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                            <x-heroicon-o-identification class="w-5 h-5 mr-2 text-emerald-500" />
+                            Tipo de Perfil e Documentos
+                        </h3>
+                    </x-slot>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user-circle mr-1"></i> Tipo de Usuário</label>
-                            <select name="tipo_usuario" x-model="tipoUsuario" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm uppercase font-semibold text-blue-600 bg-blue-50 border-blue-200 py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Tipo de Usuário <span class="text-red-500">*</span></label>
+                            <x-select name="tipo_usuario" x-model="tipoUsuario" class="w-full bg-emerald-50 border-emerald-200 text-emerald-800 focus:ring-emerald-500 focus:border-emerald-500 font-bold">
                                 <option value="{{ \App\Models\User::TIPO_ESTUDANTE }}">ESTUDANTE</option>
                                 <option value="{{ \App\Models\User::TIPO_PROFESSOR }}">PROFESSOR(A)</option>
                                 <option value="{{ \App\Models\User::TIPO_GESTOR }}">GESTOR</option>
@@ -71,183 +84,192 @@
                                 <option value="{{ \App\Models\User::TIPO_SECRETARIA }}">SECRETARIA</option>
                                 <option value="{{ \App\Models\User::TIPO_PROF_ESPECIAL }}">PROFESSOR EDUCAÇÃO ESPECIAL</option>
                                 <option value="{{ \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO }}">PROFESSOR DE ESTUDO ORIENTADO</option>
-                            </select>
+                            </x-select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-id-card mr-1"></i> Documento (CPF)</label>
-                            <input type="text" name="cpf" value="{{ old('cpf') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm bg-gray-50 py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Documento (CPF)</label>
+                            <x-input type="text" name="cpf" value="{{ old('cpf') }}" class="w-full" placeholder="000.000.000-00" />
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-qrcode mr-1"></i> Número RA</label>
-                            <input type="text" name="ra" value="{{ old('ra') }}" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-bind:readonly="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" :class="{'bg-gray-200': tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}', 'bg-gray-50': tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Número RA</label>
+                            <x-input type="text" name="ra" value="{{ old('ra') }}" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-bind:readonly="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" :class="{'bg-gray-100 text-gray-500 cursor-not-allowed': tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'}" class="w-full" placeholder="Apenas para estudantes" />
                         </div>
                     </div>
-                </div>
+                </x-card>
 
                 <!-- BLOCO 2: DADOS PESSOAIS -->
-                <div class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #e11d48;">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-                        <div class="col-span-2">
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user mr-1"></i> Nome</label>
-                            <input type="text" name="nome" value="{{ old('nome') }}" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                <x-card class="border-t-4 border-t-primary-500">
+                    <x-slot name="header">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                            <x-heroicon-o-user class="w-5 h-5 mr-2 text-primary-500" />
+                            Dados Pessoais
+                        </h3>
+                    </x-slot>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nome Completo <span class="text-red-500">*</span></label>
+                            <x-input type="text" name="nome" value="{{ old('nome') }}" required class="w-full" placeholder="Nome completo do usuário" />
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-venus-mars mr-1"></i> Sexo</label>
-                            <select name="sexo" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm text-center py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Sexo</label>
+                            <x-select name="sexo" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="w-full">
                                 <option value="">Selecione...</option>
-                                <option value="M" {{ old('sexo') == 'M' ? 'selected' : '' }}>M</option>
-                                <option value="F" {{ old('sexo') == 'F' ? 'selected' : '' }}>F</option>
-                            </select>
+                                <option value="M" {{ old('sexo') == 'M' ? 'selected' : '' }}>Masculino</option>
+                                <option value="F" {{ old('sexo') == 'F' ? 'selected' : '' }}>Feminino</option>
+                            </x-select>
                         </div>
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-birthday-cake mr-1"></i> Nascimento</label>
-                            <input type="date" name="nascimento" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('nascimento') }}" max="{{ date('Y-m-d') }}" class="date-light mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nascimento</label>
+                            <x-input type="date" name="nascimento" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('nascimento') }}" max="{{ date('Y-m-d') }}" class="w-full" />
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-phone mr-1"></i> Telefone</label>
-                            <input type="text" name="telefone" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('telefone') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Telefone</label>
+                            <x-input type="text" name="telefone" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('telefone') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="w-full" placeholder="(00) 00000-0000" />
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-city mr-1"></i> Cidade</label>
-                            <input type="text" name="cidade" value="{{ old('cidade') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm text-gray-700 py-1.5">
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Cidade</label>
+                            <x-input type="text" name="cidade" value="{{ old('cidade') }}" class="w-full" placeholder="Nome da cidade" />
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-12 gap-2">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div class="md:col-span-6">
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-road mr-1"></i> Rua</label>
-                            <input type="text" name="rua" value="{{ old('rua') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Logradouro (Rua, Av.)</label>
+                            <x-input type="text" name="rua" value="{{ old('rua') }}" class="w-full" />
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-hashtag mr-1"></i> Nº</label>
-                            <input type="text" name="numero" value="{{ old('numero') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Número</label>
+                            <x-input type="text" name="numero" value="{{ old('numero') }}" class="w-full" />
                         </div>
                         <div class="md:col-span-4">
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-map-signs mr-1"></i> Bairro</label>
-                            <input type="text" name="bairro" value="{{ old('bairro') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Bairro</label>
+                            <x-input type="text" name="bairro" value="{{ old('bairro') }}" class="w-full" />
                         </div>
                     </div>
-                </div>
+                </x-card>
 
                 <!-- BLOCO 3: DADOS FILIAÇÃO (SÓ ESTUDANTE) -->
-                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #e11d48;" x-cloak>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user mr-1"></i> Nome Pai</label>
-                            <input type="text" name="nome_pai" value="{{ old('nome_pai') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-cloak>
+                    <x-card class="border-t-4 border-t-amber-500">
+                        <x-slot name="header">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                <x-heroicon-o-users class="w-5 h-5 mr-2 text-amber-500" />
+                                Dados de Filiação
+                            </h3>
+                        </x-slot>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nome Pai</label>
+                                <x-input type="text" name="nome_pai" value="{{ old('nome_pai') }}" class="w-full" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Telefone Pai</label>
+                                <x-input type="text" name="tel_pai" value="{{ old('tel_pai') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="w-full" />
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-mobile-alt mr-1"></i> Telefone Pai</label>
-                            <input type="text" name="tel_pai" value="{{ old('tel_pai') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nome Mãe</label>
+                                <x-input type="text" name="nome_mae" value="{{ old('nome_mae') }}" class="w-full" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Telefone Mãe</label>
+                                <x-input type="text" name="tel_mae" value="{{ old('tel_mae') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="w-full" />
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-user mr-1"></i> Nome Mãe</label>
-                            <input type="text" name="nome_mae" value="{{ old('nome_mae') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase"><i class="fas fa-mobile-alt mr-1"></i> Telefone Mãe</label>
-                            <input type="text" name="tel_mae" value="{{ old('tel_mae') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm py-1.5">
-                        </div>
-                    </div>
+                    </x-card>
                 </div>
 
                 <!-- BLOCO 4: VINCULAR TURMA (SÓ ESTUDANTE) -->
-                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="border border-gray-200 p-2 mb-2 relative" style="border-left: 3px solid #06b6d4;" x-cloak>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
-                        <div class="col-span-1">
-                            <label class="block text-[11px] font-bold text-gray-700 uppercase mb-1">
-                                <input type="checkbox" class="mr-1 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"> 
-                                Vincular a uma Turma?
-                            </label>
-                            <select name="turma_id" class="block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm text-gray-600 text-center uppercase py-1.5">
-                                <option value="">Selecione...</option>
-                                @foreach($turmas as $turma)
-                                    <option value="{{ $turma->id }}" {{ old('turma_id') == $turma->id ? 'selected' : '' }}>
-                                        {{ $turma->serie }}º {{ $turma->complemento }} - {{ substr($turma->modalidade,0,2) }} ({{ substr($turma->turno,0,1) }})
-                                    </option>
-                                @endforeach
-                            </select>
+                <div x-show="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-cloak>
+                    <x-card class="border-t-4 border-t-cyan-500">
+                        <x-slot name="header">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                <x-heroicon-o-academic-cap class="w-5 h-5 mr-2 text-cyan-500" />
+                                Enturmação
+                            </h3>
+                        </x-slot>
+                        <div class="flex flex-col md:flex-row items-center gap-6">
+                            <div class="w-full md:w-1/2">
+                                <label class="flex items-center text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 cursor-pointer">
+                                    Vincular a uma Turma?
+                                </label>
+                                <x-select name="turma_id" class="w-full">
+                                    <option value="">Não vincular agora...</option>
+                                    @foreach($turmas as $turma)
+                                        <option value="{{ $turma->id }}" {{ old('turma_id') == $turma->id ? 'selected' : '' }}>
+                                            {{ $turma->serie }}º {{ $turma->complemento }} - {{ substr($turma->modalidade,0,2) }} ({{ substr($turma->turno,0,1) }})
+                                        </option>
+                                    @endforeach
+                                </x-select>
+                            </div>
+                            <div class="w-full md:w-1/2">
+                                <div class="bg-cyan-50 text-cyan-800 p-4 rounded-xl border border-cyan-100 text-sm font-medium flex items-start">
+                                    <x-heroicon-o-information-circle class="w-5 h-5 mr-2 shrink-0 text-cyan-600" />
+                                    Caso opte por não vincular o estudante agora, o mesmo pode ser feito posteriormente no módulo Acadêmico > Matrículas e Enturmações.
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-span-2 text-[10px] text-blue-500 font-semibold uppercase pl-4 border-l border-gray-200 h-full flex items-center">
-                            Caso opte por não vincular o estudante agora o mesmo pode ser feito posteriormente em SECRETARIA > VINCULAR ESTUDANTE.
-                        </div>
-                    </div>
+                    </x-card>
                 </div>
 
-                <!-- BLOCO 5: USUÁRIO E SENHA + CADASTRAR -->
-                <div x-show="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" class="mb-2 relative" style="border-left: 3px solid #6b7280;" x-cloak>
-                    <div class="border border-gray-200 p-2 relative bg-gray-50 rounded-r-md">
-                        <div class="text-[11px] font-bold text-gray-700 uppercase mb-2">
-                            <i class="fas fa-key mr-1"></i> E-MAIL DE ACESSO E SENHA
-                        </div>
+                <!-- BLOCO 5: USUÁRIO E SENHA -->
+                <div x-show="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" x-cloak>
+                    <x-card class="border-t-4 border-t-red-500 bg-gray-50/50">
+                        <x-slot name="header">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                <x-heroicon-o-key class="w-5 h-5 mr-2 text-red-500" />
+                                Credenciais de Acesso
+                            </h3>
+                        </x-slot>
                         
-                        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                            <!-- Red Email Box -->
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-black">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                    </svg>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">E-mail de Acesso <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <x-heroicon-o-envelope class="h-5 w-5 text-red-300" />
+                                    </div>
+                                    <x-input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="usuario@escola.com.br" class="pl-10 w-full !bg-white focus:!ring-red-500 focus:!border-red-500" />
                                 </div>
-                                <input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="E-mail de Acesso" class="block w-full pl-10 bg-red-600 text-black placeholder-red-200 border-none rounded-md py-2 focus:ring-2 focus:ring-red-400 focus:outline-none text-sm">
                             </div>
 
-                            <!-- Yellow Password Box -->
-                            <div class="relative w-full" x-data="{ showPass: false }">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-800">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 0 1 1 0 100-2 2 2 0 00-2 0z" clip-rule="evenodd" />
-                                    </svg>
+                            <div x-data="{ showPass: false }">
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Senha <span class="text-red-500">*</span></label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <x-heroicon-o-lock-closed class="h-5 w-5 text-yellow-500" />
+                                    </div>
+                                    <x-input x-bind:type="showPass ? 'text' : 'password'" name="password" autocomplete="new-password" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="Senha segura" class="pl-10 pr-10 w-full !bg-white focus:!ring-yellow-500 focus:!border-yellow-500" />
+                                    <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
+                                        <template x-if="!showPass">
+                                            <x-heroicon-o-eye class="h-5 w-5" />
+                                        </template>
+                                        <template x-if="showPass">
+                                            <x-heroicon-o-eye-slash class="h-5 w-5" />
+                                        </template>
+                                    </button>
                                 </div>
-                                <input x-bind:type="showPass ? 'text' : 'password'" name="password" autocomplete="new-password" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="Senha" class="block w-full pl-10 pr-10 bg-yellow-400 text-gray-800 placeholder-gray-600 border-none rounded-md py-2 focus:ring-2 focus:ring-yellow-300 focus:outline-none text-sm">
-                                <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-700 hover:text-black">
-                                    <i class="fas" :class="showPass ? 'fa-eye-slash' : 'fa-eye'"></i>
-                                </button>
                             </div>
                         </div>
-                    </div>
+                    </x-card>
                 </div>
-
-                <div class="mt-4 flex justify-end">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-black font-bold py-1.5 px-6 rounded shadow flex items-center text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                        </svg>
-                        CADASTRAR
-                    </button>
+                
+                <div class="flex justify-end pt-4">
+                    <x-button variant="secondary" type="button" onclick="window.location='{{ route('users.index') }}'" class="mr-3">
+                        Cancelar
+                    </x-button>
+                    <x-button variant="primary" type="submit" class="h-11 px-8">
+                        <x-heroicon-o-check-circle class="w-5 h-5 mr-2" />
+                        Cadastrar Usuário
+                    </x-button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
-    
-    <!-- Incluir FontAwesome para os ícones, se não existir -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* Placeholder mais claro para o input date */
-        .date-light::-webkit-datetime-edit-text, 
-        .date-light::-webkit-datetime-edit-month-field, 
-        .date-light::-webkit-datetime-edit-day-field, 
-        .date-light::-webkit-datetime-edit-year-field {
-            color: #d1d5db; /* gray-300 */
-        }
-        /* Cor normal quando tem valor preenchido ou está com foco */
-        .date-light:focus::-webkit-datetime-edit-text, 
-        .date-light:focus::-webkit-datetime-edit-month-field, 
-        .date-light:focus::-webkit-datetime-edit-day-field, 
-        .date-light:focus::-webkit-datetime-edit-year-field,
-        .date-light:valid::-webkit-datetime-edit-text, 
-        .date-light:valid::-webkit-datetime-edit-month-field, 
-        .date-light:valid::-webkit-datetime-edit-day-field, 
-        .date-light:valid::-webkit-datetime-edit-year-field {
-            color: #1f2937; /* gray-800 */
-        }
-    </style>
 </x-app-layout>

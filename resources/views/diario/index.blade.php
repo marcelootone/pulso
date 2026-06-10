@@ -1,42 +1,54 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Meu Diário de Classe') }}
-        </h2>
+        {{ __('Meu Diário de Classe') }}
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            
-            <h3 class="text-lg font-bold text-gray-700 mb-4">Selecione uma Turma para realizar a chamada:</h3>
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Pedagógico', 'url' => '#'],
+            ['label' => 'Diário']
+        ]" />
+    </x-slot>
 
-            @if($minhasTurmas->isEmpty())
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 shadow-sm">
-                    <p class="text-sm text-yellow-700 font-bold">Você ainda não foi atribuído a nenhuma turma. Procure a Secretaria.</p>
-                </div>
-            @else
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    @foreach($minhasTurmas as $turma)
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border-t-4 border-blue-500 hover:shadow-lg transition-shadow">
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-800 uppercase mb-1">
-                                    {{ $turma->serie }}º {{ $turma->complemento }}
-                                </h4>
-                                <p class="text-sm text-gray-500 mb-4">{{ $turma->modalidade }} - {{ $turma->turno }}</p>
-                                
-                                <div class="bg-blue-50 text-blue-800 text-xs font-bold px-2 py-1 rounded inline-block mb-4">
-                                    Disciplina: {{ $turma->pivot->disciplina }}
-                                </div>
+    <div class="max-w-7xl mx-auto">
+        <div class="mb-6">
+            <h3 class="text-lg font-bold text-gray-900">Selecione uma Turma</h3>
+            <p class="text-sm text-gray-500">Escolha a turma para realizar a chamada e registrar o conteúdo lecionado.</p>
+        </div>
 
-                                <a href="{{ route('diario.show', $turma->id) }}" class="block w-full text-center bg-blue-600 text-black px-4 py-2 rounded-md hover:bg-blue-700 font-bold">
-                                    FAZER CHAMADA
-                                </a>
+        @if($minhasTurmas->isEmpty())
+            <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-yellow-200">
+                <x-heroicon-o-exclamation-triangle class="mx-auto h-12 w-12 text-yellow-400" />
+                <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma turma atribuída</h3>
+                <p class="mt-1 text-sm text-gray-500">Você ainda não foi atribuído a nenhuma turma. Procure a Secretaria ou Coordenação.</p>
+            </div>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($minhasTurmas as $turma)
+                    <x-card class="hover:shadow-md transition-shadow border-t-4 border-t-blue-500 flex flex-col h-full">
+                        <div class="flex-grow">
+                            <h4 class="text-xl font-bold text-gray-900 uppercase mb-1">
+                                {{ $turma->serie }}º {{ $turma->complemento }}
+                            </h4>
+                            <p class="text-sm text-gray-500 mb-4">{{ $turma->modalidade }} &bull; {{ $turma->turno }}</p>
+                            
+                            <div class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-md inline-flex items-center mb-6">
+                                <x-heroicon-o-book-open class="w-4 h-4 mr-1.5" />
+                                Disciplina: {{ $turma->pivot->disciplina }}
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            @endif
 
-        </div>
+                        <x-slot name="footer">
+                            <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t">
+                                <x-button variant="primary" class="w-full justify-center" onclick="window.location='{{ route('diario.show', $turma->id) }}'">
+                                    Fazer Chamada
+                                </x-button>
+                            </div>
+                        </x-slot>
+                    </x-card>
+                @endforeach
+            </div>
+        @endif
     </div>
 </x-app-layout>

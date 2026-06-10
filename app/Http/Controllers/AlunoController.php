@@ -9,6 +9,20 @@ use Illuminate\Validation\Rule;
 
 class AlunoController extends Controller
 {
+    public function index(Request $request)
+    {
+        $query = Aluno::query();
+        
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('nome', 'like', "%{$search}%")
+                  ->orWhere('ra', 'like', "%{$search}%");
+        }
+
+        $alunos = $query->orderBy('nome')->paginate(15);
+        
+        return view('alunos.index', compact('alunos'));
+    }
     public function edit($id)
     {
         $aluno = Aluno::findOrFail($id);

@@ -1,57 +1,80 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Criar Novo Espaço
-        </h2>
+        {{ __('Criar Novo Espaço') }}
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    
-                    @if ($errors->any())
-                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
-                            <ul class="list-disc list-inside">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+    <x-slot name="breadcrumb">
+        <x-breadcrumb :items="[
+            ['label' => 'Dashboard', 'url' => route('dashboard')],
+            ['label' => 'Módulos Adicionais', 'url' => '#'],
+            ['label' => 'Espaços', 'url' => route('espacos.index')],
+            ['label' => 'Novo Espaço']
+        ]" />
+    </x-slot>
 
-                    <form action="{{ route('espacos.store') }}" method="POST">
-                        @csrf
-                        
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Nome do Espaço *</label>
-                            <input type="text" name="nome" value="{{ old('nome') }}" required placeholder="Ex: Sala de Leitura"
-                                   class="shadow-sm border-gray-300 rounded-md w-full focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold mb-2">Capacidade (Pessoas)</label>
-                            <input type="number" name="capacidade" value="{{ old('capacidade') }}" min="1" placeholder="Ex: 40"
-                                   class="shadow-sm border-gray-300 rounded-md w-full focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-
-                        <div class="mb-6">
-                            <label class="flex items-center space-x-2 cursor-pointer">
-                                <input type="checkbox" name="status" value="1" {{ old('status', true) ? 'checked' : '' }}
-                                       class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <span class="text-sm font-bold text-gray-700">Espaço Ativo (Permitir Agendamentos)</span>
-                            </label>
-                        </div>
-
-                        <div class="flex items-center justify-end space-x-4">
-                            <a href="{{ route('espacos.index') }}" class="text-gray-600 hover:text-gray-900 font-bold text-sm">Cancelar</a>
-                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-black font-bold py-2 px-6 rounded-md shadow-sm transition-colors">
-                                Salvar Espaço
-                            </button>
-                        </div>
-                    </form>
+    <div class="max-w-3xl mx-auto">
+        <x-card class="border-t-4 border-t-primary-500">
+            <x-slot name="header">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                    <x-heroicon-o-plus-circle class="w-6 h-6 text-primary-500 mr-2" />
+                    Adicionar Espaço
+                </h3>
+            </x-slot>
+            
+            @if ($errors->any())
+                <div class="mb-6">
+                    <x-alert type="error">
+                        <ul class="list-disc list-inside font-medium">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-alert>
                 </div>
-            </div>
-        </div>
+            @endif
+
+            <form action="{{ route('espacos.store') }}" method="POST">
+                @csrf
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
+                        <x-input type="text" name="nome" value="{{ old('nome') }}" required placeholder="Ex: Sala de Leitura, Laboratório de Informática..." class="w-full" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
+                        <x-input type="number" name="capacidade" value="{{ old('capacidade') }}" min="1" placeholder="Ex: 40" class="w-full sm:w-48" />
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <label class="flex items-center cursor-pointer group">
+                            <div class="relative flex items-center">
+                                <input type="checkbox" name="status" value="1" {{ old('status', true) ? 'checked' : '' }}
+                                       class="peer shrink-0 appearance-none w-6 h-6 border-2 border-gray-300 rounded-md bg-white mt-1 checked:bg-primary-600 checked:border-0 focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-primary-100 transition-all cursor-pointer">
+                                <svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none hidden peer-checked:block text-white mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="ml-3 flex flex-col">
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors">Espaço Ativo</span>
+                                <span class="text-xs font-medium text-gray-500 mt-0.5">Permitir que este espaço seja reservado em agendamentos.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <x-slot name="footer">
+                    <div class="flex items-center justify-end gap-3">
+                        <x-button variant="secondary" type="button" onclick="window.location='{{ route('espacos.index') }}'">
+                            Cancelar
+                        </x-button>
+                        <x-button variant="primary" type="submit">
+                            <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Espaço
+                        </x-button>
+                    </div>
+                </x-slot>
+            </form>
+        </x-card>
     </div>
 </x-app-layout>
