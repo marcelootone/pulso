@@ -29,15 +29,17 @@ class DiarioController extends Controller
             abort(403);
         }
 
-        // 2. Busca as frequências já registradas para esta turma nesta data
+        // 2. Busca as frequências já registradas para esta turma nesta data PELO PROFESSOR LOGADO
         $frequenciasExistentes = Frequencia::where('turma_id', $id)
             ->where('data', $dataSelecionada)
+            ->where('user_id', Auth::id())
             ->get()
             ->keyBy('aluno_id'); // Organiza por ID do aluno para facilitar a busca na View
 
-        // 3. Busca os conteúdos ministrados nesta turma nesta data
+        // 3. Busca os conteúdos ministrados nesta turma nesta data PELO PROFESSOR LOGADO
         $conteudosExistentes = \App\Models\ConteudoMinistrado::where('turma_id', $id)
             ->where('data', $dataSelecionada)
+            ->where('user_id', Auth::id())
             ->get()
             ->keyBy('aula_numero');
 
@@ -60,10 +62,10 @@ class DiarioController extends Controller
                     'aluno_id' => $aluno_id,
                     'turma_id' => $request->turma_id,
                     'data'     => $request->data,
+                    'user_id'  => Auth::id(),
                 ],
                 [
-                    'user_id' => Auth::id(),
-                    'status'  => $status,
+                    'status'   => $status,
                 ]
             );
         }
@@ -76,6 +78,7 @@ class DiarioController extends Controller
                             'turma_id' => $request->turma_id,
                             'data' => $request->data,
                             'aula_numero' => $aula_numero,
+                            'user_id' => Auth::id(),
                         ],
                         [
                             'descricao' => $descricao,
@@ -86,6 +89,7 @@ class DiarioController extends Controller
                     \App\Models\ConteudoMinistrado::where('turma_id', $request->turma_id)
                         ->where('data', $request->data)
                         ->where('aula_numero', $aula_numero)
+                        ->where('user_id', Auth::id())
                         ->delete();
                 }
             }

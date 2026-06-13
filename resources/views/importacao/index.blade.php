@@ -18,6 +18,14 @@
                 </div>
             </div>
 
+            <!-- TABS -->
+            <div class="flex mb-6 border-b border-gray-200">
+                <a href="{{ route('importar.index', ['turma_id' => request('turma_id')]) }}" class="text-primary-600 border-b-2 border-primary-600 px-6 py-3 font-bold text-sm flex items-center transition-colors">
+                    <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                    Importar Usuarios (Planilha)
+                </a>
+            </div>
+
             @if(session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
                     <p>{{ session('success') }}</p>
@@ -44,7 +52,7 @@
                             <select name="turma_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">Selecione a turma...</option>
                                 @foreach($turmas as $turma)
-                                    <option value="{{ $turma->id }}">
+                                    <option value="{{ $turma->id }}" {{ (old('turma_id') ?? request('turma_id')) == $turma->id ? 'selected' : '' }}>
                                         {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
                                     </option>
                                 @endforeach

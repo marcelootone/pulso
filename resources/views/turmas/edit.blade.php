@@ -35,7 +35,7 @@
                 </div>
             </x-slot>
 
-            <form action="{{ route('turmas.update', $turma->id) }}" method="POST">
+            <form id="form-43082b" action="{{ route('turmas.update', $turma->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 
@@ -95,7 +95,7 @@
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('turmas.show', $turma->id) }}'">
                             Cancelar
                         </x-button>
-                        <x-button variant="primary" type="submit">
+                        <x-button variant="primary" type="submit" form="form-43082b">
                             <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>

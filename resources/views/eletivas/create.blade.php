@@ -38,7 +38,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('eletivas.store') }}" method="POST">
+            <form id="form-3037c4" action="{{ route('eletivas.store') }}" method="POST">
                 @csrf
 
                 <div class="space-y-6">
@@ -95,7 +95,7 @@
                 <x-slot name="footer">
                     <div class="flex items-center justify-end gap-3">
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('eletivas.index') }}'">Cancelar</x-button>
-                        <x-button variant="primary" type="submit">
+                        <x-button variant="primary" type="submit" form="form-3037c4">
                             <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Eletiva/Clube
                         </x-button>
                     </div>

@@ -15,4 +15,9 @@ class Frequencia extends Model
     {
         return $this->belongsTo(Aluno::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

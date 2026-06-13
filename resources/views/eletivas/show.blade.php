@@ -72,11 +72,22 @@
                 </x-slot>
                 <div class="space-y-3">
                     @forelse($eletiva->professores as $prof)
-                        <div class="flex items-center bg-gray-50 p-3 rounded-lg border border-gray-200">
-                            <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold mr-3">
-                                {{ substr($prof->name, 0, 1) }}
+                        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold mr-3">
+                                    {{ substr($prof->name, 0, 1) }}
+                                </div>
+                                <span class="font-semibold text-gray-900">{{ $prof->name }}</span>
                             </div>
-                            <span class="font-semibold text-gray-900">{{ $prof->name }}</span>
+                            @can('gerenciar eletivas')
+                            <form action="{{ route('eletivas.professores.destroy', ['eletiva' => $eletiva->id, 'professor' => $prof->id]) }}" method="POST" class="inline-flex" onsubmit="return confirm('Tem certeza que deseja desvincular este professor?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-colors" title="Remover Professor">
+                                    <x-heroicon-o-trash class="w-4 h-4" />
+                                </button>
+                            </form>
+                            @endcan
                         </div>
                     @empty
                         <div class="text-center py-6 text-gray-500 italic">
@@ -105,19 +116,82 @@
                 @else
                     <form action="{{ route('inscricao-eletiva.store', $eletiva->id) }}" method="POST">
                         @csrf
-                        <div class="flex flex-col sm:flex-row gap-4 items-end">
-                            <div class="flex-grow w-full">
-                                <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Selecione os Alunos</label>
-                                <select name="aluno_ids[]" multiple required class="w-full border-gray-300 rounded-md shadow-sm h-40 focus:border-emerald-500 focus:ring-emerald-500">
-                                    @foreach($alunosParaInscricao as $aluno)
-                                        <option value="{{ $aluno->id }}" class="py-1 px-2 border-b">{{ $aluno->nome }} (RA: {{ $aluno->ra }})</option>
-                                    @endforeach
-                                </select>
-                                <p class="text-xs text-gray-500 mt-2 font-medium">Pressione CTRL (ou CMD) para selecionar múltiplos alunos.</p>
+                        <div x-data="{
+                            search: '',
+                            alunos: {{ $alunosParaInscricao->map(function($a) { return ['id' => (string)$a->id, 'nome' => $a->nome, 'ra' => $a->ra]; })->values()->toJson() }},
+                            selectedIds: [],
+                            get filteredAlunos() {
+                                if (this.search === '') return [];
+                                let s = this.search.toLowerCase();
+                                return this.alunos.filter(a => a.nome.toLowerCase().includes(s) || String(a.ra).includes(s)).slice(0, 8);
+                            },
+                            selectAluno(aluno) {
+                                if (!this.selectedIds.includes(aluno.id)) {
+                                    this.selectedIds.push(aluno.id);
+                                }
+                                this.search = '';
+                                this.$refs.searchInput.focus();
+                            },
+                            removeAluno(id) {
+                                this.selectedIds = this.selectedIds.filter(i => i !== id);
+                            },
+                            getSelected() {
+                                return this.alunos.filter(a => this.selectedIds.includes(a.id));
+                            }
+                        }" class="w-full">
+                            
+                            <div class="flex flex-col sm:flex-row gap-4 items-start">
+                                <div class="flex-grow w-full relative">
+                                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Digite os alunos a vincular</label>
+                                    
+                                    <!-- Autocomplete Input -->
+                                    <input type="text" x-model="search" x-ref="searchInput" placeholder="Buscar por nome ou RA..." autocomplete="off" class="w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                                    
+                                    <!-- Dropdown -->
+                                    <ul x-show="search.length > 0" @click.away="search = ''" class="absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1" style="display: none;">
+                                        <template x-for="aluno in filteredAlunos" :key="aluno.id">
+                                            <li @click="selectAluno(aluno)" class="px-4 py-2 hover:bg-emerald-50 cursor-pointer text-sm">
+                                                <span x-text="aluno.nome" class="font-bold text-gray-900"></span> 
+                                                <span class="text-gray-500 text-xs ml-1">(RA: <span x-text="aluno.ra"></span>)</span>
+                                            </li>
+                                        </template>
+                                        <li x-show="filteredAlunos.length === 0" class="px-4 py-2 text-gray-500 text-sm italic">Nenhum aluno encontrado.</li>
+                                    </ul>
+
+                                    <!-- Selected Badges -->
+                                    <div class="flex flex-wrap gap-2 mt-3 mb-4" x-show="selectedIds.length > 0" style="display: none;">
+                                        <template x-for="aluno in getSelected()" :key="aluno.id">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                <span x-text="aluno.nome"></span>
+                                                <button type="button" @click="removeAluno(aluno.id)" class="flex-shrink-0 ml-2 inline-flex text-emerald-600 hover:bg-emerald-200 hover:text-emerald-900 rounded p-0.5 transition-colors">
+                                                    <x-heroicon-o-x-mark class="w-3 h-3" />
+                                                </button>
+                                            </span>
+                                        </template>
+                                    </div>
+
+                                    <!-- Accordion para Seleção Múltipla Nativa -->
+                                    <details class="group border border-gray-200 rounded-md bg-gray-50 mt-4">
+                                        <summary class="cursor-pointer font-bold px-4 py-3 text-xs text-gray-600 uppercase tracking-wider group-open:border-b border-gray-200 transition-colors">
+                                            Seleção Múltipla de Alunos
+                                        </summary>
+                                        <div class="p-4 bg-white">
+                                            <select name="aluno_ids[]" x-model="selectedIds" multiple class="w-full border-gray-300 rounded-md shadow-sm h-48 focus:border-emerald-500 focus:ring-emerald-500">
+                                                <template x-for="aluno in alunos" :key="aluno.id">
+                                                    <option :value="aluno.id" class="py-1 px-2 border-b">
+                                                        <span x-text="aluno.nome"></span> (RA: <span x-text="aluno.ra"></span>)
+                                                    </option>
+                                                </template>
+                                            </select>
+                                            <p class="text-xs text-gray-500 mt-2 font-medium">Pressione CTRL (ou CMD) para selecionar múltiplos alunos.</p>
+                                        </div>
+                                    </details>
+                                </div>
+                                
+                                <x-button variant="primary" type="submit" class="!bg-emerald-600 hover:!bg-emerald-700 w-full sm:w-auto h-11 justify-center border-none mt-7" x-bind:disabled="selectedIds.length === 0">
+                                    <x-heroicon-o-plus class="w-5 h-5 mr-1" /> Inscrever
+                                </x-button>
                             </div>
-                            <x-button variant="primary" class="!bg-emerald-600 hover:!bg-emerald-700 w-full sm:w-auto h-11 justify-center border-none">
-                                <x-heroicon-o-plus class="w-5 h-5 mr-1" /> Inscrever
-                            </x-button>
                         </div>
                     </form>
                 @endif
@@ -154,7 +228,7 @@
                             </x-select>
                         </div>
                         <div class="pt-2 text-right">
-                            <x-button variant="primary" class="!bg-purple-600 hover:!bg-purple-700 w-full sm:w-auto justify-center border-none" onclick="return confirm('Deseja realmente transferir este aluno?');">
+                            <x-button variant="primary" type="submit" class="!bg-purple-600 hover:!bg-purple-700 w-full sm:w-auto justify-center border-none" onclick="return confirm('Deseja realmente transferir este aluno?');">
                                 Transferir Aluno
                             </x-button>
                         </div>

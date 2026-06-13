@@ -37,7 +37,7 @@
                             <select name="turma_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                 <option value="">Selecione...</option>
                                 @foreach($turmas as $turma)
-                                    <option value="{{ $turma->id }}">{{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->turno }}</option>
+                                    <option value="{{ $turma->id }}" {{ (old('turma_id') ?? request('turma_id')) == $turma->id ? 'selected' : '' }}>{{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->turno }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -48,8 +48,13 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end mt-8">
-                        <button type="submit" class="bg-indigo-600 text-black px-8 py-2 rounded-md hover:bg-indigo-700 font-bold shadow-md">
+                    <div class="flex justify-end mt-8 gap-4">
+                        <a href="{{ route('turmas.index') }}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 font-bold shadow-sm flex items-center transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            VOLTAR PARA TURMAS
+                        </a>
+                        <button type="submit" class="bg-indigo-600 text-black px-8 py-2 rounded-md hover:bg-indigo-700 font-bold shadow-md flex items-center transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
                             VINCULAR PROFESSOR
                         </button>
                     </div>

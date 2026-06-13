@@ -75,16 +75,26 @@ class VinculoAlunoTurmaController extends Controller
             ->first();
 
         if ($existingEnturmacao) {
-            return back()->with('error', 'O aluno já está vinculado a esta turma.');
+            if ($existingEnturmacao->status === 'Ativo') {
+                return back()->with('error', 'O aluno já está vinculado a esta turma.');
+            } else {
+                // Se estava inativo, reativa o vínculo
+                $existingEnturmacao->update([
+                    'status' => 'Ativo',
+                    'tipo_vinculo' => $request->tipo_vinculo,
+                    'data_entrada' => now(),
+                    'data_saida' => null
+                ]);
+            }
+        } else {
+            \App\Models\Enturmacao::create([
+                'matricula_id' => $matricula->id,
+                'turma_id' => $turma->id,
+                'tipo_vinculo' => $request->tipo_vinculo,
+                'data_entrada' => now(),
+                'status' => 'Ativo',
+            ]);
         }
-
-        \App\Models\Enturmacao::create([
-            'matricula_id' => $matricula->id,
-            'turma_id' => $turma->id,
-            'tipo_vinculo' => $request->tipo_vinculo,
-            'data_entrada' => now(),
-            'status' => 'Ativo',
-        ]);
 
         return redirect()->route('vinculo.create')
                          ->with('success', 'Aluno vinculado à turma com sucesso!');

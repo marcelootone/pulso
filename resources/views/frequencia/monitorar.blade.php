@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Lançar Chamada') }}
+        {{ __('Visualizar Chamada') }}
     </x-slot>
 
     <x-slot name="breadcrumb">
@@ -19,7 +19,7 @@
                 Visão Geral
             </x-button>
             <x-button variant="primary" onclick="window.location='{{ route('frequencia.monitorar') }}'">
-                Lançar Chamada
+                Visualizar Chamada
             </x-button>
             <x-button variant="danger" onclick="window.location='{{ route('frequencia.busca_ativa') }}'">
                 Busca Ativa (Faltas)
@@ -77,28 +77,47 @@
                                         <td class="px-6 py-4 text-center font-bold text-gray-400 text-sm">{{ $index + 1 }}</td>
                                         <td class="px-6 py-4 font-semibold text-gray-900 text-sm">{{ $aluno->nome }}</td>
                                         <td class="px-6 py-4">
-                                            <div class="flex justify-center gap-2 flex-wrap">
-                                                <label class="cursor-pointer">
-                                                    <input type="radio" name="frequencias[{{ $aluno->id }}]" value="P" class="peer sr-only" {{ $aluno->status_frequencia == 'P' ? 'checked' : '' }}>
-                                                    <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-700 font-bold text-xs transition-colors shadow-sm inline-block w-24 text-center">
-                                                        PRESENTE
-                                                    </span>
-                                                </label>
-                                                
-                                                <label class="cursor-pointer">
-                                                    <input type="radio" name="frequencias[{{ $aluno->id }}]" value="F" class="peer sr-only" {{ $aluno->status_frequencia == 'F' ? 'checked' : '' }}>
-                                                    <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-700 font-bold text-xs transition-colors shadow-sm inline-block w-24 text-center">
-                                                        FALTA
-                                                    </span>
-                                                </label>
+                                            @hasanyrole('Secretaria|Coordenador')
+                                                <div class="flex justify-start gap-2 flex-wrap">
+                                                    @if(!$aluno->frequencia_lancada)
+                                                        <span class="px-3 py-1.5 rounded-md bg-gray-100 text-gray-600 font-bold text-xs border border-gray-200 shadow-sm inline-block text-center">NÃO LANÇADA</span>
+                                                    @else
+                                                        @foreach($aluno->frequencias_dia as $freq)
+                                                            @php $profNome = strtok($freq->user->name ?? 'Prof', ' '); @endphp
+                                                            @if($freq->status == 'P')
+                                                                <span class="px-3 py-1.5 rounded-md bg-green-100 text-green-800 font-bold text-xs border border-green-200 shadow-sm inline-block text-center" title="{{ $freq->user->name ?? '' }}">PRESENTE ({{ $profNome }})</span>
+                                                            @elseif($freq->status == 'F')
+                                                                <span class="px-3 py-1.5 rounded-md bg-red-100 text-red-800 font-bold text-xs border border-red-200 shadow-sm inline-block text-center" title="{{ $freq->user->name ?? '' }}">FALTA ({{ $profNome }})</span>
+                                                            @elseif($freq->status == 'FJ')
+                                                                <span class="px-3 py-1.5 rounded-md bg-yellow-100 text-yellow-800 font-bold text-xs border border-yellow-200 shadow-sm inline-block text-center" title="{{ $freq->user->name ?? '' }}">JUSTIFICADA ({{ $profNome }})</span>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <div class="flex justify-center gap-2 flex-wrap">
+                                                    <label class="cursor-pointer">
+                                                        <input type="radio" name="frequencias[{{ $aluno->id }}]" value="P" class="peer sr-only" {{ $aluno->status_frequencia == 'P' ? 'checked' : '' }}>
+                                                        <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-green-600 peer-checked:text-white peer-checked:border-green-700 font-bold text-xs transition-colors shadow-sm inline-block w-24 text-center">
+                                                            PRESENTE
+                                                        </span>
+                                                    </label>
+                                                    
+                                                    <label class="cursor-pointer">
+                                                        <input type="radio" name="frequencias[{{ $aluno->id }}]" value="F" class="peer sr-only" {{ $aluno->status_frequencia == 'F' ? 'checked' : '' }}>
+                                                        <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-700 font-bold text-xs transition-colors shadow-sm inline-block w-24 text-center">
+                                                            FALTA
+                                                        </span>
+                                                    </label>
 
-                                                <label class="cursor-pointer">
-                                                    <input type="radio" name="frequencias[{{ $aluno->id }}]" value="FJ" class="peer sr-only" {{ $aluno->status_frequencia == 'FJ' ? 'checked' : '' }}>
-                                                    <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-600 font-bold text-xs transition-colors shadow-sm inline-block w-28 text-center" title="Falta Justificada">
-                                                        JUSTIFICADA
-                                                    </span>
-                                                </label>
-                                            </div>
+                                                    <label class="cursor-pointer">
+                                                        <input type="radio" name="frequencias[{{ $aluno->id }}]" value="FJ" class="peer sr-only" {{ $aluno->status_frequencia == 'FJ' ? 'checked' : '' }}>
+                                                        <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-yellow-500 peer-checked:text-white peer-checked:border-yellow-600 font-bold text-xs transition-colors shadow-sm inline-block w-28 text-center" title="Falta Justificada">
+                                                            JUSTIFICADA
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            @endhasanyrole
                                         </td>
                                     </tr>
                                 @empty
@@ -113,14 +132,16 @@
                     </div>
 
                     @if($alunos->count() > 0)
-                        <x-slot name="footer">
-                            <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
-                                <x-button variant="primary" type="submit">
-                                    <x-heroicon-o-check class="w-5 h-5 mr-2" />
-                                    Salvar Chamada
-                                </x-button>
-                            </div>
-                        </x-slot>
+                        @unless(auth()->user()->hasAnyRole(['Secretaria', 'Coordenador']))
+                            <x-slot name="footer">
+                                <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
+                                    <x-button variant="primary" type="submit">
+                                        <x-heroicon-o-check class="w-5 h-5 mr-2" />
+                                        Salvar Chamada
+                                    </x-button>
+                                </div>
+                            </x-slot>
+                        @endunless
                     @endif
                 </form>
             </x-card>

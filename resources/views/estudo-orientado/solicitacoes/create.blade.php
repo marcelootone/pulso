@@ -24,7 +24,7 @@
                 </div>
             </x-slot>
 
-            <form action="{{ route('estudo-orientado.solicitacoes.store') }}" method="POST">
+            <form id="form-e32e0b" action="{{ route('estudo-orientado.solicitacoes.store') }}" method="POST">
                 @csrf
 
                 <div class="space-y-6">
@@ -97,7 +97,7 @@
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('estudo-orientado.solicitacoes.index') }}'">
                             Cancelar
                         </x-button>
-                        <x-button variant="primary" type="submit">
+                        <x-button variant="primary" type="submit" form="form-e32e0b">
                             <x-heroicon-o-check class="w-5 h-5 mr-2" /> Criar Solicitação
                         </x-button>
                     </div>

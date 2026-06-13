@@ -11,12 +11,7 @@
         ]" />
     </x-slot>
 
-    <x-slot name="actions">
-        <x-button variant="secondary" onclick="window.location='{{ route('importar.index') }}'">
-            <x-heroicon-o-arrow-up-tray class="w-4 h-4 mr-2" />
-            Importar Estudantes
-        </x-button>
-    </x-slot>
+
 
     <x-card>
         <x-slot name="header">

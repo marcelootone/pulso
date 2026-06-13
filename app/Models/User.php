@@ -25,6 +25,7 @@ class User extends Authenticatable
     const TIPO_SECRETARIA = 'Secretaria';
     const TIPO_PROF_ESPECIAL = 'Professor Educação Especial';
     const TIPO_PROF_ESTUDO_ORIENTADO = 'Professor de Estudo Orientado';
+    const TIPO_ADMINISTRADOR = 'Administrador';
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasRoles;
 

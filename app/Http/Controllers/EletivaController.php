@@ -15,7 +15,7 @@ class EletivaController extends Controller
 
     public function index(\Illuminate\Http\Request $request)
     {
-        $query = \App\Models\Eletiva::with('professores')->withCount('alunos');
+        $query = \App\Models\Eletiva::with('professores')->withCount('alunosAtivos');
         
         $user = \Illuminate\Support\Facades\Auth::user();
         if ($user->hasRole(['Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado']) && !$user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
@@ -62,7 +62,8 @@ class EletivaController extends Controller
 
         $alunosParaInscricao = \App\Models\Aluno::where('status_matricula', 'Ativo')
             ->whereDoesntHave('eletivas', function($q) use ($eletiva) {
-                $q->where('eletivas.id', $eletiva->id);
+                $q->where('eletivas.id', $eletiva->id)
+                  ->where('aluno_eletiva.status', 'Ativo');
             })->orderBy('nome')->get();
 
         return view('eletivas.show', compact('eletiva', 'alunosParaInscricao'));
@@ -88,5 +89,14 @@ class EletivaController extends Controller
         $this->eletivaService->toggleAtiva($eletiva);
         $status = $eletiva->ativa ? 'ativado' : 'desativado';
         return back()->with('success', "Registro $status com sucesso!");
+    }
+
+    public function removerProfessor(\App\Models\Eletiva $eletiva, \App\Models\User $professor)
+    {
+        abort_unless(auth()->user()->can('gerenciar eletivas'), 403);
+        
+        $eletiva->professores()->detach($professor->id);
+        
+        return back()->with('success', 'Professor removido com sucesso!');
     }
 }

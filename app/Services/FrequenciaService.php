@@ -44,9 +44,8 @@ class FrequenciaService
             $turma->dias_letivos_registrados = Frequencia::where('turma_id', $turma->id)
                 ->whereMonth('data', $mes)
                 ->whereYear('data', $ano)
-                ->select('data')
-                ->distinct()
-                ->count();
+                ->distinct('data')
+                ->count('data');
         }
 
         return $turmas;
@@ -67,15 +66,23 @@ class FrequenciaService
         })->sortBy('nome')->values();
 
         // Mapear frequencias existentes na data
-        $frequencias = Frequencia::where('turma_id', $turmaId)
+        $frequencias = Frequencia::with('user')
+            ->where('turma_id', $turmaId)
             ->where('data', $data)
             ->get()
-            ->keyBy('aluno_id');
+            ->groupBy('aluno_id');
 
         foreach ($alunos as $aluno) {
-            $aluno->status_frequencia = $frequencias->has($aluno->id) 
-                ? $frequencias->get($aluno->id)->status 
-                : 'P'; // Default para Presente
+            $aluno->frequencias_dia = $frequencias->get($aluno->id, collect());
+            $aluno->frequencia_lancada = $aluno->frequencias_dia->isNotEmpty();
+            
+            $aluno->status_frequencia = 'P';
+            if (auth()->check()) {
+                $minhaFreq = $aluno->frequencias_dia->where('user_id', auth()->id())->first();
+                if ($minhaFreq) {
+                    $aluno->status_frequencia = $minhaFreq->status;
+                }
+            }
         }
 
         return $alunos;
@@ -97,10 +104,10 @@ class FrequenciaService
                     [
                         'turma_id' => $turmaId,
                         'aluno_id' => $alunoId,
-                        'data' => $dataFrequencia
+                        'data' => $dataFrequencia,
+                        'user_id' => $userId
                     ],
                     [
-                        'user_id' => $userId,
                         'status' => $status
                     ]
                 );

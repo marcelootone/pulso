@@ -51,12 +51,14 @@
                                         <td class="px-2 py-2 align-top">
                                             <input type="text" name="alunos[{{ $index }}][1]" value="{{ $row[1] ?? '' }}" class="w-full border-gray-300 rounded shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white h-10" required>
                                         </td>
-                                        <td class="px-2 py-2 align-top relative">
-                                            <input type="text" name="alunos[{{ $index }}][2]" value="{{ $row[2] ?? '' }}" class="w-full border-gray-300 rounded shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white h-10 pr-10" placeholder="DD/MM/AAAA">
-                                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none mt-2">
-                                                <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
+                                        <td class="px-2 py-2 align-top">
+                                            <div class="relative">
+                                                <input type="text" name="alunos[{{ $index }}][2]" value="{{ $row[2] ?? '' }}" class="w-full border-gray-300 rounded shadow-sm text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white h-10 pr-10" placeholder="DD/MM/AAAA">
+                                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                                    <svg class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-2 py-2 align-top">
@@ -75,7 +77,11 @@
                         </table>
                     </div>
 
-                    <div class="flex items-center justify-end mt-4 mb-4">
+                    <div class="flex items-center justify-end mt-4 mb-4 gap-3">
+                        <a href="{{ route('importar.index') }}" class="px-6 py-2 border border-gray-300 rounded shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            VOLTAR
+                        </a>
                         <button type="submit" class="px-6 py-2 border border-transparent rounded shadow-sm text-sm font-bold text-black bg-[#28a745] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5.414A1 1 0 0017.586 4L16 2.414A1 1 0 0015.293 2H4zm3 1h6v4H7V4zm8 8H5v4h10v-4z"></path></svg>
                             SALVAR

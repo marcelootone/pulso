@@ -41,4 +41,25 @@ class AtribuicaoController extends Controller
             return redirect()->back()->withErrors(['erro' => 'Este professor já está atribuído a esta turma com esta disciplina.']);
         }
     }
+
+    public function destroy(Request $request, $turmaId, $userId)
+    {
+        $disciplina = $request->input('disciplina');
+
+        if ($disciplina) {
+            \Illuminate\Support\Facades\DB::table('professor_turma')
+                ->where('user_id', $userId)
+                ->where('turma_id', $turmaId)
+                ->where('disciplina', $disciplina)
+                ->delete();
+        } else {
+            // Fallback: se não vier disciplina, remove tudo desse professor
+            \Illuminate\Support\Facades\DB::table('professor_turma')
+                ->where('user_id', $userId)
+                ->where('turma_id', $turmaId)
+                ->delete();
+        }
+
+        return redirect()->back()->with('success', 'Professor desvinculado com sucesso!');
+    }
 }

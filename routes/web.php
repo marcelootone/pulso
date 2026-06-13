@@ -11,7 +11,9 @@ use App\Http\Controllers\RelatorioController;
 
 use App\Http\Controllers\NotaController;
 
-Route::redirect('/', '/login');
+Route::get('/', function () {
+    return redirect()->route('dashboard');
+});
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -103,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
         // Atribuir Aulas
         Route::get('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'create'])->name('atribuicoes.create');
         Route::post('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'store'])->name('atribuicoes.store');
+        Route::delete('/atribuir-aulas/turma/{turma}/professor/{professor}', [\App\Http\Controllers\AtribuicaoController::class, 'destroy'])->name('atribuicoes.destroy');
         
         // Enturmações
         Route::get('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'index'])->name('enturmacoes.index');
@@ -177,6 +180,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('eletivas/{eletiva}/inscrever', [\App\Http\Controllers\InscricaoEletivaController::class, 'store'])->name('inscricao-eletiva.store');
         Route::delete('eletivas/{eletiva}/alunos/{aluno}', [\App\Http\Controllers\InscricaoEletivaController::class, 'destroy'])->name('inscricao-eletiva.destroy');
         Route::post('eletivas/trocar-clube', [\App\Http\Controllers\InscricaoEletivaController::class, 'trocar'])->name('inscricao-eletiva.trocar');
+
+        // Professores
+        Route::delete('eletivas/{eletiva}/professores/{professor}', [\App\Http\Controllers\EletivaController::class, 'removerProfessor'])->name('eletivas.professores.destroy');
     });
 
     // Excluir/Desativar

@@ -74,9 +74,12 @@ class TurmaController extends Controller
     {
         $user = Auth::user();
 
-        $query = Turma::with(['enturmacoes' => function ($q) {
-            $q->where('status', 'Ativo')->with('matricula.aluno');
-        }]);
+        $query = Turma::with([
+            'enturmacoes' => function ($q) {
+                $q->where('status', 'Ativo')->with('matricula.aluno');
+            },
+            'professores'
+        ]);
 
         if (!$user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
             $query->whereHas('professores', function($q) use ($user) {

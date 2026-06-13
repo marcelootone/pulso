@@ -23,7 +23,20 @@
                 </div>
             </x-slot>
 
-            <form action="{{ route('turmas.store') }}" method="POST">
+            @if ($errors->any())
+                <div class="mb-6">
+                    <x-alert type="error">
+                        <strong class="font-bold">Atenção!</strong>
+                        <ul class="mt-2 list-disc list-inside text-sm font-medium">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-alert>
+                </div>
+            @endif
+
+            <form id="form-create-turma" action="{{ route('turmas.store') }}" method="POST">
                 @csrf
                 <div class="space-y-6">
                     <div>
@@ -31,16 +44,16 @@
                         <x-select name="modalidade" required class="w-full">
                             <option value="">Selecione...</option>
                             <optgroup label="INFANTIL">
-                                <option value="EI - Educação Infantil">EI - Educação Infantil</option>
+                                <option value="EI - Educação Infantil" {{ old('modalidade') == 'EI - Educação Infantil' ? 'selected' : '' }}>EI - Educação Infantil</option>
                             </optgroup>
                             <optgroup label="REGULAR">
-                                <option value="EF - Ensino Fundamental">EF - Ensino Fundamental</option>
-                                <option value="EM - Ensino Médio">EM - Ensino Médio</option>
-                                <option value="EMI - Ensino Médio Integrado">EMI - Ensino Médio Integrado</option>
+                                <option value="EF - Ensino Fundamental" {{ old('modalidade') == 'EF - Ensino Fundamental' ? 'selected' : '' }}>EF - Ensino Fundamental</option>
+                                <option value="EM - Ensino Médio" {{ old('modalidade') == 'EM - Ensino Médio' ? 'selected' : '' }}>EM - Ensino Médio</option>
+                                <option value="EMI - Ensino Médio Integrado" {{ old('modalidade') == 'EMI - Ensino Médio Integrado' ? 'selected' : '' }}>EMI - Ensino Médio Integrado</option>
                             </optgroup>
                             <optgroup label="EJA">
-                                <option value="EJA EF - Ensino de Jovens e Adultos Fundamental">EJA EF</option>
-                                <option value="EJA EM - Ensino de Jovens e Adultos Médio">EJA EM</option>
+                                <option value="EJA EF - Ensino de Jovens e Adultos Fundamental" {{ old('modalidade') == 'EJA EF - Ensino de Jovens e Adultos Fundamental' ? 'selected' : '' }}>EJA EF</option>
+                                <option value="EJA EM - Ensino de Jovens e Adultos Médio" {{ old('modalidade') == 'EJA EM - Ensino de Jovens e Adultos Médio' ? 'selected' : '' }}>EJA EM</option>
                             </optgroup>
                         </x-select>
                     </div>
@@ -49,26 +62,27 @@
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Turno</label>
                             <x-select name="turno" required class="w-full">
-                                <option value="Matutino">Matutino</option>
-                                <option value="Vespertino">Vespertino</option>
-                                <option value="Noturno">Noturno</option>
-                                <option value="Integral">Integral</option>
+                                <option value="Matutino" {{ old('turno') == 'Matutino' ? 'selected' : '' }}>Matutino</option>
+                                <option value="Vespertino" {{ old('turno') == 'Vespertino' ? 'selected' : '' }}>Vespertino</option>
+                                <option value="Noturno" {{ old('turno') == 'Noturno' ? 'selected' : '' }}>Noturno</option>
+                                <option value="Integral" {{ old('turno') == 'Integral' ? 'selected' : '' }}>Integral</option>
                             </x-select>
                         </div>
 
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Série</label>
-                            <x-input type="number" name="serie" min="1" max="9" required class="w-full" />
+                            <x-input type="number" name="serie" min="1" max="9" value="{{ old('serie') }}" required class="w-full" />
                         </div>
 
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Complemento</label>
-                            <x-input type="text" name="complemento" maxlength="3" placeholder="Ex: A" class="w-full uppercase" />
+                            <x-input type="text" name="complemento" maxlength="3" value="{{ old('complemento') }}" placeholder="Ex: COM" class="w-full uppercase" />
+                            <p class="mt-1 text-[11px] leading-tight text-gray-500">O Complemento Consiste em nomear a turma com até 3 letras, por exemplo, 1º01 Comércio, o complemento seria COM.</p>
                         </div>
 
                         <div class="md:col-span-1">
                             <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Ano Letivo</label>
-                            <x-input type="number" name="ano_letivo" min="2000" max="2099" value="{{ date('Y') }}" required class="w-full" />
+                            <x-input type="number" name="ano_letivo" min="2000" max="2099" value="{{ old('ano_letivo', date('Y')) }}" required class="w-full" />
                         </div>
                     </div>
                 </div>
@@ -78,7 +92,7 @@
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('turmas.index') }}'">
                             Cancelar
                         </x-button>
-                        <x-button variant="primary" type="submit">
+                        <x-button variant="primary" type="submit" form="form-create-turma">
                             Criar Turma
                         </x-button>
                     </div>

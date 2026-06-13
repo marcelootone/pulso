@@ -8,6 +8,7 @@ class ConteudoMinistrado extends Model
 {
     protected $fillable = [
         'turma_id',
+        'user_id',
         'disciplina',
         'data',
         'aula_numero',
@@ -17,5 +18,10 @@ class ConteudoMinistrado extends Model
     public function turma()
     {
         return $this->belongsTo(Turma::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

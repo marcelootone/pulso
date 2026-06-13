@@ -22,7 +22,7 @@
                 Visão Geral
             </x-button>
             <x-button variant="secondary" onclick="window.location='{{ route('frequencia.monitorar') }}'">
-                Lançar Chamada
+                Visualizar Chamada
             </x-button>
             <x-button variant="danger" onclick="window.location='{{ route('frequencia.busca_ativa') }}'">
                 Busca Ativa (Faltas)

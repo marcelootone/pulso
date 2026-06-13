@@ -44,7 +44,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('espacos.update', $espaco->id) }}" method="POST">
+            <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST">
                 @csrf
                 @method('PUT')
                 
@@ -83,7 +83,7 @@
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('espacos.index') }}'">
                             Cancelar
                         </x-button>
-                        <x-button variant="primary" type="submit" class="!bg-amber-500 hover:!bg-amber-600 border-none">
+                        <x-button variant="primary" type="submit" form="form-f19850" class="!bg-amber-500 hover:!bg-amber-600 border-none">
                             <x-heroicon-o-check class="w-5 h-5 mr-2" /> Atualizar Espaço
                         </x-button>
                     </div>

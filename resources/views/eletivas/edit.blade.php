@@ -41,7 +41,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('eletivas.update', $eletiva->id) }}" method="POST">
+            <form id="form-960dfb" action="{{ route('eletivas.update', $eletiva->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -102,7 +102,7 @@
                 <x-slot name="footer">
                     <div class="flex items-center justify-end gap-3">
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('eletivas.index') }}'">Cancelar</x-button>
-                        <x-button variant="primary" class="!bg-amber-500 hover:!bg-amber-600 focus:!ring-amber-500 border-none" type="submit">
+                        <x-button variant="primary" class="!bg-amber-500 hover:!bg-amber-600 focus:!ring-amber-500 border-none" type="submit" form="form-960dfb">
                             <x-heroicon-o-check class="w-4 h-4 mr-2" /> Atualizar
                         </x-button>
                     </div>

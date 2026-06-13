@@ -61,6 +61,9 @@ class RolesAndPermissionsSeeder extends Seeder
         // GESTOR (Acesso irrestrito implementado no Gate::before do AuthServiceProvider)
         $roleGestor = Role::firstOrCreate(['name' => User::TIPO_GESTOR, 'guard_name' => 'web']);
         
+        // ADMINISTRADOR (Acesso irrestrito implementado no Gate::before)
+        $roleAdmin = Role::firstOrCreate(['name' => User::TIPO_ADMINISTRADOR, 'guard_name' => 'web']);
+        
         // SECRETARIA
         $roleSecretaria = Role::firstOrCreate(['name' => User::TIPO_SECRETARIA, 'guard_name' => 'web']);
         $roleSecretaria->syncPermissions([

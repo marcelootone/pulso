@@ -211,7 +211,7 @@
                             <div class="w-full md:w-1/2">
                                 <div class="bg-cyan-50 text-cyan-800 p-4 rounded-xl border border-cyan-100 text-sm font-medium flex items-start">
                                     <x-heroicon-o-information-circle class="w-5 h-5 mr-2 shrink-0 text-cyan-600" />
-                                    Caso opte por não vincular o estudante agora, o mesmo pode ser feito posteriormente no módulo Acadêmico > Matrículas e Enturmações.
+                                    Caso opte por não vincular o estudante agora, o mesmo pode ser feito posteriormente no módulo Acadêmico > Turmas > Matricular Aluno > Alocar Alunos sem Turma
                                 </div>
                             </div>
                         </div>

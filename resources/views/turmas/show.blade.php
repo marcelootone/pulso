@@ -14,10 +14,12 @@
 
     <x-slot name="actions">
         @can('gerenciar turmas')
-            <x-button variant="secondary" onclick="window.location='{{ route('vinculo.create') }}?turma_id={{ $turma->id }}'">
-                <x-heroicon-o-user-plus class="w-4 h-4 mr-2" />
-                Matricular Aluno
-            </x-button>
+            <div class="flex gap-2">
+                <x-button variant="primary" onclick="window.location='{{ route('importar.index') }}?turma_id={{ $turma->id }}'">
+                    <x-heroicon-o-user-plus class="w-4 h-4 mr-2" />
+                    Matricular Aluno
+                </x-button>
+            </div>
         @endhasrole
     </x-slot>
 
@@ -53,6 +55,62 @@
             </div>
         </x-card>
     </div>
+
+    <x-card class="mb-8">
+        <x-slot name="header">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-bold text-gray-900">Equipe Docente (Professores Vinculados)</h3>
+                @can('gerenciar turmas')
+                    <a href="{{ url('atribuir-aulas') }}?turma_id={{ $turma->id }}" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
+                        + Atribuir Aula
+                    </a>
+                @endhasrole
+            </div>
+        </x-slot>
+
+        <div class="-mx-6 -my-6">
+            <x-table>
+                <x-slot name="head">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Professor(a)</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Disciplina</th>
+                    <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                </x-slot>
+                <x-slot name="body">
+                    @forelse($turma->professores as $professor)
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold mr-3">
+                                    {{ substr($professor->name, 0, 1) }}
+                                </div>
+                                {{ $professor->name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-indigo-100 text-indigo-800">
+                                    {{ $professor->pivot->disciplina }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                @can('gerenciar turmas')
+                                    <form action="{{ route('atribuicoes.destroy', ['turma' => $turma->id, 'professor' => $professor->id]) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja desvincular este professor da disciplina de {{ $professor->pivot->disciplina }}?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="hidden" name="disciplina" value="{{ $professor->pivot->disciplina }}">
+                                        <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors">Remover</button>
+                                    </form>
+                                @endhasrole
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-8 text-center text-gray-500 italic">
+                                Nenhum professor atribuído a esta turma ainda.
+                            </td>
+                        </tr>
+                    @endforelse
+                </x-slot>
+            </x-table>
+        </div>
+    </x-card>
 
     <x-card>
         <x-slot name="header">

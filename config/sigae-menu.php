@@ -34,24 +34,8 @@ return [
                 'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
                 'permissions' => ['gerenciar estudantes', 'ver estudantes'],
             ],
-            [
-                'label' => 'Matrículas',
-                'route' => 'vinculo.create',
-                'roles' => ['Gestor', 'Secretaria'],
-                'permissions' => ['realizar matriculas'],
-            ],
-            [
-                'label' => 'Atribuir Aulas',
-                'route' => 'atribuicoes.create',
-                'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
-                'permissions' => ['gerenciar professores'],
-            ],
-            [
-                'label' => 'Importar Estudantes',
-                'route' => 'importar.index',
-                'roles' => ['Gestor', 'Secretaria'],
-                'permissions' => ['gerenciar estudantes'],
-            ],
+
+
         ],
     ],
 
@@ -71,18 +55,6 @@ return [
                 'route' => 'frequencia.index',
                 'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
                 'permissions' => ['ver frequencia geral', 'acompanhar frequencia'],
-            ],
-            [
-                'label' => 'Monitoramento',
-                'route' => 'frequencia.monitorar',
-                'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
-                'permissions' => ['acompanhar frequencia'],
-            ],
-            [
-                'label' => 'Busca Ativa',
-                'route' => 'frequencia.busca_ativa',
-                'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
-                'permissions' => ['acompanhar evasao'],
             ],
         ],
     ],
@@ -158,6 +130,18 @@ return [
                 'label' => 'Perfis e Permissões',
                 'route' => null, // Futuro
                 'roles' => ['Gestor'],
+            ],
+            [
+                'label' => 'Importar Estudantes Planilha',
+                'route' => 'importar.index',
+                'roles' => ['Gestor', 'Secretaria'],
+                'permissions' => ['gerenciar estudantes'],
+            ],
+            [
+                'label' => 'Turmas',
+                'route' => 'turmas.create',
+                'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
+                'permissions' => ['gerenciar turmas'],
             ],
         ],
     ],

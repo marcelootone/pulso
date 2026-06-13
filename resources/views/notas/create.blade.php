@@ -62,7 +62,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('notas.store', $avaliacao->id) }}" method="POST">
+            <form id="form-1eac94" action="{{ route('notas.store', $avaliacao->id) }}" method="POST">
                 @csrf
                 
                 <div class="-mx-6 -my-6">
@@ -106,7 +106,7 @@
                 @if($alunos->count() > 0)
                     <x-slot name="footer">
                         <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
-                            <x-button variant="primary" type="submit">
+                            <x-button variant="primary" type="submit" form="form-1eac94">
                                 <x-heroicon-o-check class="w-5 h-5 mr-2" />
                                 Salvar Notas
                             </x-button>

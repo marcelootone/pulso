@@ -39,7 +39,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('users.update', $user->id) }}" method="POST">
+            <form id="edit-user-form" action="{{ route('users.update', $user->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -143,7 +143,7 @@
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('users.index') }}'">
                             Cancelar
                         </x-button>
-                        <x-button variant="primary" type="submit" class="!bg-amber-500 hover:!bg-amber-600 border-none">
+                        <x-button variant="primary" type="submit" form="edit-user-form" class="!bg-amber-500 hover:!bg-amber-600 border-none">
                             <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>

@@ -1,6 +1,13 @@
 <div x-data="searchModal()" 
-     @keydown.window.ctrl.k.prevent="open = true" 
-     @keydown.window.meta.k.prevent="open = true"
+     @keydown.window="
+        if (($event.ctrlKey || $event.metaKey) && $event.key === 'k') { 
+            $event.preventDefault(); 
+            open = true; 
+        }
+        if ($event.key === 'Escape') { 
+            open = false; 
+        }
+     "
      @open-search.window="open = true"
      x-cloak>
     

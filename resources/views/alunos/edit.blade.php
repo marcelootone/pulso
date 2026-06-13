@@ -41,7 +41,7 @@
                 </div>
             </x-slot>
 
-            <form action="{{ route('alunos.update', $aluno->id) }}" method="POST">
+            <form id="form-bbb5d7" action="{{ route('alunos.update', $aluno->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -134,7 +134,7 @@
                         @else
                             <x-button variant="secondary" type="button" onclick="window.location='{{ route('alunos.index') }}'">Cancelar</x-button>
                         @endif
-                        <x-button variant="primary" type="submit">
+                        <x-button variant="primary" type="submit" form="form-bbb5d7">
                             <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>

@@ -76,7 +76,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     @php
-                                        $ocupadas = $eletiva->alunos_count;
+                                        $ocupadas = $eletiva->alunos_ativos_count;
                                         $total = $eletiva->vagas;
                                         $percent = $total > 0 ? ($ocupadas / $total) * 100 : 0;
                                         $colorClass = $percent >= 100 ? 'text-red-600' : ($percent >= 80 ? 'text-yellow-600' : 'text-green-600');
