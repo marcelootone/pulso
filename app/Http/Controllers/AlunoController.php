@@ -6,20 +6,20 @@ use App\Models\Aluno;
 use App\Models\Enturmacao;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Services\AlunoService;
 
 class AlunoController extends Controller
 {
+    protected $alunoService;
+
+    public function __construct(AlunoService $alunoService)
+    {
+        $this->alunoService = $alunoService;
+    }
+
     public function index(Request $request)
     {
-        $query = Aluno::query();
-        
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('nome', 'like', "%{$search}%")
-                  ->orWhere('ra', 'like', "%{$search}%");
-        }
-
-        $alunos = $query->orderBy('nome')->paginate(15);
+        $alunos = $this->alunoService->getAlunosPaginados(15, $request->search);
         
         return view('alunos.index', compact('alunos'));
     }
