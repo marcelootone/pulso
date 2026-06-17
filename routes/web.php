@@ -202,19 +202,32 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // 8. ESTUDO ORIENTADO
-    // Solicitações: Professores regulares criam atividades para o Prof. de EO aplicar
-    Route::group(['middleware' => ['permission:lancar avaliacoes|validar lancamentos']], function () {
-        Route::get('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexSolicitacoes'])->name('estudo-orientado.solicitacoes.index');
-        Route::get('/estudo-orientado/solicitacoes/nova', [\App\Http\Controllers\EstudoOrientadoController::class, 'createSolicitacao'])->name('estudo-orientado.solicitacoes.create');
-        Route::post('/estudo-orientado/solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeSolicitacao'])->name('estudo-orientado.solicitacoes.store');
-        Route::get('/estudo-orientado/solicitacoes/{id}/resultado', [\App\Http\Controllers\EstudoOrientadoController::class, 'showResultado'])->name('estudo-orientado.solicitacoes.show');
-    });
+    Route::group(['prefix' => 'estudo-orientado', 'as' => 'estudo-orientado.'], function () {
+        
+        // API - Obter alunos de uma turma
+        Route::get('api/turmas/{id}/alunos', [\App\Http\Controllers\EstudoOrientadoController::class, 'getAlunosPorTurma'])->name('api.alunos');
 
-    // Avaliações: Professor de EO aplica e registra cumprimento dos alunos
-    Route::group(['middleware' => ['permission:lancar avaliacoes|validar lancamentos']], function () {
-        Route::get('/estudo-orientado/avaliacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexAvaliacoes'])->name('estudo-orientado.avaliacoes.index');
-        Route::get('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showAvaliacao'])->name('estudo-orientado.avaliacoes.show');
-        Route::post('/estudo-orientado/avaliacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeAvaliacao'])->name('estudo-orientado.avaliacoes.store');
+        // Solicitações
+        Route::get('solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexSolicitacoes'])->name('solicitacoes.index');
+        Route::get('solicitacoes/nova', [\App\Http\Controllers\EstudoOrientadoController::class, 'createSolicitacao'])->name('solicitacoes.create');
+        Route::post('solicitacoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeSolicitacao'])->name('solicitacoes.store');
+        Route::get('solicitacoes/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showSolicitacao'])->name('solicitacoes.show');
+
+        // Análises (Coordenador)
+        Route::get('analises', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexAnalises'])->name('analises.index');
+        Route::get('analises/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showAnalise'])->name('analises.show');
+        Route::post('analises/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeAnalise'])->name('analises.store');
+
+        // Relatórios (Gestor/Coordenador)
+        Route::get('relatorios', [\App\Http\Controllers\EstudoOrientadoController::class, 'relatorios'])->name('relatorios');
+
+        // Acompanhamentos (Orientador)
+        Route::get('acompanhamentos', [\App\Http\Controllers\EstudoOrientadoController::class, 'indexAcompanhamentos'])->name('acompanhamentos.index');
+        Route::get('acompanhamentos/{id}', [\App\Http\Controllers\EstudoOrientadoController::class, 'showAcompanhamento'])->name('acompanhamentos.show');
+        Route::post('acompanhamentos/{id}/atendimentos', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeAtendimento'])->name('atendimentos.store');
+        Route::post('acompanhamentos/{id}/evolucoes', [\App\Http\Controllers\EstudoOrientadoController::class, 'storeEvolucao'])->name('evolucoes.store');
+        Route::post('acompanhamentos/{id}/planos', [\App\Http\Controllers\EstudoOrientadoController::class, 'storePlanoAcao'])->name('planos.store');
+        Route::post('acompanhamentos/{id}/concluir', [\App\Http\Controllers\EstudoOrientadoController::class, 'concluirAcompanhamento'])->name('concluir');
     });
 });
 

@@ -42,9 +42,15 @@
                         </x-nav-link>
                     @endhasrole
 
+                    @hasrole('Gestor|Coordenador')
+                        <x-nav-link :href="route('estudo-orientado.analises.index')" :active="request()->routeIs('estudo-orientado.analises.*')">
+                            {{ __('Análises EO') }}
+                        </x-nav-link>
+                    @endhasrole
+
                     @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
-                        <x-nav-link :href="route('estudo-orientado.avaliacoes.index')" :active="request()->routeIs('estudo-orientado.avaliacoes.*')">
-                            {{ __('Avaliar EO') }}
+                        <x-nav-link :href="route('estudo-orientado.acompanhamentos.index')" :active="request()->routeIs('estudo-orientado.acompanhamentos.*')">
+                            {{ __('Acompanhar EO') }}
                         </x-nav-link>
                     @endhasrole
                 </div>
@@ -129,9 +135,15 @@
                 </x-responsive-nav-link>
             @endhasrole
 
+            @hasrole('Gestor|Coordenador')
+                <x-responsive-nav-link :href="route('estudo-orientado.analises.index')" :active="request()->routeIs('estudo-orientado.analises.*')">
+                    {{ __('Análises EO') }}
+                </x-responsive-nav-link>
+            @endhasrole
+
             @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
-                <x-responsive-nav-link :href="route('estudo-orientado.avaliacoes.index')" :active="request()->routeIs('estudo-orientado.avaliacoes.*')">
-                    {{ __('Avaliar EO') }}
+                <x-responsive-nav-link :href="route('estudo-orientado.acompanhamentos.index')" :active="request()->routeIs('estudo-orientado.acompanhamentos.*')">
+                    {{ __('Acompanhar EO') }}
                 </x-responsive-nav-link>
             @endhasrole
         </div>

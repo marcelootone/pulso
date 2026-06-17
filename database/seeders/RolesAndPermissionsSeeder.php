@@ -49,7 +49,13 @@ class RolesAndPermissionsSeeder extends Seeder
             'lancar notas',
             'acessar proprias eletivas',
             'ver estudantes',
-            'ver relatorios proprias turmas'
+            'ver relatorios proprias turmas',
+            
+            // Estudo Orientado
+            'criar solicitacao estudo orientado',
+            'analisar solicitacao estudo orientado',
+            'registrar atendimento estudo orientado',
+            'consultar estudo orientado',
         ];
 
         foreach ($permissoes as $permissao) {
@@ -78,7 +84,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'ver relatorios administrativos',
             'ver frequencia geral',
             'agendar espacos',
-            'emitir documentos'
+            'emitir documentos',
+            'consultar estudo orientado'
         ]);
 
         // COORDENADOR
@@ -92,7 +99,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'vincular estudantes eletivas',
             'ver relatorios pedagogicos',
             'acompanhar evasao',
-            'agendar espacos'
+            'agendar espacos',
+            'analisar solicitacao estudo orientado',
+            'consultar estudo orientado'
         ]);
 
         // PROFESSOR
@@ -106,7 +115,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'acessar proprias eletivas',
             'ver estudantes',
             'agendar espacos',
-            'ver relatorios proprias turmas'
+            'ver relatorios proprias turmas',
+            'criar solicitacao estudo orientado'
         ]);
 
         // ESTUDANTE (Base)
@@ -118,7 +128,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $roleProfOrientado = Role::firstOrCreate(['name' => User::TIPO_PROF_ESTUDO_ORIENTADO, 'guard_name' => 'web']);
         // Mesmas permissões base de professor, expansível depois
         $roleProfEspecial->syncPermissions($roleProfessor->permissions);
+        
         $roleProfOrientado->syncPermissions($roleProfessor->permissions);
+        $roleProfOrientado->revokePermissionTo('criar solicitacao estudo orientado'); // Não cria
+        $roleProfOrientado->givePermissionTo('registrar atendimento estudo orientado'); // Atende
 
         // 3. Sincronizar usuários existentes com as Roles
         $users = User::all();

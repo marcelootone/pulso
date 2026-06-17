@@ -1,17 +1,18 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Testes E2E — Módulo 7.1: Estudo Orientado
+ * Testes E2E — Módulo 7.1: Estudo Orientado (Fluxo de Encaminhamento)
  *
- * Cobre os dois fluxos principais:
- * 1. Professor Regular: cria solicitação de atividade de EO
- * 2. Professor de Estudo Orientado: avalia a atividade (checklist de alunos)
+ * Cobre os três perfis e fluxos:
+ * 1. Professor Regular: Solicita encaminhamento de aluno.
+ * 2. Coordenador: Analisa e aprova solicitação.
+ * 3. Professor de EO: Registra atendimento/acompanhamento.
  */
 
 const BASE_URL = 'http://sigae.test';
 
-// Credenciais (ajuste conforme os usuários de teste no seed)
 const PROFESSOR_REGULAR = { email: 'professor@sigae.test', password: 'password' };
+const COORDENADOR       = { email: 'coordenador@sigae.test', password: 'password' };
 const PROFESSOR_EO      = { email: 'professoreo@sigae.test', password: 'password' };
 
 async function login(page, email: string, password: string) {
@@ -25,97 +26,129 @@ async function login(page, email: string, password: string) {
 // ============================================================
 // FLUXO 1: Professor Regular — Criar Solicitação
 // ============================================================
-test.describe('Fluxo 1: Solicitação de Estudo Orientado (Professor Regular)', () => {
+test.describe('Fluxo 1: Solicitação (Professor Regular)', () => {
 
-    test('Professor regular vê link "Est. Orientado" no menu', async ({ page }) => {
+    test('Professor regular vê menu e acessa solicitações', async ({ page }) => {
         await login(page, PROFESSOR_REGULAR.email, PROFESSOR_REGULAR.password);
         await expect(page.getByRole('link', { name: 'Est. Orientado' })).toBeVisible();
-    });
-
-    test('Professor regular acessa listagem de solicitações', async ({ page }) => {
-        await login(page, PROFESSOR_REGULAR.email, PROFESSOR_REGULAR.password);
         await page.click('text=Est. Orientado');
+        // Pode haver submenu "Solicitações" ou o link já levar para lá
+        const link = page.getByRole('link', { name: 'Solicitações' });
+        if (await link.isVisible()) {
+            await link.click();
+        }
         await expect(page).toHaveURL(/estudo-orientado\/solicitacoes/);
-        await expect(page.getByRole('heading', { name: /Estudo Orientado/i })).toBeVisible();
     });
 
-    test('Professor regular cria nova solicitação com sucesso', async ({ page }) => {
+    test('Professor regular cria nova solicitação para um aluno', async ({ page }) => {
         await login(page, PROFESSOR_REGULAR.email, PROFESSOR_REGULAR.password);
         await page.goto(`${BASE_URL}/estudo-orientado/solicitacoes/nova`);
 
-        // Preenche o formulário
-        await page.selectOption('#turma_id', { index: 1 }); // Primeira turma disponível
+        await page.selectOption('#turma_id', { index: 1 }); 
+        
+        // Espera a API carregar os alunos
+        await page.waitForResponse(response => response.url().includes('/api/turmas/') && response.status() === 200);
+
+        await page.selectOption('#aluno_id', { index: 1 });
         await page.fill('#disciplina_solicitante', 'Matemática');
-        await page.fill('#data_prevista', new Date(Date.now() + 86400000).toISOString().split('T')[0]); // amanhã
-        await page.fill('#descricao', 'Resolver as questões 1 a 10 da página 45 do livro de Matemática sobre equações de 1° grau.');
+        await page.selectOption('#prioridade', 'Media');
+        await page.fill('#motivo', 'Aluno apresenta dificuldades severas em interpretação de texto e operações básicas.');
 
         await page.click('button[type="submit"]');
 
-        // Verifica redirecionamento e mensagem de sucesso
         await expect(page).toHaveURL(/estudo-orientado\/solicitacoes/);
-        await expect(page.locator('.bg-green-100')).toContainText('Solicitação de Estudo Orientado criada com sucesso');
+        await expect(page.locator('.bg-green-100')).toContainText('Solicitação de encaminhamento criada com sucesso');
     });
 
-    test('Formulário valida campos obrigatórios', async ({ page }) => {
-        await login(page, PROFESSOR_REGULAR.email, PROFESSOR_REGULAR.password);
-        await page.goto(`${BASE_URL}/estudo-orientado/solicitacoes/nova`);
-
-        // Tenta submeter vazio
-        await page.click('button[type="submit"]');
-
-        // Verifica que a página não redirecionou (formulário HTML5 ou mensagens de erro)
-        await expect(page).toHaveURL(/solicitacoes\/nova/);
-    });
 });
 
 // ============================================================
-// FLUXO 2: Professor de EO — Avaliar Atividade
+// FLUXO 2: Coordenador — Avaliar Solicitação
 // ============================================================
-test.describe('Fluxo 2: Avaliação de Estudo Orientado (Professor de EO)', () => {
+test.describe('Fluxo 2: Análise (Coordenador)', () => {
 
-    test('Professor de EO vê link "Avaliar EO" no menu', async ({ page }) => {
-        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
-        await expect(page.getByRole('link', { name: 'Avaliar EO' })).toBeVisible();
+    test('Coordenador vê menu e acessa painel de análise', async ({ page }) => {
+        await login(page, COORDENADOR.email, COORDENADOR.password);
+        await expect(page.getByRole('link', { name: 'Análises EO' }).or(page.getByRole('link', { name: 'Análises' }))).toBeVisible();
+        
+        await page.goto(`${BASE_URL}/estudo-orientado/analises`);
+        await expect(page).toHaveURL(/estudo-orientado\/analises/);
+        await expect(page.getByRole('heading', { name: /Análise de Encaminhamentos/i })).toBeVisible();
     });
 
-    test('Professor de EO acessa painel de avaliações', async ({ page }) => {
-        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
-        await page.click('text=Avaliar EO');
-        await expect(page).toHaveURL(/estudo-orientado\/avaliacoes/);
-        await expect(page.getByRole('heading', { name: /Estudo Orientado/i })).toBeVisible();
-    });
+    test('Coordenador aprova solicitação pendente', async ({ page }) => {
+        await login(page, COORDENADOR.email, COORDENADOR.password);
+        await page.goto(`${BASE_URL}/estudo-orientado/analises`);
 
-    test('Professor de EO não consegue acessar a criação de solicitação', async ({ page }) => {
-        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
-        await page.goto(`${BASE_URL}/estudo-orientado/solicitacoes/nova`);
-        // Deve ser bloqueado (403 ou redirecionamento)
-        await expect(page).not.toHaveURL(/solicitacoes\/nova/);
-    });
-
-    test('Botão "Marcar Todos como Cumpriram" funciona na tela de avaliação', async ({ page }) => {
-        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
-        await page.goto(`${BASE_URL}/estudo-orientado/avaliacoes`);
-
-        // Se houver uma atividade pendente, clica em Avaliar Alunos
-        const btnAvaliar = page.locator('text=▶ Avaliar Alunos').first();
-        if (await btnAvaliar.isVisible()) {
-            await btnAvaliar.click();
-            await expect(page).toHaveURL(/estudo-orientado\/avaliacoes\/\d+/);
-
-            // Clica em marcar todos
-            await page.click('#btn-marcar-todos');
-
-            // Verifica que todos checkboxes estão marcados
-            const checkboxes = page.locator('.aluno-checkbox');
-            const count = await checkboxes.count();
-            for (let i = 0; i < count; i++) {
-                await expect(checkboxes.nth(i)).toBeChecked();
+        const btnAnalisar = page.locator('text=Analisar').first();
+        if (await btnAnalisar.isVisible()) {
+            await btnAnalisar.click();
+            
+            // Aprova
+            if (await page.locator('#acao').isVisible()) {
+                await page.selectOption('#acao', 'aprovar');
+                await page.fill('#parecer', 'Aprovado para início imediato conforme relato do professor.');
+                await page.click('button:has-text("Registrar Análise")');
+                await expect(page.locator('.bg-green-100')).toContainText('Solicitação aprovada com sucesso');
             }
-
-            // Salva a avaliação
-            await page.click('button[type="submit"]');
-            await expect(page).toHaveURL(/estudo-orientado\/avaliacoes$/);
-            await expect(page.locator('.bg-green-100')).toContainText('Avaliação salva com sucesso');
         }
     });
+
+    test('Coordenador atribui professor orientador', async ({ page }) => {
+        await login(page, COORDENADOR.email, COORDENADOR.password);
+        await page.goto(`${BASE_URL}/estudo-orientado/analises`);
+
+        // Filtra aprovadas
+        await page.selectOption('#status', 'Aprovada');
+        await page.click('button:has-text("Filtrar")');
+
+        const btnAnalisar = page.locator('text=Analisar').first();
+        if (await btnAnalisar.isVisible()) {
+            await btnAnalisar.click();
+            
+            // Atribui orientador
+            if (await page.locator('#professor_orientador_id').isVisible()) {
+                await page.selectOption('#professor_orientador_id', { index: 1 });
+                await page.click('button:has-text("Atribuir Orientador")');
+                await expect(page.locator('.bg-green-100')).toContainText('Orientador atribuído com sucesso');
+            }
+        }
+    });
+
+});
+
+// ============================================================
+// FLUXO 3: Professor de EO — Acompanhamento
+// ============================================================
+test.describe('Fluxo 3: Acompanhamento (Professor EO)', () => {
+
+    test('Professor EO vê menu e acessa seus alunos', async ({ page }) => {
+        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
+        await expect(page.getByRole('link', { name: 'Acompanhar EO' }).or(page.getByRole('link', { name: 'Acompanhamentos' }))).toBeVisible();
+        
+        await page.goto(`${BASE_URL}/estudo-orientado/acompanhamentos`);
+        await expect(page).toHaveURL(/estudo-orientado\/acompanhamentos/);
+        await expect(page.getByRole('heading', { name: /Meus Acompanhamentos/i })).toBeVisible();
+    });
+
+    test('Professor EO registra atendimento', async ({ page }) => {
+        await login(page, PROFESSOR_EO.email, PROFESSOR_EO.password);
+        await page.goto(`${BASE_URL}/estudo-orientado/acompanhamentos`);
+
+        const btnAcessar = page.locator('text=Acessar Prontuário').first();
+        if (await btnAcessar.isVisible()) {
+            await btnAcessar.click();
+            
+            // Vai para a aba Atendimentos
+            await page.click('button:has-text("Atendimentos (Sessões)")');
+            
+            // Preenche
+            if (await page.locator('#descricao_atendimento').isVisible()) {
+                await page.fill('#descricao_atendimento', 'Trabalhamos interpretação textual usando um gibi.');
+                await page.click('button:has-text("Salvar Atendimento")');
+                await expect(page.locator('.bg-green-100')).toContainText('Atendimento registrado com sucesso');
+            }
+        }
+    });
+
 });

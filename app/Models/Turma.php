@@ -39,9 +39,9 @@ class Turma extends Model
         return $this->hasMany(Avaliacao::class);
     }
 
-    // Uma turma tem muitas atividades de Estudo Orientado
-    public function atividadesEstudoOrientado()
+    // Uma turma tem muitas solicitações de Estudo Orientado
+    public function solicitacoesEstudoOrientado()
     {
-        return $this->hasMany(EstudoOrientadoAtividade::class);
+        return $this->hasMany(EstudoOrientadoSolicitacao::class);
     }
 }

@@ -77,5 +77,7 @@
         </div>
         <!-- Search Modal -->
         <x-search-modal />
+
+        @stack('scripts')
     </body>
 </html>

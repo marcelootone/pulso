@@ -68,10 +68,16 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
-    // Atividades de Estudo Orientado que este professor solicitou
-    public function atividadesEstudoOrientadoSolicitadas()
+    // Solicitações de Estudo Orientado feitas por este professor
+    public function solicitacoesEstudoOrientado()
     {
-        return $this->hasMany(EstudoOrientadoAtividade::class, 'professor_solicitante_id');
+        return $this->hasMany(EstudoOrientadoSolicitacao::class, 'professor_solicitante_id');
+    }
+
+    // Acompanhamentos de Estudo Orientado atribuídos a este professor orientador
+    public function acompanhamentosEstudoOrientado()
+    {
+        return $this->hasMany(EstudoOrientadoSolicitacao::class, 'professor_orientador_id');
     }
 
     /**

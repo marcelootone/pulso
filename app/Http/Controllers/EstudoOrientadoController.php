@@ -3,75 +3,86 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EstudoOrientadoSolicitacaoRequest;
-use App\Models\EstudoOrientadoAtividade;
+use App\Http\Requests\EstudoOrientadoAnaliseRequest;
+use App\Http\Requests\EstudoOrientadoAtendimentoRequest;
+use App\Http\Requests\EstudoOrientadoEvolucaoRequest;
+use App\Http\Requests\EstudoOrientadoPlanoAcaoRequest;
+use App\Models\EstudoOrientadoSolicitacao;
 use App\Models\Turma;
+use App\Models\Aluno;
 use App\Models\User;
 use App\Services\EstudoOrientadoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class EstudoOrientadoController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(private EstudoOrientadoService $service) {}
 
     // =========================================================================
-    // FLUXO 1: SOLICITAÇÕES — Acessível por Professores regulares
+    // SOLICITAÇÕES — Professor e Gestão
     // =========================================================================
 
-    /**
-     * Lista as solicitações feitas pelo professor autenticado.
-     * Para Gestor/Coordenador: lista todas.
-     */
     public function indexSolicitacoes(Request $request)
     {
         $user = Auth::user();
+        
+        $query = EstudoOrientadoSolicitacao::with(['turma', 'aluno', 'solicitante'])
+            ->orderByDesc('created_at');
 
-        $query = EstudoOrientadoAtividade::with(['turma', 'solicitante'])
-            ->orderByDesc('data_prevista');
-
-        // Professor regular só vê suas próprias solicitações
-        if ($user->hasRole('Professor') && !$user->hasAnyRole(['Gestor', 'Coordenador', 'Secretaria'])) {
+        // Se não for da gestão/coordenação, vê apenas as suas
+        if (!$user->hasPermissionTo('consultar estudo orientado') && !$user->hasPermissionTo('analisar solicitacao estudo orientado')) {
             $query->where('professor_solicitante_id', $user->id);
         }
 
-        // Filtros opcionais
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        if ($request->filled('turma_id')) {
-            $query->where('turma_id', $request->turma_id);
+        if ($request->filled('aluno_id')) {
+            $query->where('aluno_id', $request->aluno_id);
         }
 
-        $atividades = $query->paginate(15);
-        $turmas = Turma::where('ativa', true)->orderBy('serie')->get();
+        $solicitacoes = $query->paginate(15);
+        
+        // Alunos para filtro
+        $alunos = Aluno::orderBy('nome')->get(); // Ideal seria filtrar por ativos ou turmas do professor
 
-        return view('estudo-orientado.solicitacoes.index', compact('atividades', 'turmas'));
+        return view('estudo-orientado.solicitacoes.index', compact('solicitacoes', 'alunos'));
     }
 
-    /**
-     * Formulário para criar nova solicitação.
-     * O professor só pode solicitar para turmas nas quais está vinculado.
-     */
-    public function createSolicitacao()
+    public function createSolicitacao(Request $request)
     {
+        $this->authorize('criarSolicitacao', EstudoOrientadoSolicitacao::class);
         $user = Auth::user();
 
-        // Gestor/Coordenador vê todas as turmas ativas
-        if ($user->hasAnyRole(['Gestor', 'Coordenador', 'Secretaria'])) {
+        // Professor só pode solicitar para as turmas dele
+        if ($user->hasPermissionTo('consultar estudo orientado')) {
             $turmas = Turma::where('ativa', true)->orderBy('serie')->get();
         } else {
-            // Professor só pode solicitar para as turmas dele
             $turmas = $user->turmas()->where('ativa', true)->orderBy('serie')->get();
         }
 
         return view('estudo-orientado.solicitacoes.create', compact('turmas'));
     }
 
-    /**
-     * Persiste a nova solicitação de atividade.
-     */
+    public function getAlunosPorTurma($turmaId)
+    {
+        $turma = Turma::findOrFail($turmaId);
+        $alunoIds = $turma->enturmacoes()->where('status', 'Ativo')->pluck('matricula_id');
+        $alunos = Aluno::whereHas('matriculas', function ($q) use ($alunoIds) {
+            $q->whereIn('id', $alunoIds);
+        })->orderBy('nome')->get(['id', 'nome']);
+
+        return response()->json($alunos);
+    }
+
     public function storeSolicitacao(EstudoOrientadoSolicitacaoRequest $request)
     {
+        $this->authorize('criarSolicitacao', EstudoOrientadoSolicitacao::class);
+
         $this->service->criarSolicitacao(array_merge(
             $request->validated(),
             ['professor_solicitante_id' => Auth::id()]
@@ -79,110 +90,156 @@ class EstudoOrientadoController extends Controller
 
         return redirect()
             ->route('estudo-orientado.solicitacoes.index')
-            ->with('success', 'Solicitação de Estudo Orientado criada com sucesso!');
+            ->with('success', 'Solicitação de encaminhamento criada com sucesso!');
     }
 
-    /**
-     * Exibe o resultado da avaliação para o professor solicitante.
-     * Modo somente leitura.
-     */
-    public function showResultado(int $id)
+    public function showSolicitacao($id)
     {
-        $atividade = EstudoOrientadoAtividade::with(['turma.professores', 'solicitante', 'cumprimentos.aluno'])
-            ->findOrFail($id);
+        $solicitacao = EstudoOrientadoSolicitacao::with(['turma', 'aluno', 'solicitante', 'historicos.user'])->findOrFail($id);
+        $this->authorize('verSolicitacao', $solicitacao);
 
-        $user = Auth::user();
-        if (!$user->hasAnyRole(['Gestor', 'Coordenador', 'Secretaria']) && $atividade->professor_solicitante_id !== $user->id) {
-            abort(403, 'Você não tem permissão para ver este resultado.');
-        }
-
-        $alunos  = $this->service->alunosDaTurma($atividade->turma_id);
-        $cumprimentosExistentes = $atividade->cumprimentos->keyBy('aluno_id');
-        
-        $somenteLeitura = true;
-
-        return view('estudo-orientado.avaliacoes.avaliar', compact('atividade', 'alunos', 'cumprimentosExistentes', 'somenteLeitura'));
+        return view('estudo-orientado.solicitacoes.show', compact('solicitacao'));
     }
 
     // =========================================================================
-    // FLUXO 2: AVALIAÇÕES — Acessível pelo Professor de Estudo Orientado
+    // ANÁLISES — Coordenador
     // =========================================================================
 
-    /**
-     * Painel de Avaliações de Estudo Orientado.
-     *
-     * - Gestor / Coordenador: veem TODAS as atividades (visão administrativa).
-     * - Professor de EO: vê apenas as atividades das turmas às quais está vinculado.
-     */
-    public function indexAvaliacoes(Request $request)
+    public function indexAnalises(Request $request)
     {
-        $user = Auth::user();
+        $this->authorize('analisar', EstudoOrientadoSolicitacao::class);
 
-        $query = EstudoOrientadoAtividade::with(['turma', 'solicitante', 'cumprimentos'])
+        $query = EstudoOrientadoSolicitacao::with(['turma', 'aluno', 'solicitante'])
             ->orderBy('status')
-            ->orderByDesc('data_prevista');
-
-        // Somente Professor de EO é filtrado por turma vinculada.
-        // Gestor e Coordenador veem tudo.
-        if (!$user->hasAnyRole(['Gestor', 'Coordenador'])) {
-            $turmasIds = $user->turmas()->pluck('turmas.id');
-            $query->whereIn('turma_id', $turmasIds);
-        }
+            ->orderByDesc('created_at');
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $atividades = $query->paginate(15);
-
-        return view('estudo-orientado.avaliacoes.index', compact('atividades'));
+        $solicitacoes = $query->paginate(15);
+        return view('estudo-orientado.analises.index', compact('solicitacoes'));
     }
 
-    /**
-     * Exibe o checklist de alunos para o Professor de EO avaliar uma atividade.
-     */
-    public function showAvaliacao(int $id)
+    public function showAnalise($id)
     {
-        $atividade = EstudoOrientadoAtividade::with(['turma', 'solicitante', 'cumprimentos.aluno'])
-            ->findOrFail($id);
-
-        // Garante que o professor de EO seja da turma da atividade
-        $user = Auth::user();
-        if (!$user->hasAnyRole(['Gestor', 'Coordenador']) &&
-            !$user->turmas()->where('turmas.id', $atividade->turma_id)->exists()
-        ) {
-            abort(403, 'Você não tem permissão para avaliar esta atividade.');
-        }
-
-        $alunos  = $this->service->alunosDaTurma($atividade->turma_id);
-
-        // Monta mapa de cumprimentos já registrados: [aluno_id => cumprimento]
-        $cumprimentosExistentes = $atividade->cumprimentos->keyBy('aluno_id');
+        $solicitacao = EstudoOrientadoSolicitacao::with(['turma', 'aluno', 'solicitante', 'historicos.user'])->findOrFail($id);
         
-        $somenteLeitura = false;
-
-        return view('estudo-orientado.avaliacoes.avaliar', compact('atividade', 'alunos', 'cumprimentosExistentes', 'somenteLeitura'));
-    }
-
-    /**
-     * Persiste a avaliação em lote (checklist dos alunos).
-     */
-    public function storeAvaliacao(Request $request, int $id)
-    {
-        $atividade = EstudoOrientadoAtividade::findOrFail($id);
-
-        $user = Auth::user();
-        if (!$user->hasAnyRole(['Gestor', 'Coordenador']) &&
-            !$user->turmas()->where('turmas.id', $atividade->turma_id)->exists()
-        ) {
-            abort(403);
+        // Verifica permissão para analisar ou consultar
+        if (!Auth::user()->can('analisar', EstudoOrientadoSolicitacao::class) && !Auth::user()->can('consultar', EstudoOrientadoSolicitacao::class)) {
+            $this->authorize('verSolicitacao', $solicitacao);
         }
 
-        $cumprimentos = $request->input('cumprimentos', []);
-        $this->service->salvarAvaliacao($id, $cumprimentos);
+        $orientadores = User::role(User::TIPO_PROF_ESTUDO_ORIENTADO)->get();
+        
+        return view('estudo-orientado.analises.show', compact('solicitacao', 'orientadores'));
+    }
 
-        return redirect()
-            ->route('estudo-orientado.avaliacoes.index')
-            ->with('success', 'Avaliação salva com sucesso! A atividade foi marcada como Avaliada.');
+    public function storeAnalise(EstudoOrientadoAnaliseRequest $request, $id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::findOrFail($id);
+        $acao = $request->acao;
+
+        if ($acao === 'aprovar') {
+            $this->authorize('aprovar', $solicitacao);
+            $this->service->aprovarSolicitacao($id, Auth::id(), $request->parecer);
+            $msg = 'Solicitação aprovada com sucesso.';
+        } elseif ($acao === 'rejeitar') {
+            $this->authorize('rejeitar', $solicitacao);
+            $this->service->rejeitarSolicitacao($id, Auth::id(), $request->parecer);
+            $msg = 'Solicitação rejeitada.';
+        } elseif ($acao === 'atribuir') {
+            $this->authorize('atribuirOrientador', $solicitacao);
+            $this->service->atribuirOrientador($id, Auth::id(), $request->professor_orientador_id);
+            $msg = 'Orientador atribuído com sucesso.';
+        }
+
+        return redirect()->back()->with('success', $msg);
+    }
+
+    // =========================================================================
+    // ACOMPANHAMENTOS — Professor Orientador
+    // =========================================================================
+
+    public function indexAcompanhamentos(Request $request)
+    {
+        $user = Auth::user();
+        
+        $query = EstudoOrientadoSolicitacao::with(['turma', 'aluno'])
+            ->whereIn('status', ['Aprovada', 'EmAtendimento', 'Concluida']);
+
+        // Se for orientador, vê apenas os dele
+        if (!$user->can('analisar', EstudoOrientadoSolicitacao::class) && !$user->can('consultar', EstudoOrientadoSolicitacao::class)) {
+            $query->where('professor_orientador_id', $user->id);
+        }
+
+        $acompanhamentos = $query->orderByDesc('updated_at')->paginate(15);
+        return view('estudo-orientado.acompanhamentos.index', compact('acompanhamentos'));
+    }
+
+    public function showAcompanhamento($id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::with([
+            'aluno', 'turma', 'atendimentos', 'evolucoes', 'planosAcao', 'historicos.user'
+        ])->findOrFail($id);
+
+        $this->authorize('acompanhar', $solicitacao);
+
+        return view('estudo-orientado.acompanhamentos.show', compact('solicitacao'));
+    }
+
+    public function storeAtendimento(EstudoOrientadoAtendimentoRequest $request, $id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::findOrFail($id);
+        $this->authorize('registrarAtendimento', $solicitacao);
+
+        $this->service->registrarAtendimento($id, Auth::id(), $request->validated());
+
+        return redirect()->back()->with('success', 'Atendimento registrado com sucesso.');
+    }
+
+    public function storeEvolucao(EstudoOrientadoEvolucaoRequest $request, $id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::findOrFail($id);
+        $this->authorize('registrarEvolucao', $solicitacao);
+
+        $this->service->registrarEvolucao($id, Auth::id(), $request->validated());
+
+        return redirect()->back()->with('success', 'Evolução registrada com sucesso.');
+    }
+
+    public function storePlanoAcao(EstudoOrientadoPlanoAcaoRequest $request, $id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::findOrFail($id);
+        $this->authorize('criarPlanoAcao', $solicitacao);
+
+        $this->service->salvarPlanoAcao($id, Auth::id(), $request->validated());
+
+        return redirect()->back()->with('success', 'Plano de ação salvo com sucesso.');
+    }
+
+    public function concluirAcompanhamento(Request $request, $id)
+    {
+        $solicitacao = EstudoOrientadoSolicitacao::findOrFail($id);
+        $this->authorize('concluir', $solicitacao);
+
+        $request->validate(['parecer_conclusao' => 'required|string|min:10']);
+
+        $this->service->concluirAcompanhamento($id, Auth::id(), $request->parecer_conclusao);
+
+        return redirect()->back()->with('success', 'Acompanhamento concluído com sucesso.');
+    }
+    public function relatorios(Request $request)
+    {
+        $this->authorize('consultar', EstudoOrientadoSolicitacao::class);
+
+        $stats = [
+            'total' => EstudoOrientadoSolicitacao::count(),
+            'pendentes' => EstudoOrientadoSolicitacao::where('status', 'Pendente')->count(),
+            'em_atendimento' => EstudoOrientadoSolicitacao::where('status', 'EmAtendimento')->count(),
+            'concluidas' => EstudoOrientadoSolicitacao::where('status', 'Concluida')->count(),
+        ];
+
+        return view('estudo-orientado.relatorios.index', compact('stats'));
     }
 }
