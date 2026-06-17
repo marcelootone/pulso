@@ -44,12 +44,12 @@ class FrequenciaController extends Controller
         $turmaSelecionada = $request->input('turma_id');
         $dataSelecionada = $request->input('data', date('Y-m-d'));
         
-        $alunos = collect();
+        $disciplinas = [];
         if ($turmaSelecionada) {
-            $alunos = $this->frequenciaService->getAlunosTurma((int)$turmaSelecionada, $dataSelecionada);
+            $disciplinas = $this->frequenciaService->getFrequenciasMonitoramento((int)$turmaSelecionada, $dataSelecionada);
         }
 
-        return view('frequencia.monitorar', compact('turmas', 'turmaSelecionada', 'dataSelecionada', 'alunos'));
+        return view('frequencia.monitorar', compact('turmas', 'turmaSelecionada', 'dataSelecionada', 'disciplinas'));
     }
 
     /**
@@ -60,12 +60,13 @@ class FrequenciaController extends Controller
         $request->validate([
             'turma_id' => 'required|exists:turmas,id',
             'data' => 'required|date',
-            'frequencias' => 'required|array'
+            'frequencias' => 'required|array',
+            'professor_id' => 'required|exists:users,id'
         ]);
 
         $this->frequenciaService->salvarFrequencia(
             $request->only(['turma_id', 'data', 'frequencias']), 
-            auth()->id()
+            $request->input('professor_id')
         );
 
         return redirect()->route('frequencia.monitorar', [

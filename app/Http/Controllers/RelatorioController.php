@@ -29,19 +29,10 @@ class RelatorioController extends Controller
     /**
      * Relatório 1: Alerta de Evasão (Busca Ativa Geral)
      */
-    public function evasao()
+    public function evasao(\App\Services\DashboardService $dashboardService)
     {
-        // 1. Busca os alunos com menos de 75% de frequência
-        $alunosEmRisco = Aluno::select('alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-            ->join('matriculas', 'alunos.id', '=', 'matriculas.aluno_id')
-            ->join('enturmacoes', 'matriculas.id', '=', 'enturmacoes.matricula_id')
-            ->join('turmas', 'enturmacoes.turma_id', '=', 'turmas.id')
-            ->join('frequencias', 'alunos.id', '=', 'frequencias.aluno_id')
-            ->selectRaw('COUNT(CASE WHEN frequencias.status = "P" THEN 1 END) * 100 / COUNT(frequencias.id) as percentual')
-            ->groupBy('alunos.id', 'alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-            ->having('percentual', '<', 75)
-            ->orderBy('percentual', 'asc')
-            ->get();
+        // 1. Busca os alunos com menos de 75% de frequência usando o Service corrigido
+        $alunosEmRisco = $dashboardService->getAlunosEmRiscoTodos();
 
         $dataAtual = date('d/m/Y');
 

@@ -30,6 +30,23 @@ class TurmaController extends Controller
             }
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('serie', 'like', "%{$search}%")
+                  ->orWhere('complemento', 'like', "%{$search}%")
+                  ->orWhere('turno', 'like', "%{$search}%")
+                  ->orWhere('tipo', 'like', "%{$search}%")
+                  ->orWhere('modalidade', 'like', "%{$search}%")
+                  ->orWhereHas('enturmacoes.matricula.aluno', function($sq) use ($search) {
+                      $sq->where('nome', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('professores', function($pq) use ($search) {
+                      $pq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         $turmasPorModalidade = $query->orderBy('modalidade')
                                      ->orderBy('ano_letivo', 'desc')
                                      ->orderBy('serie')

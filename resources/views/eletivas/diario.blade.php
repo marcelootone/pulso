@@ -143,11 +143,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-purple-50 p-6 rounded-xl mb-6 border border-purple-100">
                     <div>
                         <label class="block text-sm font-bold text-purple-900 uppercase tracking-wider mb-2">Data da Avaliação</label>
-                        <x-input type="date" name="data_avaliacao" required value="{{ old('data_avaliacao', $dataAvaliacao) }}" {{ request('action') == 'ver' ? 'readonly' : '' }} class="w-full border-purple-300 focus:border-purple-500 focus:ring-purple-500 {{ request('action') == 'ver' ? 'bg-purple-100 text-purple-700 font-bold' : '' }}" />
+                        <x-input type="date" name="data_avaliacao" required value="{{ old('data_avaliacao', $dataAvaliacao) }}" :readonly="request('action') == 'ver'" class="w-full border-purple-300 focus:border-purple-500 focus:ring-purple-500 {{ request('action') == 'ver' ? 'bg-purple-100 text-purple-700 font-bold' : '' }}" />
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-purple-900 uppercase tracking-wider mb-2">Descrição (Ex: Trabalho Prático, Prova)</label>
-                        <x-input type="text" name="descricao" required placeholder="Nome da avaliação" value="{{ old('descricao', $descricaoAvaliacao) }}" {{ request('action') == 'ver' ? 'readonly' : '' }} class="w-full border-purple-300 focus:border-purple-500 focus:ring-purple-500 {{ request('action') == 'ver' ? 'bg-purple-100 text-purple-700 font-bold' : '' }}" />
+                        <x-input type="text" name="descricao" required placeholder="Nome da avaliação" value="{{ old('descricao', $descricaoAvaliacao) }}" :readonly="request('action') == 'ver'" class="w-full border-purple-300 focus:border-purple-500 focus:ring-purple-500 {{ request('action') == 'ver' ? 'bg-purple-100 text-purple-700 font-bold' : '' }}" />
                     </div>
                 </div>
 
@@ -175,7 +175,7 @@
                                         {{ $aluno->nome }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                                        <x-input type="number" name="notas[{{ $aluno->id }}]" min="0" max="100" step="0.01" placeholder="-" value="{{ old('notas.'.$aluno->id, $notaAtual) }}" {{ request('action') == 'ver' ? 'readonly' : '' }} class="w-24 text-center font-bold text-lg {{ request('action') == 'ver' ? 'bg-gray-100 text-gray-500' : '' }}" />
+                                        <x-input type="number" name="notas[{{ $aluno->id }}]" min="0" max="100" step="0.01" placeholder="-" value="{{ old('notas.'.$aluno->id, $notaAtual) }}" :readonly="request('action') == 'ver'" class="w-24 text-center font-bold text-lg {{ request('action') == 'ver' ? 'bg-gray-100 text-gray-500' : '' }}" />
                                     </td>
                                 </tr>
                             @empty

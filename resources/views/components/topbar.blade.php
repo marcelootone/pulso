@@ -5,15 +5,7 @@
                 <x-heroicon-o-bars-3 class="w-6 h-6" />
             </button>
 
-            <!-- Search Button (triggers modal) -->
-            <button @click="$dispatch('open-search')" class="hidden sm:flex items-center text-left space-x-3 px-4 h-10 bg-white border border-gray-300 rounded-lg hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors w-full max-w-md shadow-sm">
-                <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400" />
-                <span class="flex-1 text-sm text-gray-500">Buscar por alunos, turmas...</span>
-                <span class="hidden lg:flex items-center space-x-1 text-xs font-semibold text-gray-400">
-                    <kbd class="font-sans">Ctrl</kbd>
-                    <kbd class="font-sans">K</kbd>
-                </span>
-            </button>
+
         </div>
 
         <!-- Direita: Notificações e Perfil -->
@@ -77,7 +69,7 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
+                    <x-dropdown-link :href="route('users.show', Auth::user()->id)">
                         {{ __('Meu Perfil') }}
                     </x-dropdown-link>
 

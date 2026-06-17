@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('notas_eletivas');
         Schema::create('notas_eletivas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('aluno_id')->constrained('alunos')->onDelete('cascade');

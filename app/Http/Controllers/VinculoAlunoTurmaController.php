@@ -99,4 +99,78 @@ class VinculoAlunoTurmaController extends Controller
         return redirect()->route('vinculo.create')
                          ->with('success', 'Aluno vinculado à turma com sucesso!');
     }
+
+    /**
+     * Vincula múltiplos alunos a uma turma (usada pela aba "Vincular Aluno" na tela de importação).
+     */
+    public function storeBulk(Request $request)
+    {
+        $request->validate([
+            'turma_id'  => 'required|exists:turmas,id',
+            'aluno_ids' => 'required|array|min:1',
+            'aluno_ids.*' => 'exists:alunos,id',
+        ], [
+            'aluno_ids.required' => 'Selecione ao menos um aluno.',
+            'aluno_ids.min'      => 'Selecione ao menos um aluno.',
+        ]);
+
+        $turma = Turma::findOrFail($request->turma_id);
+
+        if (!$turma->ativa) {
+            return back()->with('error', 'A turma selecionada não está ativa.');
+        }
+
+        $anoLetivo   = $turma->ano_letivo ?? date('Y');
+        $vinculados  = 0;
+        $reativados  = 0;
+        $duplicados  = 0;
+
+        foreach ($request->aluno_ids as $alunoId) {
+            $aluno = Aluno::find($alunoId);
+            if (!$aluno) {
+                continue;
+            }
+
+            $matricula = \App\Models\Matricula::firstOrCreate(
+                ['aluno_id' => $aluno->id, 'ano_letivo' => $anoLetivo],
+                ['status'   => 'Ativa']
+            );
+
+            $existing = \App\Models\Enturmacao::where('matricula_id', $matricula->id)
+                ->where('turma_id', $turma->id)
+                ->first();
+
+            if ($existing) {
+                if ($existing->status === 'Ativo') {
+                    $duplicados++;
+                } else {
+                    $existing->update([
+                        'status'       => 'Ativo',
+                        'tipo_vinculo' => 'REGULAR',
+                        'data_entrada' => now(),
+                        'data_saida'   => null,
+                    ]);
+                    $reativados++;
+                }
+            } else {
+                \App\Models\Enturmacao::create([
+                    'matricula_id' => $matricula->id,
+                    'turma_id'     => $turma->id,
+                    'tipo_vinculo' => 'REGULAR',
+                    'data_entrada' => now(),
+                    'status'       => 'Ativo',
+                ]);
+                $vinculados++;
+            }
+        }
+
+        $msg = "Operação concluída: {$vinculados} aluno(s) vinculado(s)";
+        if ($reativados) $msg .= ", {$reativados} reativado(s)";
+        if ($duplicados) $msg .= ", {$duplicados} já estava(m) vinculado(s) (ignorado(s))";
+        $msg .= '.';
+
+        return redirect()
+            ->route('importar.index', ['turma_id' => $turma->id, 'tab' => 'vincular'])
+            ->with('success', $msg);
+    }
 }

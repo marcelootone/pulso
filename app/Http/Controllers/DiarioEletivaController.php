@@ -123,15 +123,9 @@ class DiarioEletivaController extends Controller
 
         DB::transaction(function () use ($eletiva, $data, $descricao, $notas) {
             foreach ($notas as $aluno_id => $notaValor) {
-                // Se a nota for enviada vazia, ignora ou apaga se existir?
-                // No caso mais simples, se estiver vazia e já existia, apaga.
+                // Se a nota for enviada vazia, armazena como null para manter o registro da avaliação
                 if ($notaValor === null || $notaValor === '') {
-                    NotaEletiva::where('eletiva_id', $eletiva->id)
-                        ->where('aluno_id', $aluno_id)
-                        ->whereDate('data', $data)
-                        ->where('descricao', $descricao)
-                        ->delete();
-                    continue;
+                    $notaValor = null;
                 }
 
                 NotaEletiva::updateOrCreate(
@@ -148,7 +142,12 @@ class DiarioEletivaController extends Controller
             }
         });
 
-        return redirect()->route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas'])
-            ->with('success', 'Notas salvas com sucesso!');
+        return redirect()->route('eletivas.diario.show', [
+            'id' => $eletiva->id, 
+            'tab' => 'notas',
+            'data_avaliacao' => $data,
+            'descricao' => $descricao,
+            'action' => 'ver'
+        ])->with('success', 'Notas salvas com sucesso!');
     }
 }

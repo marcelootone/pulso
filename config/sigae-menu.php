@@ -140,22 +140,12 @@ return [
                 'roles' => ['Gestor', 'Secretaria'],
                 'permissions' => ['gerenciar espacos'],
             ],
-            [
-                'label' => 'Perfis e Permissões',
-                'route' => null, // Futuro
-                'roles' => ['Gestor'],
-            ],
+
             [
                 'label' => 'Importar Estudantes Planilha',
                 'route' => 'importar.index',
                 'roles' => ['Gestor', 'Secretaria'],
                 'permissions' => ['gerenciar estudantes'],
-            ],
-            [
-                'label' => 'Turmas',
-                'route' => 'turmas.create',
-                'roles' => ['Gestor', 'Secretaria', 'Coordenador'],
-                'permissions' => ['gerenciar turmas'],
             ],
         ],
     ],

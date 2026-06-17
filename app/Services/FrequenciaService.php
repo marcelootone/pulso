@@ -89,6 +89,63 @@ class FrequenciaService
     }
 
     /**
+     * Retorna a lista de disciplinas registradas para a turma na data, com os alunos e seus status.
+     */
+    public function getFrequenciasMonitoramento(int $turmaId, string $data): array
+    {
+        // 1. Obter alunos ativos da turma
+        $turma = Turma::with(['enturmacoes' => function ($q) {
+            $q->where('status', 'Ativo')->with('matricula.aluno');
+        }])->findOrFail($turmaId);
+
+        $alunos = $turma->enturmacoes->map(function ($enturmacao) {
+            return $enturmacao->matricula->aluno;
+        })->sortBy('nome')->values();
+
+        // 2. Obter registros de frequência na data informada
+        $frequencias = Frequencia::with('user')
+            ->where('turma_id', $turmaId)
+            ->where('data', $data)
+            ->get();
+
+        if ($frequencias->isEmpty()) {
+            return []; // Nenhuma disciplina registrada
+        }
+
+        // 3. Obter as disciplinas dos professores que registraram frequência
+        $professoresIds = $frequencias->pluck('user_id')->unique();
+        $disciplinasProfessores = DB::table('professor_turma')
+            ->where('turma_id', $turmaId)
+            ->whereIn('user_id', $professoresIds)
+            ->pluck('disciplina', 'user_id');
+
+        // 4. Montar a estrutura por disciplina
+        $disciplinas = [];
+        foreach ($frequencias->groupBy('user_id') as $professorId => $freqsProfessor) {
+            $nomeDisciplina = $disciplinasProfessores->get($professorId) ?? 'Geral/Coordenação';
+            
+            $freqsPorAluno = $freqsProfessor->keyBy('aluno_id');
+            
+            $alunosComStatus = $alunos->map(function($aluno) use ($freqsPorAluno) {
+                $freq = $freqsPorAluno->get($aluno->id);
+                return (object)[
+                    'id' => $aluno->id,
+                    'nome' => $aluno->nome,
+                    'status_frequencia' => $freq ? $freq->status : null,
+                ];
+            });
+
+            $disciplinas[] = (object)[
+                'nome' => $nomeDisciplina,
+                'professor_id' => $professorId,
+                'alunos' => $alunosComStatus
+            ];
+        }
+
+        return $disciplinas;
+    }
+
+    /**
      * Salva a chamada para uma turma em uma data.
      * $data deve conter: ['turma_id' => X, 'data' => Y, 'frequencias' => [aluno_id => status]]
      */

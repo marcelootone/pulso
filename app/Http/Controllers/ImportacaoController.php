@@ -16,7 +16,11 @@ class ImportacaoController extends Controller
     {
         // Busca apenas as turmas ativas para mostrar no Dropdown
         $turmas = Turma::where('ativa', true)->get();
-        return view('importacao.index', compact('turmas'));
+
+        // Busca todos os alunos para o autocomplete da aba "Vincular Aluno"
+        $alunos = Aluno::orderBy('nome')->get(['id', 'nome', 'ra']);
+
+        return view('importacao.index', compact('turmas', 'alunos'));
     }
 
     public function preview(Request $request)

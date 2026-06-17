@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TurmaController;
 use App\Http\Controllers\ImportacaoController;
@@ -20,9 +20,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Profile routes have been removed, profile information is now accessed via users.show
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -98,6 +96,7 @@ Route::middleware(['auth'])->group(function () {
         // Vincular aluno a turma
         Route::get('/vinculo-aluno-turma', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'create'])->name('vinculo.create');
         Route::post('/vinculo-aluno-turma', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'store'])->name('vinculo.store');
+        Route::post('/importar-alunos/vincular-lote', [\App\Http\Controllers\VinculoAlunoTurmaController::class, 'storeBulk'])->name('vinculo.storeBulk');
     });
 
     // 3. ATRIBUIÇÕES E ENTURMAÇÃO

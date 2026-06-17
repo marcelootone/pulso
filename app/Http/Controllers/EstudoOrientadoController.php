@@ -34,7 +34,7 @@ class EstudoOrientadoController extends Controller
             ->orderByDesc('created_at');
 
         // Se não for da gestão/coordenação, vê apenas as suas
-        if (!$user->hasPermissionTo('consultar estudo orientado') && !$user->hasPermissionTo('analisar solicitacao estudo orientado')) {
+        if (!$user->can('consultar estudo orientado') && !$user->can('analisar solicitacao estudo orientado')) {
             $query->where('professor_solicitante_id', $user->id);
         }
 
@@ -59,7 +59,7 @@ class EstudoOrientadoController extends Controller
         $user = Auth::user();
 
         // Professor só pode solicitar para as turmas dele
-        if ($user->hasPermissionTo('consultar estudo orientado')) {
+        if ($user->can('consultar estudo orientado')) {
             $turmas = Turma::where('ativa', true)->orderBy('serie')->get();
         } else {
             $turmas = $user->turmas()->where('ativa', true)->orderBy('serie')->get();

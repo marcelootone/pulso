@@ -43,8 +43,11 @@
                 <th rowspan="2" class="summary">% Pres.</th>
             </tr>
             <tr>
-                @forelse($dias_letivos as $dia)
-                    <th style="width: 15px; font-size: 8px;">{{ \Carbon\Carbon::parse($dia)->format('d') }}</th>
+                @forelse($dias_letivos as $sessao)
+                    <th style="min-width: 35px; font-size: 8px; padding: 2px;" title="{{ $sessao['data'] }} - {{ $sessao['professor_nome'] }}">
+                        {{ \Carbon\Carbon::parse($sessao['data'])->format('d') }}<br>
+                        <span style="font-size: 8px; color: #555; display: block; overflow: hidden; text-overflow: ellipsis; max-width: 45px; margin: 0 auto;">{{ $sessao['professor_nome'] }}</span>
+                    </th>
                 @empty
                     <th>-</th>
                 @endforelse
@@ -58,8 +61,11 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td class="col-nome">{{ $row['aluno']->nome }}</td>
-                    @forelse($dias_letivos as $dia)
-                        @php $status = $row['dias'][$dia]; @endphp
+                    @forelse($dias_letivos as $sessao)
+                        @php
+                            $key = $sessao['data'] . '_' . $sessao['user_id'];
+                            $status = $row['dias'][$key] ?? '-';
+                        @endphp
                         <td class="
                             {{ $status === 'P' ? 'status-p' : '' }}
                             {{ $status === 'F' ? 'status-f' : '' }}

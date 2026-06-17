@@ -23,15 +23,23 @@ class RelatorioService
         })->sortBy('nome')->values();
 
         // Extrai todos os dias do mês em que houve chamada para esta turma
-        $diasComChamada = Frequencia::where('turma_id', $turmaId)
+        $diasComChamada = Frequencia::with('user:id,name')
+            ->where('turma_id', $turmaId)
             ->whereMonth('data', $mes)
             ->whereYear('data', $ano)
-            ->select('data')
+            ->select('data', 'user_id')
             ->distinct()
             ->orderBy('data')
-            ->pluck('data');
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'data' => $item->data,
+                    'user_id' => $item->user_id,
+                    'professor_nome' => explode(' ', trim($item->user->name ?? 'Prof'))[0]
+                ];
+            });
 
-        // Busca todas as frequências da turma no mês indexadas por [aluno_id][data]
+        // Busca todas as frequências da turma no mês indexadas por [aluno_id][data_userid]
         $frequenciasBrutas = Frequencia::where('turma_id', $turmaId)
             ->whereMonth('data', $mes)
             ->whereYear('data', $ano)
@@ -39,7 +47,8 @@ class RelatorioService
 
         $mapaFrequencias = [];
         foreach ($frequenciasBrutas as $freq) {
-            $mapaFrequencias[$freq->aluno_id][$freq->data] = $freq->status;
+            $key = $freq->data . '_' . $freq->user_id;
+            $mapaFrequencias[$freq->aluno_id][$key] = $freq->status;
         }
 
         // Monta o resumo por aluno
@@ -50,9 +59,10 @@ class RelatorioService
             $totalF = 0;
             $totalFJ = 0;
 
-            foreach ($diasComChamada as $data) {
-                $status = $mapaFrequencias[$aluno->id][$data] ?? '-';
-                $dias[$data] = $status;
+            foreach ($diasComChamada as $sessao) {
+                $key = $sessao['data'] . '_' . $sessao['user_id'];
+                $status = $mapaFrequencias[$aluno->id][$key] ?? '-';
+                $dias[$key] = $status;
 
                 if ($status === 'P') $totalP++;
                 if ($status === 'F') $totalF++;
@@ -60,7 +70,7 @@ class RelatorioService
             }
 
             $total = $totalP + $totalF + $totalFJ;
-            $percentual = $total > 0 ? ($totalP / $total) * 100 : 0;
+            $percentual = $total > 0 ? (($totalP + $totalFJ) / $total) * 100 : 0;
 
             $resumoAlunos[] = [
                 'aluno' => $aluno,

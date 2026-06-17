@@ -2,71 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Aluno;
-use App\Models\Turma;
-use App\Models\Frequencia;
-use Illuminate\Support\Facades\DB;
+use App\Services\DashboardService;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    protected $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
+
     public function index()
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
+        $user = Auth::user();
 
         if ($user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
-            // 1. KPIs Básicos
-            $totalAlunos = Aluno::count();
-            $totalTurmas = Turma::where('ativa', true)->count();
-
-            // 2. Cálculo de Frequência Global da Escola
-            $totalRegistros = Frequencia::count();
-            $presencas = Frequencia::where('status', 'P')->count();
-            $mediaEscola = $totalRegistros > 0 ? ($presencas / $totalRegistros) * 100 : 0;
-
-            // 3. Alunos em Risco (Frequência < 75%)
-            // Agrupamos por aluno, contamos presenças e calculamos a média
-            $alunosEmRisco = Aluno::select('alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-                ->join('matriculas', 'alunos.id', '=', 'matriculas.aluno_id')
-                ->join('enturmacoes', 'matriculas.id', '=', 'enturmacoes.matricula_id')
-                ->join('turmas', 'enturmacoes.turma_id', '=', 'turmas.id')
-                ->join('frequencias', 'alunos.id', '=', 'frequencias.aluno_id')
-                ->selectRaw('COUNT(CASE WHEN frequencias.status = "P" THEN 1 END) * 100 / COUNT(frequencias.id) as percentual')
-                ->groupBy('alunos.id', 'alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-                ->having('percentual', '<', 75)
-                ->orderBy('percentual', 'asc')
-                ->take(5)
-                ->get();
+            $dados = $this->dashboardService->getDadosGestor();
         } else {
-            // Dados específicos do professor (Turmas que leciona)
-            $turmasIds = $user->turmas()->pluck('turmas.id');
-            
-            // 1. KPIs Básicos do Professor
-            $totalTurmas = $turmasIds->count();
-            $totalAlunos = DB::table('enturmacoes')
-                ->whereIn('turma_id', $turmasIds)
-                ->where('status', 'Ativo')
-                ->count();
-
-            // 2. Frequência Média nas Turmas do Professor
-            $totalRegistros = Frequencia::whereIn('turma_id', $turmasIds)->count();
-            $presencas = Frequencia::whereIn('turma_id', $turmasIds)->where('status', 'P')->count();
-            $mediaEscola = $totalRegistros > 0 ? ($presencas / $totalRegistros) * 100 : 0;
-
-            // 3. Alunos em Risco apenas nas turmas do Professor
-            $alunosEmRisco = Aluno::select('alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-                ->join('matriculas', 'alunos.id', '=', 'matriculas.aluno_id')
-                ->join('enturmacoes', 'matriculas.id', '=', 'enturmacoes.matricula_id')
-                ->join('turmas', 'enturmacoes.turma_id', '=', 'turmas.id')
-                ->join('frequencias', 'alunos.id', '=', 'frequencias.aluno_id')
-                ->whereIn('turmas.id', $turmasIds)
-                ->selectRaw('COUNT(CASE WHEN frequencias.status = "P" THEN 1 END) * 100 / COUNT(frequencias.id) as percentual')
-                ->groupBy('alunos.id', 'alunos.nome', 'alunos.ra', 'turmas.serie', 'turmas.complemento')
-                ->having('percentual', '<', 75)
-                ->orderBy('percentual', 'asc')
-                ->take(5)
-                ->get();
+            $dados = $this->dashboardService->getDadosProfessor($user);
         }
 
-        return view('dashboard', compact('totalAlunos', 'totalTurmas', 'mediaEscola', 'alunosEmRisco'));
+        return view('dashboard', $dados);
     }
 }

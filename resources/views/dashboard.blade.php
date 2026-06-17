@@ -50,7 +50,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 gap-8">
         
         <!-- Alunos em Risco -->
         <x-card>
@@ -89,47 +89,5 @@
                 </x-table>
             </div>
         </x-card>
-
-        <!-- Gráfico -->
-        <x-card>
-            <x-slot name="header">
-                <h3 class="text-lg font-bold text-gray-900">Saúde Escolar por Bimestre</h3>
-            </x-slot>
-            <canvas id="evasaoChart" height="200"></canvas>
-        </x-card>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('evasaoChart');
-            if (ctx) {
-                new Chart(ctx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['1º Bim', '2º Bim', '3º Bim', '4º Bim'],
-                        datasets: [{
-                            label: 'Frequência Média (%)',
-                            data: [92, 88, {{ number_format($mediaEscola, 0) }}, 0],
-                            backgroundColor: 'rgba(79, 70, 229, 0.5)',
-                            borderColor: '#4F46E5',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: { 
-                        scales: { 
-                            y: { 
-                                beginAtZero: true, 
-                                max: 100 
-                            } 
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </x-app-layout>

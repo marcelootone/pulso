@@ -12,14 +12,26 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\User::updateOrCreate(
+        $admin = \App\Models\User::updateOrCreate(
             ['email' => 'admin@email.com'],
             [
                 'name' => 'Administrador do Sistema',
                 'password' => \Illuminate\Support\Facades\Hash::make('senha123'),
                 'tipo_usuario' => 'Administrador',
-                'ra' => 'ADMIN01', // O campo RA está como fillable na tabela users e pode ser necessário em alguns lugares do sistema.
+                'ra' => 'ADMIN01',
             ]
         );
+        $admin->assignRole('Administrador');
+
+        $gestor = \App\Models\User::updateOrCreate(
+            ['email' => 'gestor1@email.com'],
+            [
+                'name' => 'Gestor Teste',
+                'password' => \Illuminate\Support\Facades\Hash::make('senha123'),
+                'tipo_usuario' => 'Gestor',
+                'ra' => 'GESTOR01',
+            ]
+        );
+        $gestor->assignRole('Gestor');
     }
 }

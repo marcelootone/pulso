@@ -20,20 +20,41 @@
         @endhasrole
     </x-slot>
 
-    <!-- Filtros de Status -->
-    <div class="mb-6 flex gap-3 items-center">
-        <a href="{{ request()->fullUrlWithQuery(['status' => 'todas']) }}"
-            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ !request('status') || request('status') === 'todas' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-            Todas
-        </a>
-        <a href="{{ request()->fullUrlWithQuery(['status' => 'ativas']) }}"
-            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'ativas' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-            Ativas
-        </a>
-        <a href="{{ request()->fullUrlWithQuery(['status' => 'inativas']) }}"
-            class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'inativas' ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
-            Inativas
-        </a>
+    <div class="mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <!-- Filtros de Status -->
+        <div class="flex gap-3 items-center">
+            <a href="{{ request()->fullUrlWithQuery(['status' => 'todas']) }}"
+                class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ !request('status') || request('status') === 'todas' ? 'bg-gray-800 text-white border-gray-800' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+                Todas
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['status' => 'ativas']) }}"
+                class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'ativas' ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+                Ativas
+            </a>
+            <a href="{{ request()->fullUrlWithQuery(['status' => 'inativas']) }}"
+                class="text-sm px-4 py-1.5 rounded-full font-medium transition-colors border {{ request('status') === 'inativas' ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' }}">
+                Inativas
+            </a>
+        </div>
+
+        <!-- Barra de Pesquisa -->
+        <form method="GET" action="{{ route('turmas.index') }}" class="w-full sm:w-auto relative">
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            <div class="relative w-full sm:w-72">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <x-heroicon-s-magnifying-glass class="h-5 w-5 text-gray-400" />
+                </div>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar turmas, alunos, docentes..." 
+                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition duration-150 ease-in-out">
+                @if(request('search'))
+                    <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                        <x-heroicon-s-x-mark class="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    </a>
+                @endif
+            </div>
+        </form>
     </div>
 
     @forelse ($turmasPorModalidade as $modalidade => $turmas)
