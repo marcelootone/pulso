@@ -19,7 +19,7 @@ return new class extends Migration
         });
 
         // Migrate data
-        \Illuminate\Support\Facades\DB::statement('INSERT INTO aluno_turma (aluno_id, turma_id, created_at, updated_at) SELECT id, turma_id, NOW(), NOW() FROM alunos WHERE turma_id IS NOT NULL');
+        \Illuminate\Support\Facades\DB::statement('INSERT INTO aluno_turma (aluno_id, turma_id, created_at, updated_at) SELECT id, turma_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP FROM alunos WHERE turma_id IS NOT NULL');
 
         // Drop the old column
         Schema::table('alunos', function (Blueprint $table) {
