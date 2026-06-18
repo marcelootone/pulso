@@ -15,6 +15,15 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+// Rota temporária para criar o usuário admin no Railway
+Route::get('/setup-admin', function () {
+    \Illuminate\Support\Facades\Artisan::call('db:seed', [
+        '--class' => 'AdminUserSeeder',
+        '--force' => true
+    ]);
+    return 'Admin user criado com sucesso!';
+});
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
