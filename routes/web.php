@@ -15,32 +15,6 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
-// Rota temporária para configurar o banco de dados e usuário admin no Railway
-Route::get('/setup-admin', function () {
-    try {
-        // 1. Roda as migrations (cria as tabelas se não existirem)
-        \Illuminate\Support\Facades\Artisan::call('migrate', [
-            '--force' => true
-        ]);
-        
-        // 2. Roda o seeder de permissões
-        \Illuminate\Support\Facades\Artisan::call('db:seed', [
-            '--class' => 'RolesAndPermissionsSeeder',
-            '--force' => true
-        ]);
-        
-        // 3. Roda o seeder do admin
-        \Illuminate\Support\Facades\Artisan::call('db:seed', [
-            '--class' => 'AdminUserSeeder',
-            '--force' => true
-        ]);
-        
-        return 'Setup concluído com sucesso! Tabelas, Permissões e Usuário Admin foram criados.';
-    } catch (\Exception $e) {
-        return 'Erro ao executar o setup: ' . $e->getMessage() . '<br><br>Arquivo: ' . $e->getFile() . ' (Linha ' . $e->getLine() . ')';
-    }
-});
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');

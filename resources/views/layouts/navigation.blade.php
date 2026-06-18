@@ -22,7 +22,7 @@
                         </x-nav-link>
                     @endunlessrole
                     
-                    @hasrole('Gestor|Secretaria|Coordenador')
+                    @hasrole('Administrador|Gestor|Secretaria|Coordenador')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                             {{ __('Funcionários') }}
                         </x-nav-link>
@@ -36,19 +36,19 @@
                         </x-nav-link>
                     @endhasrole
 
-                    @hasrole('Gestor|Coordenador|Professor|Professor Educação Especial')
+                    @hasrole('Administrador|Gestor|Coordenador|Professor|Professor Educação Especial')
                         <x-nav-link :href="route('estudo-orientado.solicitacoes.index')" :active="request()->routeIs('estudo-orientado.solicitacoes.*')">
                             {{ __('Est. Orientado') }}
                         </x-nav-link>
                     @endhasrole
 
-                    @hasrole('Gestor|Coordenador')
+                    @hasrole('Administrador|Gestor|Coordenador')
                         <x-nav-link :href="route('estudo-orientado.analises.index')" :active="request()->routeIs('estudo-orientado.analises.*')">
                             {{ __('Análises EO') }}
                         </x-nav-link>
                     @endhasrole
 
-                    @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
+                    @hasrole('Administrador|Gestor|Coordenador|Professor de Estudo Orientado')
                         <x-nav-link :href="route('estudo-orientado.acompanhamentos.index')" :active="request()->routeIs('estudo-orientado.acompanhamentos.*')">
                             {{ __('Acompanhar EO') }}
                         </x-nav-link>
@@ -115,7 +115,7 @@
                 </x-responsive-nav-link>
             @endunlessrole
             
-            @hasrole('Gestor|Secretaria|Coordenador')
+            @hasrole('Administrador|Gestor|Secretaria|Coordenador')
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                     {{ __('Funcionários') }}
                 </x-responsive-nav-link>
@@ -129,19 +129,19 @@
                 </x-responsive-nav-link>
             @endhasrole
 
-            @hasrole('Gestor|Coordenador|Professor|Professor Educação Especial')
+            @hasrole('Administrador|Gestor|Coordenador|Professor|Professor Educação Especial')
                 <x-responsive-nav-link :href="route('estudo-orientado.solicitacoes.index')" :active="request()->routeIs('estudo-orientado.solicitacoes.*')">
                     {{ __('Est. Orientado') }}
                 </x-responsive-nav-link>
             @endhasrole
 
-            @hasrole('Gestor|Coordenador')
+            @hasrole('Administrador|Gestor|Coordenador')
                 <x-responsive-nav-link :href="route('estudo-orientado.analises.index')" :active="request()->routeIs('estudo-orientado.analises.*')">
                     {{ __('Análises EO') }}
                 </x-responsive-nav-link>
             @endhasrole
 
-            @hasrole('Gestor|Coordenador|Professor de Estudo Orientado')
+            @hasrole('Administrador|Gestor|Coordenador|Professor de Estudo Orientado')
                 <x-responsive-nav-link :href="route('estudo-orientado.acompanhamentos.index')" :active="request()->routeIs('estudo-orientado.acompanhamentos.*')">
                     {{ __('Acompanhar EO') }}
                 </x-responsive-nav-link>

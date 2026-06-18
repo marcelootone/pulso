@@ -17,8 +17,11 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        // Pega apenas usuários que NÃO são estudantes
-        $query = \App\Models\User::where('tipo_usuario', '!=', \App\Models\User::TIPO_ESTUDANTE);
+        // Pega apenas usuários que NÃO são estudantes e NÃO são administradores (o admin do sistema)
+        $query = \App\Models\User::whereNotIn('tipo_usuario', [
+            \App\Models\User::TIPO_ESTUDANTE,
+            \App\Models\User::TIPO_ADMINISTRADOR
+        ]);
 
         if ($request->filled('tipo_usuario')) {
             $query->where('tipo_usuario', $request->tipo_usuario);
