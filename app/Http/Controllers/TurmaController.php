@@ -17,9 +17,13 @@ class TurmaController extends Controller
         $user = Auth::user();
 
         if ($user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
-            $query = Turma::with('professores');
+            $query = Turma::with('professores')->withCount(['enturmacoes' => function ($query) {
+                $query->where('status', 'Ativo');
+            }]);
         } else {
-            $query = $user->turmas()->with('professores');
+            $query = $user->turmas()->with('professores')->withCount(['enturmacoes' => function ($query) {
+                $query->where('status', 'Ativo');
+            }]);
         }
 
         if ($request->filled('status')) {

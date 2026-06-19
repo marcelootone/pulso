@@ -44,10 +44,33 @@ class ImportacaoController extends Controller
         ]);
 
         $file = $request->file('planilha');
-        // Salva temporariamente
-        $temp_file_path = $file->store('temp');
+        
+        // Salva temporariamente preservando a extensão original
+        $extensao = strtolower($file->getClientOriginalExtension());
+        $nomeArquivo = uniqid('import_') . '.' . $extensao;
+        $temp_file_path = $file->storeAs('temp', $nomeArquivo);
 
-        $planilhas = Excel::toArray(new \stdClass, Storage::path($temp_file_path));
+        $mimeType = $file->getMimeType();
+
+        // Define o tipo de leitor verificando o MimeType real para evitar que
+        // arquivos XLSX renomeados manualmente para .csv sejam lidos como texto (causando caracteres estranhos).
+        if (in_array($mimeType, [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/zip',
+            'application/x-zip-compressed'
+        ])) {
+            $readerType = \Maatwebsite\Excel\Excel::XLSX;
+        } elseif ($mimeType === 'application/vnd.ms-excel') {
+            $readerType = \Maatwebsite\Excel\Excel::XLS;
+        } else {
+            $readerType = match ($extensao) {
+                'csv', 'txt' => \Maatwebsite\Excel\Excel::CSV,
+                'xls' => \Maatwebsite\Excel\Excel::XLS,
+                default => \Maatwebsite\Excel\Excel::XLSX,
+            };
+        }
+
+        $planilhas = Excel::toArray(new \stdClass, Storage::path($temp_file_path), null, $readerType);
         
         $dados = $planilhas[0] ?? [];
         if (count($dados) > 0) {

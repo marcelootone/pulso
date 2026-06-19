@@ -106,7 +106,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">{{ $turma->ano_letivo }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-bold text-primary-600">
-                                    {{ $turma->enturmacoes->count() }}
+                                    {{ $turma->enturmacoes_count ?? 0 }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">

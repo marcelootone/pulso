@@ -18,7 +18,7 @@ test.describe('Importação de Alunos', () => {
 9991,Aluno Teste 1,01/01/2010,M,11999999999
 9992,Aluno Teste 2,02/02/2010,F,11888888888
 ,,,,`; // Linha vazia no final
-        const filePath = path.join(__dirname, 'dummy_alunos.csv');
+        const filePath = path.join(__dirname, 'ImportarUsuariosSIGAE.csv');
         fs.writeFileSync(filePath, dummyCsvContent);
 
         // Acessar a página de importação
