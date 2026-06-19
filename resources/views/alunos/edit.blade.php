@@ -119,9 +119,11 @@
                                 <x-select name="status_matricula" required class="w-full font-semibold">
                                     <option value="Ativo" {{ old('status_matricula', $aluno->status_matricula) == 'Ativo' ? 'selected' : '' }}>🟢 Ativo</option>
                                     <option value="Novato" {{ old('status_matricula', $aluno->status_matricula) == 'Novato' ? 'selected' : '' }}>🔵 Novato</option>
-                                    <option value="Transferido" {{ old('status_matricula', $aluno->status_matricula) == 'Transferido' ? 'selected' : '' }}>🟠 Transferido</option>
-                                    <option value="Evasão" {{ old('status_matricula', $aluno->status_matricula) == 'Evasão' ? 'selected' : '' }}>🔴 Evasão</option>
+                                    <option value="Transferência" {{ old('status_matricula', $aluno->status_matricula) == 'Transferência' ? 'selected' : '' }}>🟠 Transferência</option>
+                                    <option value="Deixou de frequentar" {{ old('status_matricula', $aluno->status_matricula) == 'Deixou de frequentar' ? 'selected' : '' }}>🔴 Deixou de frequentar</option>
+                                    <option value="Falecimento" {{ old('status_matricula', $aluno->status_matricula) == 'Falecimento' ? 'selected' : '' }}>⚫ Falecimento</option>
                                 </x-select>
+
                             </div>
                         </div>
                     </div>

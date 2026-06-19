@@ -172,33 +172,77 @@ class FrequenciaService
         });
     }
 
-    /**
-     * Retorna os alunos com frequência abaixo de 75% no mês selecionado.
-     */
     public function getBuscaAtiva(int $mes, int $ano, ?int $turmaId = null): Collection
     {
-        $queryRegistros = Frequencia::whereMonth('data', $mes)
-            ->whereYear('data', $ano);
+        $currentMonth = (int)date('n');
+        $currentYear = (int)date('Y');
+        
+        if ($mes === $currentMonth && $ano === $currentYear) {
+            $dataReferencia = Carbon::now();
+        } else {
+            $dataReferencia = Carbon::create($ano, $mes)->endOfMonth();
+        }
+
+        $inicioAno = Carbon::create($ano, 1, 1)->startOfDay();
+        
+        $queryRegistros = Frequencia::where('data', '>=', $inicioAno)
+            ->where('data', '<=', $dataReferencia);
 
         if ($turmaId) {
             $queryRegistros->where('turma_id', $turmaId);
         }
 
-        // Agrupa por aluno
-        $dadosFrequencia = $queryRegistros->selectRaw('aluno_id, turma_id, count(*) as total, sum(case when status = "P" then 1 else 0 end) as presencas, sum(case when status = "F" then 1 else 0 end) as faltas')
-            ->groupBy('aluno_id', 'turma_id')
-            ->get();
+        $frequencias = $queryRegistros->get();
 
         $alunosRisco = collect();
+        $frequenciasPorAluno = $frequencias->groupBy('aluno_id');
 
-        foreach ($dadosFrequencia as $dado) {
-            $percentual = $dado->total > 0 ? ($dado->presencas / $dado->total) * 100 : 0;
+        foreach ($frequenciasPorAluno as $alunoId => $freqsAluno) {
+            // Arrays para períodos
+            $freqsAnual = $freqsAluno;
+            $freqs90d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(90));
+            $freqs30d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(30));
+            $freqs7d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(7));
             
-            if ($percentual < 75) {
-                $aluno = Aluno::find($dado->aluno_id);
-                $turma = Turma::find($dado->turma_id);
-                
-                // Buscar registros da Busca Ativa já feitos neste mês para este aluno
+            // Helpers
+            $calc = function($collection) {
+                $total = $collection->count();
+                $faltas = $collection->where('status', 'F')->count();
+                // Faltas (dias letivos) = distinct datas with status F
+                $diasFaltosos = $collection->where('status', 'F')->pluck('data')->unique()->count();
+                $percentual = $total > 0 ? ($faltas / $total) * 100 : 0;
+                return (object) ['total' => $total, 'faltas' => $faltas, 'dias_faltosos' => $diasFaltosos, 'percentual' => $percentual];
+            };
+
+            $anual = $calc($freqsAnual);
+            $t90d = $calc($freqs90d);
+            $t30d = $calc($freqs30d);
+            $t7d = $calc($freqs7d);
+
+            $motivos = [];
+            
+            if ($t7d->dias_faltosos >= 2 || $t7d->percentual >= 40) {
+                $motivos[] = 'Semanal (>= 2 dias ou >= 40%)';
+            }
+            if ($t30d->dias_faltosos >= 5 || $t30d->percentual >= 25) {
+                $motivos[] = 'Mensal (>= 5 dias ou >= 25%)';
+            }
+            if ($t90d->dias_faltosos >= 12 || $t90d->percentual >= 20) {
+                $motivos[] = 'Trimestral (>= 12 dias ou >= 20%)';
+            }
+            if ($anual->percentual > 25 && $anual->percentual <= 35) {
+                $motivos[] = 'Anual Portaria 254-R (> 25% a <= 35%)';
+            } elseif ($anual->percentual > 35) {
+                $motivos[] = 'Anual (> 35% de faltas)';
+            }
+
+            if (!empty($motivos)) {
+                $aluno = Aluno::find($alunoId);
+                if (!$aluno) continue;
+
+                $tId = $turmaId ?? $freqsAluno->first()->turma_id;
+                $turma = Turma::find($tId);
+
                 $registros = BuscaAtivaRegistro::where('aluno_id', $aluno->id)
                     ->whereMonth('data', $mes)
                     ->whereYear('data', $ano)
@@ -209,13 +253,15 @@ class FrequenciaService
                 $alunosRisco->push((object)[
                     'aluno' => $aluno,
                     'turma' => $turma,
-                    'percentual' => round($percentual, 1),
-                    'total_faltas' => $dado->faltas,
-                    'registros' => $registros
+                    'motivos' => implode(' | ', $motivos),
+                    'percentual' => round($t30d->percentual, 1), 
+                    'total_faltas' => $t30d->faltas, 
+                    'registros' => $registros,
+                    'anual_percentual' => round($anual->percentual, 1)
                 ]);
             }
         }
 
-        return $alunosRisco->sortBy('percentual')->values();
+        return $alunosRisco->sortByDesc('anual_percentual')->values();
     }
 }

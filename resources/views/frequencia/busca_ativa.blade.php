@@ -39,7 +39,7 @@
         <x-card class="mb-8 border-l-4 border-l-red-500">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-900">Alunos com Menos de 75% de Frequência</h3>
+                    <h3 class="text-lg font-bold text-gray-900">Estudantes Infrequentes (Busca Ativa)</h3>
                     <p class="text-sm text-gray-500">Mês de referência: {{ str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano }}</p>
                 </div>
                 
@@ -92,11 +92,15 @@
                                 Turma: {{ $risco->turma->serie }}º {{ $risco->turma->complemento }}
                             </p>
                         </div>
-                        <div class="mt-4 md:mt-0">
+                        <div class="mt-4 md:mt-0 flex gap-4">
+                            <div class="inline-flex flex-col items-end px-4 py-2 bg-yellow-50 rounded-xl border border-yellow-100">
+                                <p class="text-xs uppercase font-bold text-yellow-800 tracking-wider">Faltas Anuais</p>
+                                <p class="text-2xl font-black text-yellow-600 my-1">{{ number_format($risco->anual_percentual, 1) }}%</p>
+                            </div>
                             <div class="inline-flex flex-col items-end px-5 py-3 bg-red-50 rounded-xl border border-red-100">
-                                <p class="text-xs uppercase font-bold text-red-800 tracking-wider">Frequência Mensal</p>
-                                <p class="text-3xl font-black text-red-600 my-1">{{ number_format($risco->percentual, 1) }}%</p>
-                                <p class="text-xs font-semibold text-red-700">{{ $risco->total_faltas }} faltas no mês</p>
+                                <p class="text-xs uppercase font-bold text-red-800 tracking-wider">Motivos do Alerta</p>
+                                <p class="text-sm font-black text-red-600 my-1 max-w-xs text-right">{{ $risco->motivos }}</p>
+                                <p class="text-xs font-semibold text-red-700">{{ $risco->total_faltas }} faltas no mês base</p>
                             </div>
                         </div>
                     </div>

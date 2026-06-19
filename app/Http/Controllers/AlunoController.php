@@ -43,6 +43,7 @@ class AlunoController extends Controller
     public function update(Request $request, $id)
     {
         $aluno = Aluno::findOrFail($id);
+        $oldStatus = $aluno->status_matricula;
 
         $request->validate([
             'nome' => 'required|string|max:255',
@@ -54,10 +55,32 @@ class AlunoController extends Controller
             'nascimento' => 'nullable|string|max:20',
             'sexo' => 'nullable|string|in:M,F,m,f',
             'telefone' => 'nullable|string|max:255',
-            'status_matricula' => 'required|string|in:Ativo,Novato,Transferido,Evasão',
+            'status_matricula' => 'required|string|in:Ativo,Novato,Transferência,Deixou de frequentar,Falecimento',
         ]);
 
         $aluno->update($request->all());
+
+        // Se mudou para Deixou de frequentar, registrar na Busca Ativa
+        if ($oldStatus !== $aluno->status_matricula && $aluno->status_matricula === 'Deixou de frequentar') {
+            \App\Models\BuscaAtivaRegistro::create([
+                'aluno_id' => $aluno->id,
+                'user_id' => auth()->id() ?? 1,
+                'observacao' => 'Status do aluno alterado para Deixou de frequentar (Alerta de evasão/abandono gerado automaticamente).',
+                'data' => now()->format('Y-m-d')
+            ]);
+        }
+
+        // Atualizar o status da matrícula correspondente no banco (ano letivo atual)
+        if ($oldStatus !== $aluno->status_matricula) {
+            $matriculaAtiva = \App\Models\Matricula::where('aluno_id', $aluno->id)
+                ->where('ano_letivo', date('Y'))
+                ->latest()
+                ->first();
+                
+            if ($matriculaAtiva) {
+                $matriculaAtiva->update(['status' => $aluno->status_matricula]);
+            }
+        }
 
         // Busca a turma atual via enturmação ativa para o redirect
         $enturmacaoAtiva = Enturmacao::whereHas('matricula', function ($q) use ($aluno) {
