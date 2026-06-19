@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('notas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('avaliacao_id')->constrained('avaliacaos')->cascadeOnDelete();
+            $table->foreignId('avaliacao_id')->constrained('avaliacoes')->cascadeOnDelete();
             $table->foreignId('aluno_id')->constrained()->cascadeOnDelete();
             $table->decimal('valor', 5, 2)->nullable();
             $table->timestamps();
