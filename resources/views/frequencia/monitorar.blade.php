@@ -36,14 +36,39 @@
         <x-card class="mb-8 border-l-4 border-l-primary-500">
             <form method="GET" action="{{ route('frequencia.monitorar') }}" class="flex flex-col md:flex-row gap-4 items-end">
                 <div class="flex-1 w-full">
-                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Turma</label>
-                    <x-select name="turma_id" class="w-full" required onchange="this.form.submit()">
-                        <option value="">Selecione a Turma...</option>
-                        @foreach($turmas as $turma)
-                            <option value="{{ $turma->id }}" {{ $turmaSelecionada == $turma->id ? 'selected' : '' }}>
-                                {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
-                            </option>
-                        @endforeach
+                    <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Destino (Turma, Eletiva ou Clube)</label>
+                    <x-select name="destino" class="w-full" required onchange="this.form.submit()">
+                        <option value="">Selecione o destino...</option>
+                        
+                        @if($turmas->count() > 0)
+                            <optgroup label="Turmas Regulares">
+                                @foreach($turmas as $turma)
+                                    <option value="turma_{{ $turma->id }}" {{ $destinoSelecionado == 'turma_'.$turma->id ? 'selected' : '' }}>
+                                        {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+
+                        @if($eletivas->count() > 0)
+                            <optgroup label="Eletivas">
+                                @foreach($eletivas as $eletiva)
+                                    <option value="eletiva_{{ $eletiva->id }}" {{ $destinoSelecionado == 'eletiva_'.$eletiva->id ? 'selected' : '' }}>
+                                        {{ $eletiva->nome }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @endif
+
+                        @if($clubes->count() > 0)
+                            <optgroup label="Clubes">
+                                @foreach($clubes as $clube)
+                                    <option value="clube_{{ $clube->id }}" {{ $destinoSelecionado == 'clube_'.$clube->id ? 'selected' : '' }}>
+                                        {{ $clube->nome }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @endif
                     </x-select>
                 </div>
                 <div>
@@ -58,7 +83,7 @@
 
         {{-- Lista de Alunos para Lançamento --}}
         {{-- Lista de Disciplinas/Abas --}}
-        @if($turmaSelecionada)
+        @if($destinoSelecionado)
             @if(empty($disciplinas))
                 <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300 shadow-sm">
                     <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-300 mb-3" />
@@ -85,7 +110,7 @@
                             <x-card>
                                 <form action="{{ route('frequencia.store') }}" method="POST" id="form-disciplina-{{ $index }}">
                                     @csrf
-                                    <input type="hidden" name="turma_id" value="{{ $turmaSelecionada }}">
+                                    <input type="hidden" name="destino" value="{{ $destinoSelecionado }}">
                                     <input type="hidden" name="data" value="{{ $dataSelecionada }}">
                                     <input type="hidden" name="professor_id" value="{{ $disciplina->professor_id }}">
 

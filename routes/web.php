@@ -116,8 +116,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/frequencia', [\App\Http\Controllers\FrequenciaController::class, 'index'])->name('frequencia.index');
         Route::get('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'monitorar'])->name('frequencia.monitorar');
         Route::post('/frequencia/monitorar', [\App\Http\Controllers\FrequenciaController::class, 'store'])->name('frequencia.store');
-        Route::get('/frequencia/busca-ativa', [\App\Http\Controllers\FrequenciaController::class, 'buscaAtiva'])->name('frequencia.busca_ativa');
-        Route::post('/frequencia/busca-ativa/registrar', [\App\Http\Controllers\FrequenciaController::class, 'registrarBuscaAtiva'])->name('frequencia.registrar_busca_ativa');
+        Route::get('/frequencia/busca-ativa', [\App\Http\Controllers\BuscaAtivaController::class, 'index'])->name('frequencia.busca_ativa');
+        Route::post('/frequencia/busca-ativa/registrar', [\App\Http\Controllers\BuscaAtivaController::class, 'registrar'])->name('frequencia.registrar_busca_ativa');
 
         Route::get('/relatorios', [\App\Http\Controllers\RelatorioController::class, 'index'])->name('relatorios.index');
         Route::get('/relatorio-evasao', [\App\Http\Controllers\RelatorioController::class, 'evasao'])->name('relatorios.evasao');
@@ -134,6 +134,14 @@ Route::middleware(['auth'])->group(function () {
         Route::put('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update'])->name('espacos.update');
         Route::patch('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update']);
         // Route::delete('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'destroy'])->name('espacos.destroy'); // Destroy estava excetuado antes
+    });
+
+    // Horários de reserva (RF11) - Configurar/gerenciar faixas de horário dos espaços
+    Route::group(['middleware' => ['permission:gerenciar horarios']], function () {
+        Route::get('/horarios-reserva', [\App\Http\Controllers\HorarioController::class, 'index'])->name('horarios.index');
+        Route::post('/horarios-reserva', [\App\Http\Controllers\HorarioController::class, 'store'])->name('horarios.store');
+        Route::put('/horarios-reserva/{horario}', [\App\Http\Controllers\HorarioController::class, 'update'])->name('horarios.update');
+        Route::delete('/horarios-reserva/{horario}', [\App\Http\Controllers\HorarioController::class, 'destroy'])->name('horarios.destroy');
     });
 
     // Espaços - Visualizar e Agendamentos em si (Todos)

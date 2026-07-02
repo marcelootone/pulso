@@ -13,6 +13,7 @@ class BuscaAtivaRegistro extends Model
 
     protected $fillable = [
         'aluno_id',
+        'matricula_id',
         'user_id',
         'observacao',
         'data'
@@ -24,6 +25,14 @@ class BuscaAtivaRegistro extends Model
     public function aluno()
     {
         return $this->belongsTo(Aluno::class);
+    }
+
+    /**
+     * A matrícula do estudante monitorado (conforme DER do TCC).
+     */
+    public function matricula()
+    {
+        return $this->belongsTo(Matricula::class);
     }
 
     /**

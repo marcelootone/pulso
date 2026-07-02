@@ -23,6 +23,15 @@ class AlunoController extends Controller
         
         return view('alunos.index', compact('alunos'));
     }
+
+    public function show($id)
+    {
+        // Não há página de visualização dedicada: a tela de edição já é a ficha
+        // do estudante. Redireciona para evitar o erro 500 em links que apontam
+        // para alunos.show (ex.: resultados da busca global no SearchController).
+        return redirect()->route('alunos.edit', $id);
+    }
+
     public function edit($id)
     {
         $aluno = Aluno::findOrFail($id);
@@ -62,8 +71,13 @@ class AlunoController extends Controller
 
         // Se mudou para Deixou de frequentar, registrar na Busca Ativa
         if ($oldStatus !== $aluno->status_matricula && $aluno->status_matricula === 'Deixou de frequentar') {
+            $matriculaId = \App\Models\Matricula::where('aluno_id', $aluno->id)
+                ->orderByDesc('ano_letivo')
+                ->value('id');
+
             \App\Models\BuscaAtivaRegistro::create([
                 'aluno_id' => $aluno->id,
+                'matricula_id' => $matriculaId,
                 'user_id' => auth()->id() ?? 1,
                 'observacao' => 'Status do aluno alterado para Deixou de frequentar (Alerta de evasão/abandono gerado automaticamente).',
                 'data' => now()->format('Y-m-d')

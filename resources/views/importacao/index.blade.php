@@ -70,14 +70,39 @@
                         
                         <div class="grid grid-cols-2 gap-8">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Turma</label>
-                                <select name="turma_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">Selecione a turma...</option>
-                                    @foreach($turmas as $turma)
-                                        <option value="{{ $turma->id }}" {{ (old('turma_id') ?? request('turma_id')) == $turma->id ? 'selected' : '' }}>
-                                            {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
-                                        </option>
-                                    @endforeach
+                                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Destino (Turma, Eletiva ou Clube)</label>
+                                <select name="destino" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                    <option value="">Selecione o destino...</option>
+                                    
+                                    @if($turmas->count() > 0)
+                                        <optgroup label="Turmas Regulares">
+                                            @foreach($turmas as $turma)
+                                                <option value="turma_{{ $turma->id }}" {{ (old('destino') ?? request('destino')) == 'turma_'.$turma->id ? 'selected' : '' }}>
+                                                    {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+
+                                    @if($eletivas->count() > 0)
+                                        <optgroup label="Eletivas">
+                                            @foreach($eletivas as $eletiva)
+                                                <option value="eletiva_{{ $eletiva->id }}" {{ (old('destino') ?? request('destino')) == 'eletiva_'.$eletiva->id ? 'selected' : '' }}>
+                                                    {{ $eletiva->nome }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+
+                                    @if($clubes->count() > 0)
+                                        <optgroup label="Clubes">
+                                            @foreach($clubes as $clube)
+                                                <option value="clube_{{ $clube->id }}" {{ (old('destino') ?? request('destino')) == 'clube_'.$clube->id ? 'selected' : '' }}>
+                                                    {{ $clube->nome }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
                                 </select>
                             </div>
 
@@ -131,14 +156,39 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Turma de Destino</label>
-                                <select name="turma_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
-                                    <option value="">Selecione a turma...</option>
-                                    @foreach($turmas as $turma)
-                                        <option value="{{ $turma->id }}" {{ request('turma_id') == $turma->id ? 'selected' : '' }}>
-                                            {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
-                                        </option>
-                                    @endforeach
+                                <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Destino (Turma, Eletiva ou Clube)</label>
+                                <select name="destino" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
+                                    <option value="">Selecione o destino...</option>
+                                    
+                                    @if($turmas->count() > 0)
+                                        <optgroup label="Turmas Regulares">
+                                            @foreach($turmas as $turma)
+                                                <option value="turma_{{ $turma->id }}" {{ request('destino') == 'turma_'.$turma->id ? 'selected' : '' }}>
+                                                    {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }})
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+
+                                    @if($eletivas->count() > 0)
+                                        <optgroup label="Eletivas">
+                                            @foreach($eletivas as $eletiva)
+                                                <option value="eletiva_{{ $eletiva->id }}" {{ request('destino') == 'eletiva_'.$eletiva->id ? 'selected' : '' }}>
+                                                    {{ $eletiva->nome }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
+
+                                    @if($clubes->count() > 0)
+                                        <optgroup label="Clubes">
+                                            @foreach($clubes as $clube)
+                                                <option value="clube_{{ $clube->id }}" {{ request('destino') == 'clube_'.$clube->id ? 'selected' : '' }}>
+                                                    {{ $clube->nome }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endif
                                 </select>
                             </div>
                         </div>

@@ -5,7 +5,23 @@
                 <x-heroicon-o-bars-3 class="w-6 h-6" />
             </button>
 
+            <!-- Busca Global (abre o modal via Ctrl+K ou clique) -->
+            <button type="button"
+                    onclick="window.dispatchEvent(new CustomEvent('open-search'))"
+                    class="hidden sm:flex items-center w-full max-w-md text-left bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    aria-label="Pesquisar no sistema (Ctrl+K)">
+                <x-heroicon-o-magnifying-glass class="w-5 h-5 text-gray-400 mr-2 flex-shrink-0" />
+                <span class="flex-1 text-sm text-gray-400 truncate">Pesquise por Turmas, Estudantes, Funcionários ou Espaços...</span>
+                <span class="ml-2 hidden md:inline-flex items-center text-xs font-semibold text-gray-400 border border-gray-200 rounded px-1.5 py-0.5 bg-white">Ctrl&nbsp;K</span>
+            </button>
 
+            <!-- Versão compacta para telas pequenas (somente a lupa) -->
+            <button type="button"
+                    onclick="window.dispatchEvent(new CustomEvent('open-search'))"
+                    class="sm:hidden text-gray-400 hover:text-gray-600 hover:bg-gray-100 p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    aria-label="Pesquisar no sistema">
+                <x-heroicon-o-magnifying-glass class="w-6 h-6" />
+            </button>
         </div>
 
         <!-- Direita: Notificações e Perfil -->

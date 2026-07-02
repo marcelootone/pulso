@@ -25,7 +25,7 @@
                 <form action="{{ route('importar.confirm') }}" method="POST">
                     @csrf
                     
-                    <input type="hidden" name="turma_id" value="{{ $turma_id }}">
+                    <input type="hidden" name="destino" value="{{ $destino }}">
                     <input type="hidden" name="temp_file_path" value="{{ $temp_file_path }}">
 
                     <div class="overflow-x-auto pb-4">

@@ -14,19 +14,23 @@ class ImportacaoController extends Controller
 {
     public function index()
     {
-        // Busca apenas as turmas ativas para mostrar no Dropdown
-        $turmas = Turma::where('ativa', true)->get();
+        // Busca turmas ativas ordenadas
+        $turmas = Turma::where('ativa', true)->orderBy('serie')->orderBy('complemento')->get();
+        
+        // Busca eletivas e clubes ativos ordenados alfabeticamente
+        $eletivas = \App\Models\Eletiva::where('ativa', true)->where('tipo', 'eletiva')->orderBy('nome')->get();
+        $clubes = \App\Models\Eletiva::where('ativa', true)->where('tipo', 'clube')->orderBy('nome')->get();
 
         // Busca todos os alunos para o autocomplete da aba "Vincular Aluno"
         $alunos = Aluno::orderBy('nome')->get(['id', 'nome', 'ra']);
 
-        return view('importacao.index', compact('turmas', 'alunos'));
+        return view('importacao.index', compact('turmas', 'eletivas', 'clubes', 'alunos'));
     }
 
     public function preview(Request $request)
     {
         $request->validate([
-            'turma_id' => 'required|exists:turmas,id',
+            'destino' => 'required|string',
             'planilha' => [
                 'required',
                 'file',
@@ -88,20 +92,44 @@ class ImportacaoController extends Controller
             }
         }
 
-        $turma_id = $request->turma_id;
+        $destino = $request->destino;
 
-        return view('importacao.preview', compact('dados', 'turma_id', 'temp_file_path'));
+        // Valida se o destino existe
+        $partes = explode('_', $destino);
+        if (count($partes) !== 2) {
+            return back()->withErrors(['destino' => 'Destino inválido.'])->withInput();
+        }
+        
+        [$tipoDestino, $idDestino] = $partes;
+        if ($tipoDestino === 'turma') {
+            if (!Turma::where('id', $idDestino)->exists()) {
+                return back()->withErrors(['destino' => 'Turma não encontrada.'])->withInput();
+            }
+        } elseif (in_array($tipoDestino, ['eletiva', 'clube'])) {
+            if (!\App\Models\Eletiva::where('id', $idDestino)->exists()) {
+                return back()->withErrors(['destino' => ucfirst($tipoDestino) . ' não encontrado(a).'])->withInput();
+            }
+        } else {
+            return back()->withErrors(['destino' => 'Tipo de destino inválido.'])->withInput();
+        }
+
+        return view('importacao.preview', compact('dados', 'destino', 'temp_file_path'));
     }
 
     public function confirm(Request $request)
     {
         $request->validate([
-            'turma_id' => 'required|exists:turmas,id',
+            'destino' => 'required|string',
             'alunos' => 'required|array',
             'temp_file_path' => 'nullable|string'
         ]);
 
-        $turma_id = $request->turma_id;
+        $destino = $request->destino;
+        $partes = explode('_', $destino);
+        if (count($partes) !== 2) {
+            return redirect()->route('importar.index')->with('error', 'Destino inválido.');
+        }
+        [$tipoDestino, $idDestino] = $partes;
 
         foreach ($request->alunos as $index => $row) {
             // $row[0] = RA, $row[1] = Nome
@@ -166,24 +194,37 @@ class ImportacaoController extends Controller
                 ]
             );
 
-            // Vincula o aluno à turma importada sem remover vínculos anteriores
+            // Vincula o aluno ao destino selecionado
             $anoLetivo = date('Y');
             
-            $matricula = \App\Models\Matricula::firstOrCreate([
-                'aluno_id' => $aluno->id,
-                'ano_letivo' => $anoLetivo,
-            ], [
-                'status' => 'Ativa',
-            ]);
+            if ($tipoDestino === 'turma') {
+                $matricula = \App\Models\Matricula::firstOrCreate([
+                    'aluno_id' => $aluno->id,
+                    'ano_letivo' => $anoLetivo,
+                ], [
+                    'status' => 'Ativa',
+                ]);
 
-            \App\Models\Enturmacao::firstOrCreate([
-                'matricula_id' => $matricula->id,
-                'turma_id' => $turma_id,
-            ], [
-                'tipo_vinculo' => 'REGULAR',
-                'data_entrada' => now(),
-                'status' => 'Ativo',
-            ]);
+                \App\Models\Enturmacao::firstOrCreate([
+                    'matricula_id' => $matricula->id,
+                    'turma_id' => $idDestino,
+                ], [
+                    'tipo_vinculo' => 'REGULAR',
+                    'data_entrada' => now(),
+                    'status' => 'Ativo',
+                ]);
+            } else {
+                // Eletiva ou Clube
+                \Illuminate\Support\Facades\DB::table('aluno_eletiva')->updateOrInsert([
+                    'aluno_id' => $aluno->id,
+                    'eletiva_id' => $idDestino,
+                ], [
+                    'data_inscricao' => now(),
+                    'status' => 'Ativo',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         // Apaga o arquivo temporário

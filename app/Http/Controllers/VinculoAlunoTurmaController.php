@@ -106,7 +106,7 @@ class VinculoAlunoTurmaController extends Controller
     public function storeBulk(Request $request)
     {
         $request->validate([
-            'turma_id'  => 'required|exists:turmas,id',
+            'destino'  => 'required|string',
             'aluno_ids' => 'required|array|min:1',
             'aluno_ids.*' => 'exists:alunos,id',
         ], [
@@ -114,16 +114,31 @@ class VinculoAlunoTurmaController extends Controller
             'aluno_ids.min'      => 'Selecione ao menos um aluno.',
         ]);
 
-        $turma = Turma::findOrFail($request->turma_id);
-
-        if (!$turma->ativa) {
-            return back()->with('error', 'A turma selecionada não está ativa.');
+        $destino = $request->destino;
+        $partes = explode('_', $destino);
+        if (count($partes) !== 2) {
+            return back()->with('error', 'Destino inválido.');
         }
+        [$tipoDestino, $idDestino] = $partes;
 
-        $anoLetivo   = $turma->ano_letivo ?? date('Y');
+        $anoLetivo = date('Y');
         $vinculados  = 0;
         $reativados  = 0;
         $duplicados  = 0;
+
+        if ($tipoDestino === 'turma') {
+            $turma = Turma::findOrFail($idDestino);
+            if (!$turma->ativa) {
+                return back()->with('error', 'A turma selecionada não está ativa.');
+            }
+            $anoLetivo = $turma->ano_letivo ?? $anoLetivo;
+        } else {
+            $eletiva = \App\Models\Eletiva::findOrFail($idDestino);
+            if (!$eletiva->ativa) {
+                return back()->with('error', 'O destino selecionado não está ativo.');
+            }
+            $anoLetivo = $eletiva->ano_letivo ?? $anoLetivo;
+        }
 
         foreach ($request->aluno_ids as $alunoId) {
             $aluno = Aluno::find($alunoId);
@@ -131,36 +146,70 @@ class VinculoAlunoTurmaController extends Controller
                 continue;
             }
 
-            $matricula = \App\Models\Matricula::firstOrCreate(
-                ['aluno_id' => $aluno->id, 'ano_letivo' => $anoLetivo],
-                ['status'   => 'Ativa']
-            );
+            if ($tipoDestino === 'turma') {
+                $matricula = \App\Models\Matricula::firstOrCreate(
+                    ['aluno_id' => $aluno->id, 'ano_letivo' => $anoLetivo],
+                    ['status'   => 'Ativa']
+                );
 
-            $existing = \App\Models\Enturmacao::where('matricula_id', $matricula->id)
-                ->where('turma_id', $turma->id)
-                ->first();
+                $existing = \App\Models\Enturmacao::where('matricula_id', $matricula->id)
+                    ->where('turma_id', $idDestino)
+                    ->first();
 
-            if ($existing) {
-                if ($existing->status === 'Ativo') {
-                    $duplicados++;
+                if ($existing) {
+                    if ($existing->status === 'Ativo') {
+                        $duplicados++;
+                    } else {
+                        $existing->update([
+                            'status'       => 'Ativo',
+                            'tipo_vinculo' => 'REGULAR',
+                            'data_entrada' => now(),
+                            'data_saida'   => null,
+                        ]);
+                        $reativados++;
+                    }
                 } else {
-                    $existing->update([
-                        'status'       => 'Ativo',
+                    \App\Models\Enturmacao::create([
+                        'matricula_id' => $matricula->id,
+                        'turma_id'     => $idDestino,
                         'tipo_vinculo' => 'REGULAR',
                         'data_entrada' => now(),
-                        'data_saida'   => null,
+                        'status'       => 'Ativo',
                     ]);
-                    $reativados++;
+                    $vinculados++;
                 }
             } else {
-                \App\Models\Enturmacao::create([
-                    'matricula_id' => $matricula->id,
-                    'turma_id'     => $turma->id,
-                    'tipo_vinculo' => 'REGULAR',
-                    'data_entrada' => now(),
-                    'status'       => 'Ativo',
-                ]);
-                $vinculados++;
+                // Eletiva ou Clube
+                $existing = \Illuminate\Support\Facades\DB::table('aluno_eletiva')
+                    ->where('aluno_id', $aluno->id)
+                    ->where('eletiva_id', $idDestino)
+                    ->first();
+
+                if ($existing) {
+                    if ($existing->status === 'Ativo') {
+                        $duplicados++;
+                    } else {
+                        \Illuminate\Support\Facades\DB::table('aluno_eletiva')
+                            ->where('id', $existing->id)
+                            ->update([
+                                'status' => 'Ativo',
+                                'data_inscricao' => now(),
+                                'data_saida' => null,
+                                'updated_at' => now(),
+                            ]);
+                        $reativados++;
+                    }
+                } else {
+                    \Illuminate\Support\Facades\DB::table('aluno_eletiva')->insert([
+                        'aluno_id' => $aluno->id,
+                        'eletiva_id' => $idDestino,
+                        'status' => 'Ativo',
+                        'data_inscricao' => now(),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    $vinculados++;
+                }
             }
         }
 
@@ -170,7 +219,7 @@ class VinculoAlunoTurmaController extends Controller
         $msg .= '.';
 
         return redirect()
-            ->route('importar.index', ['turma_id' => $turma->id, 'tab' => 'vincular'])
+            ->route('importar.index', ['destino' => $destino, 'tab' => 'vincular'])
             ->with('success', $msg);
     }
 }

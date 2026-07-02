@@ -143,6 +143,13 @@ return [
             ],
 
             [
+                'label' => 'Horários de Reserva',
+                'route' => 'horarios.index',
+                'roles' => ['Administrador', 'Gestor', 'Secretaria'],
+                'permissions' => ['gerenciar horarios'],
+            ],
+
+            [
                 'label' => 'Importar Estudantes Planilha',
                 'route' => 'importar.index',
                 'roles' => ['Administrador', 'Gestor', 'Secretaria'],

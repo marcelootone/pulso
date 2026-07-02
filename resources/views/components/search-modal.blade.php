@@ -40,7 +40,7 @@
                        x-ref="searchInput"
                        @input.debounce.300ms="fetchResults"
                        class="w-full border-0 focus:ring-0 py-4 pl-4 pr-12 text-gray-900 placeholder-gray-400 text-lg bg-transparent"
-                       placeholder="Buscar por alunos, turmas ou funcionários..."
+                       placeholder="Pesquise por Turmas, Estudantes, Funcionários ou Espaços..."
                        autocomplete="off">
                 <button @click="open = false" class="absolute right-4 p-1 text-gray-400 hover:text-gray-500 rounded-md focus:outline-none">
                     <span class="text-xs font-semibold bg-gray-100 px-2 py-1 rounded">ESC</span>

@@ -40,23 +40,25 @@
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div>
                     <h3 class="text-lg font-bold text-gray-900">Estudantes Infrequentes (Busca Ativa)</h3>
-                    <p class="text-sm text-gray-500">Mês de referência: {{ str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano }}</p>
+                    <p class="text-sm text-gray-500">Mês de referência: {{ $mes === 'todos' ? 'Todos' : str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano === 'todos' ? 'Todos' : $ano }}</p>
                 </div>
                 
                 <form method="GET" action="{{ route('frequencia.busca_ativa') }}" class="flex flex-wrap items-end gap-4 w-full md:w-auto">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Mês</label>
                         <x-select name="mes" class="w-full md:w-28">
+                            <option value="todos" {{ $mes === 'todos' ? 'selected' : '' }}>Todos</option>
                             @for($i = 1; $i <= 12; $i++)
-                                <option value="{{ $i }}" {{ $mes == $i ? 'selected' : '' }}>{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
+                                <option value="{{ $i }}" {{ $mes == $i && $mes !== 'todos' ? 'selected' : '' }}>{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
                             @endfor
                         </x-select>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Ano</label>
                         <x-select name="ano" class="w-full md:w-28">
+                            <option value="todos" {{ $ano === 'todos' ? 'selected' : '' }}>Todos</option>
                             @for($i = date('Y'); $i >= date('Y') - 2; $i--)
-                                <option value="{{ $i }}" {{ $ano == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                <option value="{{ $i }}" {{ $ano == $i && $ano !== 'todos' ? 'selected' : '' }}>{{ $i }}</option>
                             @endfor
                         </x-select>
                     </div>
@@ -100,7 +102,7 @@
                             <div class="inline-flex flex-col items-end px-5 py-3 bg-red-50 rounded-xl border border-red-100">
                                 <p class="text-xs uppercase font-bold text-red-800 tracking-wider">Motivos do Alerta</p>
                                 <p class="text-sm font-black text-red-600 my-1 max-w-xs text-right">{{ $risco->motivos }}</p>
-                                <p class="text-xs font-semibold text-red-700">{{ $risco->total_faltas }} faltas no mês base</p>
+                                <p class="text-xs font-semibold text-red-700">{{ $risco->total_faltas }} faltas injustificadas no mês</p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +134,7 @@
                             @else
                                 <div class="text-center py-8">
                                     <x-heroicon-o-document-magnifying-glass class="w-10 h-10 mx-auto text-gray-300 mb-2" />
-                                    <p class="text-sm text-gray-500">Nenhuma ação registrada neste mês.</p>
+                                    <p class="text-sm text-gray-500">Nenhuma ação registrada neste ano letivo.</p>
                                 </div>
                             @endif
                         </div>
@@ -173,7 +175,7 @@
                         <x-heroicon-o-check class="h-8 w-8 text-green-600" />
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Tudo em ordem!</h3>
-                    <p class="text-gray-500 max-w-sm mx-auto">Nenhum aluno está com a frequência abaixo de 75% de acordo com os filtros selecionados.</p>
+                    <p class="text-gray-500 max-w-sm mx-auto">Nenhum estudante atingiu os limiares de infrequência da SEDU (faltas injustificadas nas periodicidades semanal, mensal, trimestral ou anual) para os filtros selecionados.</p>
                 </div>
             @endforelse
         </div>

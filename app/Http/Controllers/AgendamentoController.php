@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Espaco;
 use App\Models\Agendamento;
+use App\Models\HorarioReserva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,10 @@ class AgendamentoController extends Controller
             ->orderBy('horario_inicio')
             ->get();
 
-        return view('agendamentos.create', compact('espaco', 'dataSelecionada', 'agendamentos'));
+        // RF11 - faixas de horário configuradas, disponíveis para seleção rápida na reserva.
+        $horarios = HorarioReserva::where('ativo', true)->orderBy('horario_inicio')->get();
+
+        return view('agendamentos.create', compact('espaco', 'dataSelecionada', 'agendamentos', 'horarios'));
     }
 
     public function store(Request $request, Espaco $espaco)

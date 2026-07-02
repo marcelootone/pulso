@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\FrequenciaService;
 use App\Models\Turma;
-use App\Models\BuscaAtivaRegistro;
 use Carbon\Carbon;
 
 class FrequenciaController extends Controller
@@ -41,15 +40,26 @@ class FrequenciaController extends Controller
             ->orderBy('complemento')
             ->get();
             
-        $turmaSelecionada = $request->input('turma_id');
+        $eletivas = \App\Models\Eletiva::where('ativa', true)->where('tipo', 'eletiva')->orderBy('nome')->get();
+        $clubes = \App\Models\Eletiva::where('ativa', true)->where('tipo', 'clube')->orderBy('nome')->get();
+
+        $destinoSelecionado = $request->input('destino');
         $dataSelecionada = $request->input('data', date('Y-m-d'));
         
         $disciplinas = [];
-        if ($turmaSelecionada) {
-            $disciplinas = $this->frequenciaService->getFrequenciasMonitoramento((int)$turmaSelecionada, $dataSelecionada);
+        if ($destinoSelecionado) {
+            $partes = explode('_', $destinoSelecionado);
+            if (count($partes) === 2) {
+                [$tipoDestino, $idDestino] = $partes;
+                if ($tipoDestino === 'turma') {
+                    $disciplinas = $this->frequenciaService->getFrequenciasMonitoramento((int)$idDestino, $dataSelecionada);
+                } else {
+                    $disciplinas = $this->frequenciaService->getFrequenciasEletivaMonitoramento((int)$idDestino, $dataSelecionada);
+                }
+            }
         }
 
-        return view('frequencia.monitorar', compact('turmas', 'turmaSelecionada', 'dataSelecionada', 'disciplinas'));
+        return view('frequencia.monitorar', compact('turmas', 'eletivas', 'clubes', 'destinoSelecionado', 'dataSelecionada', 'disciplinas'));
     }
 
     /**
@@ -58,59 +68,40 @@ class FrequenciaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'turma_id' => 'required|exists:turmas,id',
+            'destino' => 'required|string',
             'data' => 'required|date',
             'frequencias' => 'required|array',
             'professor_id' => 'required|exists:users,id'
         ]);
 
-        $this->frequenciaService->salvarFrequencia(
-            $request->only(['turma_id', 'data', 'frequencias']), 
-            $request->input('professor_id')
-        );
+        $partes = explode('_', $request->destino);
+        if (count($partes) !== 2) {
+            return back()->with('error', 'Destino inválido.');
+        }
+
+        $tipoDestino = $partes[0];
+        $idDestino = $partes[1];
+
+        if ($tipoDestino === 'turma') {
+            $this->frequenciaService->salvarFrequencia([
+                'turma_id' => $idDestino,
+                'data' => $request->data,
+                'frequencias' => $request->frequencias
+            ], $request->input('professor_id'));
+        } else {
+            $this->frequenciaService->salvarFrequenciaEletiva([
+                'eletiva_id' => $idDestino,
+                'data' => $request->data,
+                'frequencias' => $request->frequencias
+            ], $request->input('professor_id'));
+        }
 
         return redirect()->route('frequencia.monitorar', [
-            'turma_id' => $request->turma_id,
+            'destino' => $request->destino,
             'data' => $request->data
         ])->with('success', 'Frequência salva com sucesso!');
     }
 
-    /**
-     * Exibe o painel de Busca Ativa (alunos com < 75% de frequência no mês).
-     */
-    public function buscaAtiva(Request $request)
-    {
-        $mes = $request->input('mes', date('n'));
-        $ano = $request->input('ano', date('Y'));
-        $turmaId = $request->input('turma_id');
-
-        $turmas = Turma::where('ativa', true)->orderBy('serie')->orderBy('complemento')->get();
-        
-        $alunosRisco = collect();
-        // Apenas buscar se foi filtrado ou se quiser exibir do mês inteiro logo de cara
-        $alunosRisco = $this->frequenciaService->getBuscaAtiva((int)$mes, (int)$ano, $turmaId ? (int)$turmaId : null);
-
-        return view('frequencia.busca_ativa', compact('alunosRisco', 'turmas', 'turmaId', 'mes', 'ano'));
-    }
-
-    /**
-     * Registra uma ação de Busca Ativa para o aluno.
-     */
-    public function registrarBuscaAtiva(Request $request)
-    {
-        $request->validate([
-            'aluno_id' => 'required|exists:alunos,id',
-            'observacao' => 'required|string|max:1000',
-            'data' => 'required|date',
-        ]);
-
-        BuscaAtivaRegistro::create([
-            'aluno_id' => $request->aluno_id,
-            'user_id' => auth()->id(),
-            'observacao' => $request->observacao,
-            'data' => $request->data
-        ]);
-
-        return redirect()->back()->with('success', 'Registro de busca ativa salvo com sucesso!');
-    }
+    // O painel e o registro de Busca Ativa foram movidos para o
+    // BuscaAtivaController dedicado (ver Figura 21 - Diagrama de Sequência).
 }

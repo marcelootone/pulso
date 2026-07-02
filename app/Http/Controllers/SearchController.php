@@ -45,8 +45,15 @@ class SearchController extends Controller
 
         // 2. Buscar Turmas
         if ($user->can('acessar turmas vinculadas') || $user->can('gerenciar turmas')) {
-            $turmas = Turma::where('nome', 'like', "%{$query}%")
-                ->orWhere('ano_letivo', 'like', "%{$query}%")
+            // A tabela "turmas" não possui coluna "nome"; a busca é feita sobre
+            // os campos reais que compõem a identificação da turma.
+            $turmas = Turma::where(function ($q) use ($query) {
+                    $q->where('serie', 'like', "%{$query}%")
+                      ->orWhere('modalidade', 'like', "%{$query}%")
+                      ->orWhere('turno', 'like', "%{$query}%")
+                      ->orWhere('complemento', 'like', "%{$query}%")
+                      ->orWhere('ano_letivo', 'like', "%{$query}%");
+                })
                 ->take(5)
                 ->get()
                 ->map(function ($turma) {

@@ -20,6 +20,25 @@ class Turma extends Model
         'ativa'
     ];
 
+    /**
+     * Nome composto e legível da turma (a tabela não possui coluna "nome").
+     * Ex.: "1º COM - EM - Ensino Médio (Matutino)".
+     */
+    public function getNomeAttribute(): string
+    {
+        $partes = trim(($this->serie ? $this->serie . 'º' : '') . ' ' . ($this->complemento ?? ''));
+        $nome = $partes !== '' ? $partes : 'Turma';
+
+        if (!empty($this->modalidade)) {
+            $nome .= ' - ' . $this->modalidade;
+        }
+        if (!empty($this->turno)) {
+            $nome .= ' (' . ucfirst($this->turno) . ')';
+        }
+
+        return $nome;
+    }
+
     public function enturmacoes()
     {
         return $this->hasMany(Enturmacao::class);

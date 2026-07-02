@@ -87,6 +87,24 @@
                         @csrf
                         <input type="hidden" name="data" value="{{ $dataSelecionada }}">
 
+                        @if (isset($horarios) && $horarios->count() > 0)
+                            <div class="mb-4">
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Faixa de horário (opcional)</label>
+                                <select onchange="const o=this.options[this.selectedIndex]; if(o.value){this.form.horario_inicio.value=o.dataset.inicio; this.form.horario_fim.value=o.dataset.fim;}"
+                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <option value="">— Selecionar horário configurado —</option>
+                                    @foreach ($horarios as $h)
+                                        <option value="{{ $h->id }}"
+                                                data-inicio="{{ \Illuminate\Support\Str::substr($h->horario_inicio, 0, 5) }}"
+                                                data-fim="{{ \Illuminate\Support\Str::substr($h->horario_fim, 0, 5) }}">
+                                            {{ $h->rotulo }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">Selecione uma faixa configurada para preencher os horários, ou informe manualmente abaixo.</p>
+                            </div>
+                        @endif
+
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Início</label>
