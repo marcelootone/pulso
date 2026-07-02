@@ -5,7 +5,7 @@
                 {{ __('Gestão de Funcionários') }}
             </h2>
             <x-button variant="primary" onclick="window.location='{{ route('users.create') }}'" class="w-full sm:w-auto justify-center">
-                <x-heroicon-o-user-plus class="w-5 h-5 mr-2" /> Novo Funcionário
+                <x-heroicon-o-user-plus class="w-5 h-5 mr-2" /> Novo Usuário
             </x-button>
         </div>
     </x-slot>

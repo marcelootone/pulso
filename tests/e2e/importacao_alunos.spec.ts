@@ -1,12 +1,16 @@
 import { test, expect } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
+import { fileURLToPath } from 'url';
+
+// __dirname não existe em ESM (modo de execução do Playwright); reconstruído aqui.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test.describe('Importação de Alunos', () => {
     test.beforeEach(async ({ page }) => {
         // Supondo que a aplicação tem um login padrão
         await page.goto('/login');
-        await page.fill('input[name="email"]', 'admin@sigae.com');
+        await page.fill('input[name="email"]', 'admin@example.com');
         await page.fill('input[name="password"]', 'password'); // Senha comum para testes
         await page.click('button[type="submit"]');
         await page.waitForURL('/dashboard');

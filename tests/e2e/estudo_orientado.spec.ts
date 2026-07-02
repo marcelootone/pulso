@@ -9,11 +9,11 @@ import { test, expect } from '@playwright/test';
  * 3. Professor de EO: Registra atendimento/acompanhamento.
  */
 
-const BASE_URL = 'http://sigae.test';
+const BASE_URL = '';
 
-const PROFESSOR_REGULAR = { email: 'professor@sigae.test', password: 'password' };
-const COORDENADOR       = { email: 'coordenador@sigae.test', password: 'password' };
-const PROFESSOR_EO      = { email: 'professoreo@sigae.test', password: 'password' };
+const PROFESSOR_REGULAR = { email: 'professor@example.com', password: 'password' };
+const COORDENADOR       = { email: 'coordenador@example.com', password: 'password' };
+const PROFESSOR_EO      = { email: 'professoreo@example.com', password: 'password' };
 
 async function login(page, email: string, password: string) {
     await page.goto(`${BASE_URL}/login`);

@@ -6,7 +6,7 @@ test.describe('Eletivas e Clubes', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'admin@sigae.edu.br');
+    await page.fill('input[name="email"]', 'admin@example.com');
     await page.fill('input[name="password"]', 'password');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL('/dashboard');

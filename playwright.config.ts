@@ -13,14 +13,21 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests/e2e',
-  /* Run tests in files in parallel */
-  fullyParallel: true,
+  /* Popula o banco (E2ETestSeeder) antes de iniciar a suíte. */
+  globalSetup: './tests/e2e/global-setup.ts',
+  /* IMPORTANTE: o servidor de testes (`php artisan serve`) é SINGLE-PROCESS.
+     Sob paralelismo ele afoga (a requisição da página espera por uma sub-requisição
+     que o mesmo processo, ocupado, não responde) → timeouts em massa.
+     Por isso a suíte roda SERIALIZADA (1 worker, sem paralelismo intra-arquivo).
+     Se você rodar contra o Laragon (sigae.test, com PHP-FPM concorrente) pode
+     reativar o paralelismo: fullyParallel: true e workers: undefined. */
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* 1 worker = execução serial, compatível com o servidor single-process. */
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -70,10 +77,15 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* Sobe o servidor Laravel automaticamente antes dos testes.
+     reuseExistingServer evita conflito caso o Laragon/artisan já esteja servindo em 8000. */
+  webServer: {
+    command: 'php artisan serve --host=127.0.0.1 --port=8000',
+    url: 'http://127.0.0.1:8000',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+    /* Em Linux/macOS, permite que o servidor embutido do PHP atenda requisições
+       concorrentes (no Windows é ignorado pelo PHP). */
+    env: { PHP_CLI_SERVER_WORKERS: '4' },
+  },
 });

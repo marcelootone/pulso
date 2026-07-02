@@ -5,7 +5,7 @@ test.describe('Cadastro Manual de Usuários', () => {
     test.beforeEach(async ({ page }) => {
         // Assume que existe um login admin padrão
         await page.goto('/login');
-        await page.fill('input[name="email"]', 'admin@admin.com');
+        await page.fill('input[name="email"]', 'admin@example.com');
         await page.fill('input[name="password"]', 'password');
         await page.click('button[type="submit"]');
         await page.waitForURL('/dashboard');

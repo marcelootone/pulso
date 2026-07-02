@@ -198,13 +198,13 @@ class FrequenciaService
         $frequenciasPorAluno = $frequencias->groupBy('aluno_id');
 
         foreach ($frequenciasPorAluno as $alunoId => $freqsAluno) {
-            // Arrays para períodos
+            // janelas retroativas a partir da data de referência
             $freqsAnual = $freqsAluno;
             $freqs90d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(90));
             $freqs30d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(30));
             $freqs7d = $freqsAluno->where('data', '>=', $dataReferencia->copy()->subDays(7));
             
-            // Helpers
+            // para cada janela: total, dias de falta (distintos) e percentual
             $calc = function($collection) {
                 $total = $collection->count();
                 $faltas = $collection->where('status', 'F')->count();
@@ -219,6 +219,7 @@ class FrequenciaService
             $t30d = $calc($freqs30d);
             $t7d = $calc($freqs7d);
 
+            // limiares da SEDU-ES 2026
             $motivos = [];
             
             if ($t7d->dias_faltosos >= 2 || $t7d->percentual >= 40) {

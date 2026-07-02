@@ -7,7 +7,7 @@ import { test, expect, type Page } from '@playwright/test';
  * throttle rate-limit e fluxo de redefinição de senha.
  */
 
-const BASE_URL = 'http://sigae.test';
+const BASE_URL = '';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -15,7 +15,8 @@ const BASE_URL = 'http://sigae.test';
 
 async function goToForgotPassword(page: Page) {
     await page.goto(`${BASE_URL}/forgot-password`);
-    await expect(page).toHaveTitle(/SIGAE/);
+    // Não depende do APP_NAME (título varia conforme .env); valida o formulário em si.
+    await expect(page.locator('#email')).toBeVisible();
 }
 
 // ---------------------------------------------------------------------------
