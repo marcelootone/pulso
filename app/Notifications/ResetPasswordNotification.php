@@ -26,7 +26,7 @@ class ResetPasswordNotification extends BaseResetPassword
         return (new MailMessage())
             ->subject('Recuperação de Senha — SIGAE')
             ->greeting('Olá, ' . ($notifiable->name ?? 'usuário') . '!')
-            ->line('Recebemos uma solicitação para redefinir a senha da sua conta no **SIGAE — Sistema de Gestão Acadêmica Escolar**.')
+            ->line('Recebemos uma solicitação para redefinir a senha da sua conta no **SIGAE — Sistema Integrado de Gestão e Acompanhamento Escolar**.')
             ->line('Clique no botão abaixo para criar uma nova senha. Este link é válido por **' . $expiresIn . ' minutos**.')
             ->action('Redefinir Minha Senha', $resetUrl)
             ->line('Se você **não** solicitou a redefinição de senha, nenhuma ação é necessária. Sua senha permanece inalterada.')
