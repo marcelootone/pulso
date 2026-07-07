@@ -21,7 +21,7 @@ class DiarioEletivaController extends Controller
         }])->findOrFail($id);
 
         // Apenas o professor responsável, coordenador ou superior pode ver/editar
-        if (!auth()->user()->hasRole(['Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
+        if (!auth()->user()->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
             abort(403, 'Acesso negado.');
         }
 
@@ -58,7 +58,7 @@ class DiarioEletivaController extends Controller
     {
         $eletiva = Eletiva::findOrFail($id);
 
-        if (!auth()->user()->hasRole(['Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
+        if (!auth()->user()->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
             abort(403, 'Acesso negado.');
         }
 
@@ -98,7 +98,7 @@ class DiarioEletivaController extends Controller
     {
         $eletiva = Eletiva::findOrFail($id);
 
-        if (!auth()->user()->hasRole(['Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
+        if (!auth()->user()->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador']) && !$eletiva->professores->contains(auth()->id())) {
             abort(403, 'Acesso negado.');
         }
 

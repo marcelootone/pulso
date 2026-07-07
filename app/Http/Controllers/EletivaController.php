@@ -18,7 +18,7 @@ class EletivaController extends Controller
         $query = \App\Models\Eletiva::with('professores')->withCount('alunosAtivos');
         
         $user = \Illuminate\Support\Facades\Auth::user();
-        if ($user->hasRole(['Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado']) && !$user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
+        if ($user->hasRole(['Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado']) && !$user->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador'])) {
             $query->whereHas('professores', function($q) use ($user) {
                 $q->where('users.id', $user->id);
             });
@@ -50,7 +50,7 @@ class EletivaController extends Controller
     public function show(\App\Models\Eletiva $eletiva)
     {
         $user = \Illuminate\Support\Facades\Auth::user();
-        if ($user->hasRole(['Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado']) && !$user->hasRole(['Gestor', 'Secretaria', 'Coordenador'])) {
+        if ($user->hasRole(['Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado']) && !$user->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador'])) {
             if (!$eletiva->professores->contains($user->id)) {
                 abort(403, 'Acesso não autorizado a esta eletiva/clube.');
             }

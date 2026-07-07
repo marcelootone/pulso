@@ -102,7 +102,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     <div class="flex justify-center items-center space-x-3">
-                                        @if(auth()->user()->hasRole(['Gestor', 'Secretaria', 'Coordenador']) || $eletiva->professores->contains(auth()->id()))
+                                        @if(auth()->user()->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador']) || $eletiva->professores->contains(auth()->id()))
                                         <a href="{{ route('eletivas.diario.show', $eletiva->id) }}" class="text-emerald-600 hover:text-emerald-900 transition-colors p-1" title="Diário de Frequência e Notas">
                                             <x-heroicon-o-clipboard-document-check class="w-5 h-5" />
                                         </a>
