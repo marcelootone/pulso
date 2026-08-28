@@ -79,10 +79,10 @@ export default defineConfig({
 
   /* Sobe o servidor Laravel automaticamente antes dos testes.
      reuseExistingServer evita conflito caso o Laragon/artisan já esteja servindo em 8000. */
-  webServer: {
+  /*webServer: {
     command: 'php artisan serve --host=127.0.0.1 --port=8000',
 	url: 'http://127.0.0.1:8000',
     reuseExistingServer: true,
     timeout: 120 * 1000,
-  },
+  },*/
 });
