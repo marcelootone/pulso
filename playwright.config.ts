@@ -80,13 +80,9 @@ export default defineConfig({
   /* Sobe o servidor Laravel automaticamente antes dos testes.
      reuseExistingServer evita conflito caso o Laragon/artisan já esteja servindo em 8000. */
   webServer: {
-    //command: 'php artisan serve --host=127.0.0.1 --port=8000',
-	command: 'php artisan serve --host=0.0.0.0 --port=8000',
-    url: 'http://127.0.0.1:8000',
-    reuseExistingServer: !process.env.CI,
+    command: 'php artisan serve --host=127.0.0.1 --port=8000',
+	url: 'http://127.0.0.1:8000',
+    reuseExistingServer: false,
     timeout: 120 * 1000,
-    /* Em Linux/macOS, permite que o servidor embutido do PHP atenda requisições
-       concorrentes (no Windows é ignorado pelo PHP). */
-    env: { PHP_CLI_SERVER_WORKERS: '4' },
   },
 });
