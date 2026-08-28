@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SIGAE') }}</title>
+        <title>{{ config('app.name', 'PULSO') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,9 +20,9 @@
             Pular para o conteúdo principal
         </a>
         <div class="flex h-screen overflow-hidden">
-            
+
             <!-- Sidebar Backdrop for mobile -->
-            <div x-show="sidebarOpen" 
+            <div x-show="sidebarOpen"
                  @click="sidebarOpen = false"
                  class="fixed inset-0 z-20 bg-gray-900/50 lg:hidden"
                  x-transition.opacity
@@ -31,10 +31,10 @@
             <!-- Sidebar -->
             <aside class="fixed inset-y-0 left-0 z-30 flex flex-col bg-primary-900 text-white transition-all duration-300 transform lg:relative lg:translate-x-0"
                    :class="sidebarOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full lg:w-0'">
-                
+
                 <!-- Logo area -->
                 <div class="flex items-center justify-center h-16 border-b border-primary-700/50 bg-primary-900 overflow-hidden flex-shrink-0">
-                    <span x-show="sidebarOpen" x-transition class="text-2xl font-bold tracking-wider text-white">SIGAE</span>
+                    <span x-show="sidebarOpen" x-transition class="text-2xl font-bold tracking-wider text-white">PULSO</span>
                 </div>
 
                 <!-- Menu -->
@@ -43,7 +43,7 @@
 
             <!-- Main Content Wrapper -->
             <div class="flex-1 flex flex-col overflow-hidden">
-                
+
                 <!-- Topbar -->
                 <x-topbar />
 

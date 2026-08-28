@@ -24,7 +24,7 @@
     <div class="header">
         <h1>Relatório de Frequência Mensal</h1>
         <p>
-            <strong>Turma:</strong> {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }}) | 
+            <strong>Turma:</strong> {{ $turma->serie }}º {{ $turma->complemento }} - {{ $turma->modalidade }} ({{ $turma->turno }}) |
             <strong>Mês de Referência:</strong> {{ str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano }}
         </p>
     </div>
@@ -74,7 +74,7 @@
                     @empty
                         <td>Nenhum registro no mês.</td>
                     @endforelse
-                    
+
                     <td class="summary">{{ $row['total_presencas'] }}</td>
                     <td class="summary status-f">{{ $row['total_faltas'] }}</td>
                     <td class="summary">{{ $row['total_faltas_justificadas'] }}</td>
@@ -91,7 +91,7 @@
     </table>
 
     <div class="footer">
-        Gerado pelo SIGAE em {{ $dataEmissao }}
+        Gerado pelo PULSO em {{ $dataEmissao }}
     </div>
 
 </body>

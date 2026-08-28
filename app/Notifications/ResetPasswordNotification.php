@@ -24,13 +24,13 @@ class ResetPasswordNotification extends BaseResetPassword
         $expiresIn = $this->expiresIn();
 
         return (new MailMessage())
-            ->subject('Recuperação de Senha — SIGAE')
+            ->subject('Recuperação de Senha — PULSO')
             ->greeting('Olá, ' . ($notifiable->name ?? 'usuário') . '!')
-            ->line('Recebemos uma solicitação para redefinir a senha da sua conta no **SIGAE — Sistema Integrado de Gestão e Acompanhamento Escolar**.')
+            ->line('Recebemos uma solicitação para redefinir a senha da sua conta no **PULSO — Plataforma Unificada de Supervisão e Organização Educacional**.')
             ->line('Clique no botão abaixo para criar uma nova senha. Este link é válido por **' . $expiresIn . ' minutos**.')
             ->action('Redefinir Minha Senha', $resetUrl)
             ->line('Se você **não** solicitou a redefinição de senha, nenhuma ação é necessária. Sua senha permanece inalterada.')
             ->line('Por segurança, nunca compartilhe este link com ninguém.')
-            ->salutation('Atenciosamente, Equipe SIGAE');
+            ->salutation('Atenciosamente, Equipe PULSO');
     }
 }

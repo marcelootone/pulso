@@ -42,7 +42,7 @@
                 <tr>
                     <td style="font-weight: bold; font-size: 14px;">{{ $index + 1 }}º</td>
                     <td class="col-turma">
-                        {{ $dado->turma->serie }}º {{ $dado->turma->complemento }} 
+                        {{ $dado->turma->serie }}º {{ $dado->turma->complemento }}
                         <span style="font-weight: normal; font-size: 12px; color: #666;">
                             - {{ $dado->turma->modalidade }} ({{ $dado->turma->turno }})
                         </span>
@@ -77,7 +77,7 @@
     </div>
 
     <div class="footer">
-        Documento Oficial SIGAE - Gerado em {{ $dataEmissao }}
+        Documento Oficial PULSO - Gerado em {{ $dataEmissao }}
     </div>
 
 </body>

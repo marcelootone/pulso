@@ -9,12 +9,12 @@
         .header { text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; }
         .logo { font-size: 24px; font-weight: bold; color: #2563eb; }
         .subtitle { font-size: 14px; color: #666; }
-        
+
         table { w-full; border-collapse: collapse; margin-top: 20px; width: 100%; }
         th { background-color: #f3f4f6; color: #374151; font-weight: bold; padding: 10px; text-align: left; border: 1px solid #ddd; }
         td { padding: 10px; border: 1px solid #ddd; }
         .danger { color: #dc2626; font-weight: bold; text-align: center; }
-        
+
         .footer { position: fixed; bottom: -30px; left: 0px; right: 0px; height: 50px; text-align: center; font-size: 10px; color: #999; border-top: 1px solid #eee; padding-top: 10px; }
         .signature-box { margin-top: 50px; width: 300px; float: right; text-align: center; }
         .signature-line { border-bottom: 1px solid #000; margin-bottom: 5px; }
@@ -23,7 +23,7 @@
 <body>
 
     <div class="header">
-        <div class="logo">SIGAE - Sistema Integrado de Gestão Escolar</div>
+        <div class="logo">PULSO — Plataforma Unificada de Supervisão e Organização Educacional</div>
         <div class="subtitle">Relatório Oficial de Intervenção Pedagógica (Evasão)</div>
         <div>Data de Emissão: {{ $dataAtual }}</div>
     </div>
@@ -61,7 +61,7 @@
     </div>
 
     <div class="footer">
-        Gerado automaticamente pelo SIGAE - Página 1
+        Gerado automaticamente pelo PULSO - Página 1
     </div>
 
 </body>
