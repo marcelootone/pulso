@@ -15,7 +15,8 @@
         <x-card class="border-l-4 border-l-primary-500">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-primary-100 text-primary-600 mr-4">
-                    <x-heroicon-o-users class="w-8 h-8" />
+                    <x-icon name="heroicon-o-users" class="w-8 h-8" />
+
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Estudantes</p>
@@ -27,7 +28,9 @@
         <x-card class="border-l-4 border-l-purple-500">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                    <x-heroicon-o-academic-cap class="w-8 h-8" />
+
+                <x-icon name="heroicon-o-academic-cap" class="w-8 h-8" />
+
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Turmas</p>
@@ -39,7 +42,7 @@
         <x-card class="border-l-4 {{ $mediaEscola < 75 ? 'border-l-red-500' : 'border-l-green-500' }}">
             <div class="flex items-center">
                 <div class="p-3 rounded-full {{ $mediaEscola < 75 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }} mr-4">
-                    <x-heroicon-o-chart-bar class="w-8 h-8" />
+                    <x-icon name="heroicon-o-chart-bar" class="w-8 h-8" />
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Freq. Geral</p>
@@ -51,13 +54,13 @@
 
     <!-- Main Content Area -->
     <div class="grid grid-cols-1 gap-8">
-        
+
         <!-- Alunos em Risco -->
         <x-card>
             <x-slot name="header">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-exclamation-triangle class="w-5 h-5 text-red-500 mr-2" />
+                        <x-icon name="heroicon-o-exclamation-triangle" class="w-5 h-5 text-red-500 mr-2" />
                         Alerta de Evasão
                     </h3>
                     <x-button variant="danger" size="sm" onclick="window.location='{{ route('relatorios.evasao') }}'">

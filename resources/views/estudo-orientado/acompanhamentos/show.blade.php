@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Prontuário de Acompanhamento: ') }} {{ $solicitacao->aluno->nome }}
             </h2>
-            <span class="px-3 py-1 text-sm font-semibold rounded-full 
+            <span class="px-3 py-1 text-sm font-semibold rounded-full
                 {{ $solicitacao->status === 'Aprovada' ? 'bg-blue-100 text-blue-800' : '' }}
                 {{ $solicitacao->status === 'EmAtendimento' ? 'bg-indigo-100 text-indigo-800' : '' }}
                 {{ $solicitacao->status === 'Concluida' ? 'bg-green-100 text-green-800' : '' }}
@@ -206,11 +206,11 @@
                         ">
                             <div class="mt-1">
                                 @if($evolucao->indicador === 'Melhora')
-                                    <x-heroicon-o-arrow-trending-up class="w-6 h-6 text-green-600" />
+                                    <x-icon name="heroicon-o-arrow-trending-up" class="w-6 h-6 text-green-600" />
                                 @elseif($evolucao->indicador === 'Estavel')
-                                    <x-heroicon-o-minus class="w-6 h-6 text-gray-600" />
+                                    <x-icon name="heroicon-o-minus" class="w-6 h-6 text-gray-600" />
                                 @else
-                                    <x-heroicon-o-arrow-trending-down class="w-6 h-6 text-red-600" />
+                                    <x-icon name="heroicon-o-arrow-trending-down" class="w-6 h-6 text-red-600" />
                                 @endif
                             </div>
                             <div>
@@ -228,7 +228,7 @@
             <div x-show="tab === 'concluir'" style="display: none;" class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-bold mb-4 text-gray-700 border-b pb-2">Encerramento do Acompanhamento</h3>
-                    
+
                     @if($solicitacao->status === 'EmAtendimento' && Auth::user()->can('concluir', $solicitacao))
                         <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
                             <p class="text-yellow-700 text-sm">Ao concluir o acompanhamento, não será possível registrar novos atendimentos, planos de ação ou evoluções. O processo retornará ao Coordenador para ciência e será arquivado no prontuário do aluno.</p>

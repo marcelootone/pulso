@@ -106,7 +106,7 @@
                     <!-- Seção: Dados Acadêmicos -->
                     <div>
                         <h4 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">3. Dados Acadêmicos</h4>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">R.A. (Registro do Aluno)</label>
@@ -137,7 +137,7 @@
                             <x-button variant="secondary" type="button" onclick="window.location='{{ route('alunos.index') }}'">Cancelar</x-button>
                         @endif
                         <x-button variant="primary" type="submit" form="form-bbb5d7">
-                            <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Alterações
+                            <x-icon name="heroicon-o-check" class="w-4 h-4 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>
                 </x-slot>

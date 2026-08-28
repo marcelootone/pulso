@@ -39,7 +39,7 @@
                     <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Destino (Turma, Eletiva ou Clube)</label>
                     <x-select name="destino" class="w-full" required onchange="this.form.submit()">
                         <option value="">Selecione o destino...</option>
-                        
+
                         @if($turmas->count() > 0)
                             <optgroup label="Turmas Regulares">
                                 @foreach($turmas as $turma)
@@ -86,7 +86,7 @@
         @if($destinoSelecionado)
             @if(empty($disciplinas))
                 <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300 shadow-sm">
-                    <x-heroicon-o-document-text class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                    <x-icon name="heroicon-o-document-text" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                     <h3 class="text-lg font-medium text-gray-900">Nenhuma disciplina registrada</h3>
                     <p class="mt-1 text-sm text-gray-500">Não há registros de aulas nesta data para a turma selecionada.</p>
                 </div>
@@ -95,7 +95,7 @@
                     {{-- Tabs --}}
                     <div class="mb-4 flex space-x-2 border-b border-gray-200 overflow-x-auto">
                         @foreach($disciplinas as $index => $disciplina)
-                            <button 
+                            <button
                                 @click="activeTab = {{ $index }}"
                                 :class="{'border-primary-500 text-primary-600': activeTab === {{ $index }}, 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== {{ $index }}}"
                                 class="whitespace-nowrap py-4 px-4 border-b-2 font-medium text-sm transition-colors duration-150">
@@ -134,7 +134,7 @@
                                                                         PRESENTE
                                                                     </span>
                                                                 </label>
-                                                                
+
                                                                 <label class="cursor-pointer">
                                                                     <input type="radio" name="frequencias[{{ $aluno->id }}]" value="F" class="peer sr-only" {{ $aluno->status_frequencia == 'F' ? 'checked' : '' }}>
                                                                     <span class="px-3 py-1.5 rounded-md bg-white border border-gray-300 peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-700 font-bold text-xs transition-colors shadow-sm inline-block w-24 text-center">
@@ -166,7 +166,7 @@
                                         <x-slot name="footer">
                                             <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
                                                 <x-button variant="primary" type="button" @click="formToSubmit = 'form-disciplina-{{ $index }}'; showConfirmModal = true">
-                                                    <x-heroicon-o-check class="w-5 h-5 mr-2" />
+                                                    <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" />
                                                     Salvar Alteração
                                                 </x-button>
                                             </div>
@@ -186,7 +186,7 @@
                                 <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div class="sm:flex sm:items-start">
                                         <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 sm:mx-0 sm:h-10 sm:w-10">
-                                            <x-heroicon-o-exclamation-triangle class="h-6 w-6 text-yellow-600" />
+                                            <x-icon name="heroicon-o-exclamation-triangle" class="h-6 w-6 text-yellow-600" />
                                         </div>
                                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
@@ -216,7 +216,7 @@
             @endif
         @else
             <div class="text-center py-16 bg-white rounded-xl border border-dashed border-gray-300 shadow-sm">
-                <x-heroicon-o-calendar-days class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                <x-icon name="heroicon-o-calendar"-days class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                 <h3 class="text-lg font-medium text-gray-900">Nenhuma turma selecionada</h3>
                 <p class="mt-1 text-sm text-gray-500">Selecione uma turma e uma data acima para carregar as disciplinas com aulas registradas.</p>
             </div>

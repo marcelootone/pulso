@@ -16,7 +16,7 @@
         @can('gerenciar turmas')
             <div class="flex gap-2">
                 <x-button variant="primary" onclick="window.location='{{ route('importar.index') }}?turma_id={{ $turma->id }}'">
-                    <x-heroicon-o-user-plus class="w-4 h-4 mr-2" />
+                    <x-icon name="heroicon-o-user"-plus class="w-4 h-4 mr-2" />
                     Matricular Aluno
                 </x-button>
             </div>
@@ -27,7 +27,7 @@
         <x-card class="border-l-4 border-l-primary-500">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-primary-100 text-primary-600 mr-4">
-                    <x-heroicon-o-users class="w-8 h-8" />
+                    <x-icon name="heroicon-o-users" class="w-8 h-8" />
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Estudantes Matriculados</p>
@@ -35,18 +35,18 @@
                 </div>
             </div>
         </x-card>
-        
+
         <x-card class="border-l-4 border-l-purple-500 md:col-span-2">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                    <x-heroicon-o-information-circle class="w-8 h-8" />
+                    <x-icon name="heroicon-o-information-circle" class="w-8 h-8" />
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Informações da Turma</p>
                     <p class="text-base text-gray-900 mt-1">
-                        <strong>Turno:</strong> {{ $turma->turno }} &bull; 
-                        <strong>Ano Letivo:</strong> {{ $turma->ano_letivo }} &bull; 
-                        <strong>Status:</strong> 
+                        <strong>Turno:</strong> {{ $turma->turno }} &bull;
+                        <strong>Ano Letivo:</strong> {{ $turma->ano_letivo }} &bull;
+                        <strong>Status:</strong>
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $turma->ativa ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             {{ $turma->ativa ? 'Ativa' : 'Inativa' }}
                         </span>

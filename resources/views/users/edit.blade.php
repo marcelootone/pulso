@@ -17,11 +17,11 @@
             <x-slot name="header">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-pencil-square class="w-6 h-6 text-amber-500 mr-2" />
+                        <x-icon name="heroicon-o-pencil-square" class="w-6 h-6 text-amber-500 mr-2" />
                         Atualizar Dados do Funcionário
                     </h3>
                     <x-button variant="secondary" onclick="window.location='{{ route('users.index') }}'" class="text-sm">
-                        <x-heroicon-o-arrow-left class="w-4 h-4 mr-2" /> Voltar
+                        <x-icon name="heroicon-o-arrow-left" class="w-4 h-4 mr-2" /> Voltar
                     </x-button>
                 </div>
             </x-slot>
@@ -132,7 +132,7 @@
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nova Senha</label>
                         <x-input type="password" name="password" placeholder="Preencha apenas para alterar" class="w-full bg-white focus:ring-yellow-500 focus:border-yellow-500" />
                         <p class="text-[11px] font-medium text-gray-500 mt-2 flex items-center">
-                            <x-heroicon-o-information-circle class="w-4 h-4 mr-1 text-gray-400" />
+                            <x-icon name="heroicon-o-information-circle" class="w-4 h-4 mr-1 text-gray-400" />
                             Mínimo 6 caracteres. Deixe em branco para manter a senha atual.
                         </p>
                     </div>
@@ -144,7 +144,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="edit-user-form" class="!bg-amber-500 hover:!bg-amber-600 border-none">
-                            <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Alterações
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>
                 </x-slot>

@@ -6,10 +6,10 @@
             </h2>
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto justify-center">
-                    <x-heroicon-o-arrow-left class="w-5 h-5 mr-2" /> Agendamentos
+                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 mr-2" /> Agendamentos
                 </x-button>
                 <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto justify-center">
-                    <x-heroicon-o-plus-circle class="w-5 h-5 mr-2" /> Criar Espaço
+                    <x-icon name="heroicon-o-plus"-circle class="w-5 h-5 mr-2" /> Criar Espaço
                 </x-button>
             </div>
         </div>
@@ -24,7 +24,7 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto">
-        
+
         @if (session('success'))
             <div class="mb-6">
                 <x-alert type="success" message="{{ session('success') }}" />
@@ -34,7 +34,7 @@
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-heroicon-o-building-office-2 class="w-6 h-6 text-primary-500 mr-2" />
+                    <x-icon name="heroicon-o-building-office-2" class="w-6 h-6 text-primary-500 mr-2" />
                     Espaços Cadastrados
                 </h3>
             </x-slot>
@@ -80,14 +80,14 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <a href="{{ route('espacos.edit', $espaco->id) }}" class="text-primary-600 hover:text-primary-900 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-md transition-colors inline-flex items-center">
-                                    <x-heroicon-o-pencil-square class="w-4 h-4 mr-1.5" /> Editar
+                                    <x-icon name="heroicon-o-pencil-square" class="w-4 h-4 mr-1.5" /> Editar
                                 </a>
                             </td>
                         </tr>
                         @empty
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
-                                <x-heroicon-o-building-office-2 class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                                <x-icon name="heroicon-o-building-office-2" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                 <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço cadastrado.</p>
                                 <p class="text-sm font-medium">Crie o primeiro espaço para permitir agendamentos.</p>
                             </td>

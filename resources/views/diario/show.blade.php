@@ -23,17 +23,17 @@
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Data da Aula</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <x-heroicon-o-calendar class="h-5 w-5 text-gray-400" />
+                                <x-icon name="heroicon-o-calendar" class="h-5 w-5 text-gray-400" />
                             </div>
-                            <x-input type="date" id="input_data" name="data" value="{{ $dataSelecionada }}" 
+                            <x-input type="date" id="input_data" name="data" value="{{ $dataSelecionada }}"
                                    onchange="window.location.href='/meu-diario/{{ $turma->id }}?data=' + this.value"
                                    class="pl-10 font-bold text-primary-700 w-full sm:w-48" />
                         </div>
                     </div>
-                    
+
                     <div class="w-full sm:w-auto self-end">
                         <x-button variant="primary" type="submit" class="w-full sm:w-auto justify-center">
-                            <x-heroicon-o-check class="w-5 h-5 mr-2" />
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" />
                             Salvar Diário
                         </x-button>
                     </div>
@@ -44,7 +44,7 @@
             <x-card class="mb-6 border-l-4 border-l-purple-500">
                 <x-slot name="header">
                     <h3 class="font-bold text-lg text-gray-900 flex items-center">
-                        <x-heroicon-o-document-text class="w-5 h-5 mr-2 text-purple-600" />
+                        <x-icon name="heroicon-o-document-text" class="w-5 h-5 mr-2 text-purple-600" />
                         Conteúdo Ministrado
                     </h3>
                 </x-slot>
@@ -52,12 +52,12 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-purple-700 uppercase tracking-wider mb-2">1ª Aula</label>
-                        <textarea name="conteudos[1]" rows="3" placeholder="Ex: Álgebra e Equações..." 
+                        <textarea name="conteudos[1]" rows="3" placeholder="Ex: Álgebra e Equações..."
                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">{{ $conteudosExistentes['1']->descricao ?? '' }}</textarea>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-purple-700 uppercase tracking-wider mb-2">2ª Aula</label>
-                        <textarea name="conteudos[2]" rows="3" placeholder="Ex: Resolução de Exercícios..." 
+                        <textarea name="conteudos[2]" rows="3" placeholder="Ex: Resolução de Exercícios..."
                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500">{{ $conteudosExistentes['2']->descricao ?? '' }}</textarea>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             <x-card>
                 <x-slot name="header">
                     <h3 class="font-bold text-lg text-gray-900 flex items-center">
-                        <x-heroicon-o-users class="w-5 h-5 mr-2 text-gray-600" />
+                        <x-icon name="heroicon-o-users" class="w-5 h-5 mr-2 text-gray-600" />
                         Lista de Presença
                     </h3>
                 </x-slot>
@@ -91,14 +91,14 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex justify-center gap-6">
                                             <label class="flex items-center space-x-2 cursor-pointer group">
-                                                <input type="radio" name="presencas[{{ $aluno->id }}]" value="P" 
+                                                <input type="radio" name="presencas[{{ $aluno->id }}]" value="P"
                                                        {{ $statusAtual == 'P' ? 'checked' : '' }}
                                                        class="w-5 h-5 text-green-600 focus:ring-green-500 border-gray-300">
                                                 <span class="text-sm font-bold {{ $statusAtual == 'P' ? 'text-green-600' : 'text-gray-500 group-hover:text-green-600' }}">P</span>
                                             </label>
-                                            
+
                                             <label class="flex items-center space-x-2 cursor-pointer group">
-                                                <input type="radio" name="presencas[{{ $aluno->id }}]" value="F" 
+                                                <input type="radio" name="presencas[{{ $aluno->id }}]" value="F"
                                                        {{ $statusAtual == 'F' ? 'checked' : '' }}
                                                        class="w-5 h-5 text-red-600 focus:ring-red-500 border-gray-300">
                                                 <span class="text-sm font-bold {{ $statusAtual == 'F' ? 'text-red-600' : 'text-gray-500 group-hover:text-red-600' }}">F</span>

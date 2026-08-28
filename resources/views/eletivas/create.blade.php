@@ -96,7 +96,7 @@
                     <div class="flex items-center justify-end gap-3">
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('eletivas.index') }}'">Cancelar</x-button>
                         <x-button variant="primary" type="submit" form="form-3037c4">
-                            <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Eletiva/Clube
+                            <x-icon name="heroicon-o-check" class="w-4 h-4 mr-2" /> Salvar Eletiva/Clube
                         </x-button>
                     </div>
                 </x-slot>

@@ -23,7 +23,7 @@
                                     <div>
                                         <div class="flex justify-between items-start mb-4">
                                             <h3 class="text-lg font-bold text-gray-800">{{ $acomp->aluno->nome }}</h3>
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full
                                                 {{ $acomp->status === 'Aprovada' ? 'bg-blue-100 text-blue-800' : '' }}
                                                 {{ $acomp->status === 'EmAtendimento' ? 'bg-indigo-100 text-indigo-800' : '' }}
                                                 {{ $acomp->status === 'Concluida' ? 'bg-green-100 text-green-800' : '' }}
@@ -49,7 +49,7 @@
                         </div>
                     @else
                         <div class="text-center py-12 text-gray-500">
-                            <x-heroicon-o-folder-open class="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <x-icon name="heroicon-o-folder-open" class="mx-auto h-12 w-12 text-gray-400 mb-4" />
                             <p class="text-lg">Nenhum aluno em acompanhamento no momento.</p>
                         </div>
                     @endif

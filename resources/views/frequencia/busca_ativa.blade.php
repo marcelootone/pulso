@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center text-red-600">
-            <x-heroicon-o-exclamation-triangle class="w-6 h-6 mr-2" />
+            <x-icon name="heroicon-o-exclamation-triangle" class="w-6 h-6 mr-2" />
             {{ __('Busca Ativa (Alerta de Frequência)') }}
         </div>
     </x-slot>
@@ -42,7 +42,7 @@
                     <h3 class="text-lg font-bold text-gray-900">Estudantes Infrequentes (Busca Ativa)</h3>
                     <p class="text-sm text-gray-500">Mês de referência: {{ $mes === 'todos' ? 'Todos' : str_pad($mes, 2, '0', STR_PAD_LEFT) }}/{{ $ano === 'todos' ? 'Todos' : $ano }}</p>
                 </div>
-                
+
                 <form method="GET" action="{{ route('frequencia.busca_ativa') }}" class="flex flex-wrap items-end gap-4 w-full md:w-auto">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Mês</label>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="w-full md:w-auto mt-2 md:mt-0 pb-0">
                         <x-button variant="primary" type="submit" class="w-full justify-center md:w-auto">
-                            <x-heroicon-o-funnel class="w-5 h-5 mr-2" /> Filtrar
+                            <x-icon name="heroicon-o-funnel" class="w-5 h-5 mr-2" /> Filtrar
                         </x-button>
                     </div>
                 </form>
@@ -90,7 +90,7 @@
                         <div>
                             <h4 class="text-2xl font-black text-gray-900">{{ $risco->aluno->nome }}</h4>
                             <p class="text-sm font-medium text-gray-500 mt-1 flex items-center">
-                                <x-heroicon-o-academic-cap class="w-4 h-4 mr-1 text-gray-400" />
+                                <x-icon name="heroicon-o-academic-cap" class="w-4 h-4 mr-1 text-gray-400" />
                                 Turma: {{ $risco->turma->serie }}º {{ $risco->turma->complemento }}
                             </p>
                         </div>
@@ -111,10 +111,10 @@
                         {{-- Histórico de Contatos --}}
                         <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
                             <h5 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider flex items-center">
-                                <x-heroicon-o-clock class="h-5 w-5 mr-2 text-gray-500" />
+                                <x-icon name="heroicon-o-clock" class="h-5 w-5 mr-2 text-gray-500" />
                                 Histórico de Busca Ativa
                             </h5>
-                            
+
                             @if($risco->registros->count() > 0)
                                 <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
                                     @foreach($risco->registros as $registro)
@@ -133,7 +133,7 @@
                                 </div>
                             @else
                                 <div class="text-center py-8">
-                                    <x-heroicon-o-document-magnifying-glass class="w-10 h-10 mx-auto text-gray-300 mb-2" />
+                                    <x-icon name="heroicon-o-document-magnifying-glass" class="w-10 h-10 mx-auto text-gray-300 mb-2" />
                                     <p class="text-sm text-gray-500">Nenhuma ação registrada neste ano letivo.</p>
                                 </div>
                             @endif
@@ -142,26 +142,26 @@
                         {{-- Formulário de Novo Contato --}}
                         <div>
                             <h5 class="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider flex items-center">
-                                <x-heroicon-o-plus-circle class="h-5 w-5 mr-2 text-red-500" />
+                                <x-icon name="heroicon-o-plus"-circle class="h-5 w-5 mr-2 text-red-500" />
                                 Registrar Nova Ação
                             </h5>
                             <form action="{{ route('frequencia.registrar_busca_ativa') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="aluno_id" value="{{ $risco->aluno->id }}">
-                                
+
                                 <div class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Data da Ação</label>
                                         <x-input type="date" name="data" value="{{ date('Y-m-d') }}" max="{{ date('Y-m-d') }}" required class="w-full" />
                                     </div>
-                                    
+
                                     <div>
                                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Observação / Medida Tomada <span class="text-red-500">*</span></label>
                                         <textarea name="observacao" rows="4" required placeholder="Ex: Entramos em contato com a família..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"></textarea>
                                     </div>
-                                    
+
                                     <x-button variant="danger" type="submit" class="w-full justify-center">
-                                        <x-heroicon-o-document-plus class="w-5 h-5 mr-2" />
+                                        <x-icon name="heroicon-o-document-plus" class="w-5 h-5 mr-2" />
                                         Salvar Registro
                                     </x-button>
                                 </div>
@@ -172,7 +172,7 @@
             @empty
                 <div class="bg-white rounded-xl shadow-sm border-2 border-dashed border-green-200 p-12 text-center">
                     <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
-                        <x-heroicon-o-check class="h-8 w-8 text-green-600" />
+                        <x-icon name="heroicon-o-check" class="h-8 w-8 text-green-600" />
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Tudo em ordem!</h3>
                     <p class="text-gray-500 max-w-sm mx-auto">Nenhum estudante atingiu os limiares de infrequência da SEDU (faltas injustificadas nas periodicidades semanal, mensal, trimestral ou anual) para os filtros selecionados.</p>

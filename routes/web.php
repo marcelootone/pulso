@@ -19,13 +19,19 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+#Route::get('/dashboard', function () {
+#    return 'Dashboard OK';
+#})
+#->middleware(['auth', 'verified'])
+#->name('dashboard');
+
 Route::middleware('auth')->group(function () {
     // Profile routes have been removed, profile information is now accessed via users.show
 });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/api/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
-    
+
     // Notificações
     Route::get('/api/notifications', [\App\Http\Controllers\NotificationController::class, 'index']);
     Route::post('/api/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead']);
@@ -70,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
     // Turmas - Visualizar (Todos)
     Route::get('turmas', [\App\Http\Controllers\TurmaController::class, 'index'])->name('turmas.index');
     Route::get('turmas/{turma}', [\App\Http\Controllers\TurmaController::class, 'show'])->name('turmas.show');
-    
+
     // Alunos - Visualizar
     Route::group(['middleware' => ['permission:gerenciar estudantes|ver estudantes']], function () {
         Route::get('alunos', [\App\Http\Controllers\AlunoController::class, 'index'])->name('alunos.index');
@@ -105,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'create'])->name('atribuicoes.create');
         Route::post('/atribuir-aulas', [\App\Http\Controllers\AtribuicaoController::class, 'store'])->name('atribuicoes.store');
         Route::delete('/atribuir-aulas/turma/{turma}/professor/{professor}', [\App\Http\Controllers\AtribuicaoController::class, 'destroy'])->name('atribuicoes.destroy');
-        
+
         // Enturmações
         Route::get('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'index'])->name('enturmacoes.index');
         Route::post('/turmas/{turma}/enturmacao', [\App\Http\Controllers\EnturmacaoController::class, 'store'])->name('enturmacoes.store');
@@ -149,7 +155,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/agendamentos', [\App\Http\Controllers\AgendamentoController::class, 'index'])->name('agendamentos.index');
     Route::get('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'create'])->name('agendamentos.create');
     Route::post('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'store'])->name('agendamentos.store');
-    
+
 
 
     // 6. MEU DIÁRIO E PLANEJAMENTO SEMANAL
@@ -158,7 +164,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/meu-diario', [\App\Http\Controllers\DiarioController::class, 'index'])->name('diario.index');
         Route::get('/meu-diario/{id}', [\App\Http\Controllers\DiarioController::class, 'show'])->name('diario.show');
         Route::post('/meu-diario/salvar', [\App\Http\Controllers\DiarioController::class, 'store'])->name('diario.store');
-        
+
         // Avaliações
         Route::get('/turmas/{turma}/disciplinas/{disciplina}/avaliacoes', [\App\Http\Controllers\AvaliacaoController::class, 'index'])->name('avaliacoes.index');
         Route::post('/turmas/{turma}/disciplinas/{disciplina}/avaliacoes', [\App\Http\Controllers\AvaliacaoController::class, 'store'])->name('avaliacoes.store');
@@ -210,7 +216,7 @@ Route::middleware(['auth'])->group(function () {
 
     // 8. ESTUDO ORIENTADO
     Route::group(['prefix' => 'estudo-orientado', 'as' => 'estudo-orientado.'], function () {
-        
+
         // API - Obter alunos de uma turma
         Route::get('api/turmas/{id}/alunos', [\App\Http\Controllers\EstudoOrientadoController::class, 'getAlunosPorTurma'])->name('api.alunos');
 

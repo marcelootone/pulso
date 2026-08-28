@@ -46,7 +46,7 @@
                 </div>
                 <div class="pb-0">
                     <x-button variant="primary" type="submit">
-                        <x-heroicon-o-funnel class="w-5 h-5 mr-2" />
+                        <x-icon name="heroicon-o-funnel" class="w-5 h-5 mr-2" />
                         Filtrar
                     </x-button>
                 </div>
@@ -69,7 +69,7 @@
                                 </span>
                             </div>
                         </div>
-                        
+
                         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 flex items-center justify-between">
                             <span class="text-xs text-gray-500 uppercase font-bold tracking-wider">Dias Letivos</span>
                             <span class="text-lg font-bold text-primary-700">{{ $turma->dias_letivos_registrados }} <span class="text-sm text-gray-500 font-medium">dias no mês</span></span>
@@ -86,7 +86,7 @@
                 </x-card>
             @empty
                 <div class="col-span-full text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <x-heroicon-o-clipboard-document-list class="mx-auto h-12 w-12 text-gray-400" />
+                    <x-icon name="heroicon-o-clipboard-document-list" class="mx-auto h-12 w-12 text-gray-400" />
                     <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma turma encontrada</h3>
                     <p class="mt-1 text-sm text-gray-500">Nenhuma turma ativa encontrada para monitoramento neste período.</p>
                 </div>

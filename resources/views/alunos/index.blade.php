@@ -17,11 +17,11 @@
         <x-slot name="header">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <h3 class="text-lg font-bold text-gray-900">Lista de Alunos</h3>
-                
+
                 <form method="GET" action="{{ route('alunos.index') }}" class="w-full sm:w-1/3">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <x-heroicon-o-magnifying-glass class="h-5 w-5 text-gray-400" />
+                            <x-icon name="heroicon-o-magnifying-glass" class="h-5 w-5 text-gray-400" />
                         </div>
                         <x-input type="text" name="search" value="{{ request('search') }}" class="pl-10 w-full" placeholder="Buscar por Nome ou RA..." />
                     </div>
@@ -64,7 +64,7 @@
                 </x-slot>
             </x-table>
         </div>
-        
+
         <x-slot name="footer">
             {{ $alunos->links() }}
         </x-slot>

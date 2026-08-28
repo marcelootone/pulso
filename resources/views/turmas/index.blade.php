@@ -14,7 +14,7 @@
     <x-slot name="actions">
         @can('gerenciar turmas')
             <x-button variant="primary" onclick="window.location='{{ route('turmas.create') }}'">
-                <x-heroicon-o-plus class="w-4 h-4 mr-2" />
+                <x-icon name="heroicon-o-plus" class="w-4 h-4 mr-2" />
                 Nova Turma
             </x-button>
         @endhasrole
@@ -46,7 +46,7 @@
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <x-heroicon-s-magnifying-glass class="h-5 w-5 text-gray-400" />
                 </div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar turmas, alunos, docentes..." 
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar turmas, alunos, docentes..."
                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition duration-150 ease-in-out">
                 @if(request('search'))
                     <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}" class="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -90,13 +90,13 @@
                                 <td class="px-6 py-4 text-sm text-gray-600">
                                     @if($professoresRegulares)
                                         <div class="mb-1">
-                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Prof:</span> 
+                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Prof:</span>
                                             {{ $professoresRegulares }}
                                         </div>
                                     @endif
                                     @if($professoresEO)
                                         <div>
-                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Orientador:</span> 
+                                            <span class="font-semibold text-gray-500 text-xs uppercase tracking-wider">Orientador:</span>
                                             {{ $professoresEO }}
                                         </div>
                                     @endif
@@ -140,13 +140,13 @@
         </x-card>
     @empty
         <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-gray-100">
-            <x-heroicon-o-academic-cap class="mx-auto h-12 w-12 text-gray-400" />
+            <x-icon name="heroicon-o-academic-cap" class="mx-auto h-12 w-12 text-gray-400" />
             <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma turma encontrada</h3>
             <p class="mt-1 text-sm text-gray-500">Comece criando uma nova turma para iniciar o ano letivo.</p>
             @can('gerenciar turmas')
                 <div class="mt-6">
                     <x-button variant="primary" onclick="window.location='{{ route('turmas.create') }}'">
-                        <x-heroicon-o-plus class="w-4 h-4 mr-2" /> Nova Turma
+                        <x-icon name="heroicon-o-plus" class="w-4 h-4 mr-2" /> Nova Turma
                     </x-button>
                 </div>
             @endhasrole

@@ -6,7 +6,7 @@
             </h2>
             <div class="flex items-center gap-3 w-full sm:w-auto">
                 <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto justify-center">
-                    <x-heroicon-o-arrow-left class="w-5 h-5 mr-2" /> Agendamentos
+                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 mr-2" /> Agendamentos
                 </x-button>
             </div>
         </div>
@@ -35,7 +35,7 @@
         <x-card class="border-t-4 border-t-primary-500 mb-6">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-heroicon-o-clock class="w-6 h-6 text-primary-500 mr-2" />
+                    <x-icon name="heroicon-o-clock" class="w-6 h-6 text-primary-500 mr-2" />
                     Nova faixa de horário
                 </h3>
             </x-slot>
@@ -70,7 +70,7 @@
                         Disponível para reserva
                     </label>
                     <x-button type="submit" variant="primary">
-                        <x-heroicon-o-plus-circle class="w-5 h-5 mr-2" /> Adicionar
+                        <x-icon name="heroicon-o-plus"-circle class="w-5 h-5 mr-2" /> Adicionar
                     </x-button>
                 </div>
             </form>
@@ -79,7 +79,7 @@
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-heroicon-o-list-bullet class="w-6 h-6 text-primary-500 mr-2" />
+                    <x-icon name="heroicon-o-list-bullet" class="w-6 h-6 text-primary-500 mr-2" />
                     Faixas cadastradas
                 </h3>
             </x-slot>

@@ -17,7 +17,7 @@
             <x-slot name="header">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-pencil-square class="w-6 h-6 text-amber-500 mr-2" />
+                        <x-icon name="heroicon-o-pencil-square" class="w-6 h-6 text-amber-500 mr-2" />
                         Atualizar Dados
                     </h3>
                     @if($espaco->status)
@@ -31,7 +31,7 @@
                     @endif
                 </div>
             </x-slot>
-            
+
             @if ($errors->any())
                 <div class="mb-6">
                     <x-alert type="error">
@@ -47,7 +47,7 @@
             <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
@@ -84,7 +84,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-f19850" class="!bg-amber-500 hover:!bg-amber-600 border-none">
-                            <x-heroicon-o-check class="w-5 h-5 mr-2" /> Atualizar Espaço
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Atualizar Espaço
                         </x-button>
                     </div>
                 </x-slot>

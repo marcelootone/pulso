@@ -38,7 +38,7 @@
             <form id="form-43082b" action="{{ route('turmas.update', $turma->id) }}" method="POST">
                 @csrf
                 @method('PUT')
-                
+
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 uppercase tracking-wider mb-2">Modalidade</label>
@@ -96,7 +96,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-43082b">
-                            <x-heroicon-o-check class="w-4 h-4 mr-2" /> Salvar Alterações
+                            <x-icon name="heroicon-o-check" class="w-4 h-4 mr-2" /> Salvar Alterações
                         </x-button>
                     </div>
                 </x-slot>

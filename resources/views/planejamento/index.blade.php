@@ -28,7 +28,7 @@
 
         {{-- Cabeçalho do planejamento --}}
         <x-card class="!p-0 overflow-hidden shadow-lg border-none">
-            
+
             {{-- Título e navegação semanal --}}
             <div class="bg-gradient-to-r from-primary-700 to-primary-600 px-6 py-5">
                 <h1 class="text-xl font-black text-white tracking-wide text-center uppercase mb-4 drop-shadow-sm" id="titulo-planejamento">
@@ -38,11 +38,11 @@
                     <a href="{{ route('planejamento.index', ['data' => $semanaAnterior->toDateString()]) }}"
                        class="bg-white/10 hover:bg-white/20 text-white rounded-lg px-3 py-2 border border-white/20 transition-colors duration-200 flex items-center gap-1 backdrop-blur-sm shadow-sm"
                        id="btn-semana-anterior" title="Semana anterior">
-                        <x-heroicon-o-chevron-left class="w-5 h-5" />
+                        <x-icon name="heroicon-o-chevron-left" class="w-5 h-5" />
                         <span class="text-sm font-bold hidden sm:inline">Anterior</span>
                     </a>
                     <div class="bg-white/95 rounded-lg px-5 py-2 border border-white shadow-sm flex items-center" id="periodo-semana">
-                        <x-heroicon-o-calendar class="w-5 h-5 mr-2 text-primary-600" />
+                        <x-icon name="heroicon-o-calendar" class="w-5 h-5 mr-2 text-primary-600" />
                         <span class="text-primary-900 font-black text-sm uppercase tracking-wider">
                             {{ $planejamento->semana_inicio->format('d/m/Y') }}
                             <span class="text-gray-400 mx-1 text-xs">ATÉ</span>
@@ -53,7 +53,7 @@
                        class="bg-white/10 hover:bg-white/20 text-white rounded-lg px-3 py-2 border border-white/20 transition-colors duration-200 flex items-center gap-1 backdrop-blur-sm shadow-sm"
                        id="btn-proxima-semana" title="Próxima semana">
                         <span class="text-sm font-bold hidden sm:inline">Próxima</span>
-                        <x-heroicon-o-chevron-right class="w-5 h-5" />
+                        <x-icon name="heroicon-o-chevron-right" class="w-5 h-5" />
                     </a>
                 </div>
             </div>
@@ -89,9 +89,9 @@
                                 <tr class="bg-white hover:bg-primary-50/30 transition-colors duration-150 group" data-horario-id="{{ $horario->id }}">
                                     {{-- Coluna Drag Handle --}}
                                     <td class="px-2 py-4 align-middle text-center cursor-move drag-handle text-gray-300 hover:text-primary-600 transition-colors" title="Arraste para reordenar">
-                                        <x-heroicon-o-bars-3 class="w-6 h-6 mx-auto" />
+                                        <x-icon name="heroicon-o-bars-3" class="w-6 h-6 mx-auto" />
                                     </td>
-                                    
+
                                     {{-- Coluna Horário --}}
                                     <td class="px-3 py-4 align-top">
                                         <div class="flex flex-col gap-3 bg-gray-50/50 p-2.5 rounded-lg border border-gray-100">
@@ -171,14 +171,14 @@
                                                 class="text-red-400 hover:text-red-600 bg-white hover:bg-red-50 rounded-lg p-2 border border-transparent hover:border-red-200 transition-all duration-200 shadow-sm"
                                                 title="Remover horário"
                                                 id="btn-remover-{{ $horario->id }}">
-                                            <x-heroicon-o-trash class="w-5 h-5" />
+                                            <x-icon name="heroicon-o-trash" class="w-5 h-5" />
                                         </button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="{{ count($diasSemana) + 3 }}" class="px-4 py-16 text-center bg-gray-50">
-                                        <x-heroicon-o-calendar class="w-16 h-16 mx-auto text-gray-300 mb-4" />
+                                        <x-icon name="heroicon-o-calendar" class="w-16 h-16 mx-auto text-gray-300 mb-4" />
                                         <p class="text-gray-500 font-bold text-lg mb-1">Nenhum horário cadastrado</p>
                                         <p class="text-gray-400 text-sm">Adicione horários para começar a planejar sua semana.</p>
                                     </td>
@@ -196,7 +196,7 @@
                                 @click="open = !open"
                                 class="w-full sm:w-auto bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold py-2.5 px-5 rounded-xl shadow-sm transition-colors duration-200 flex items-center justify-center gap-2"
                                 id="btn-criar-horario">
-                            <x-heroicon-o-plus class="w-5 h-5 text-gray-500" />
+                            <x-icon name="heroicon-o-plus" class="w-5 h-5 text-gray-500" />
                             Adicionar Horário
                         </button>
 
@@ -211,7 +211,7 @@
                              class="absolute bottom-[120%] left-0 bg-white rounded-xl shadow-xl border border-gray-200 p-5 w-72 z-50 origin-bottom-left"
                              id="dropdown-criar-horario" style="display: none;">
                             <h3 class="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider flex items-center">
-                                <x-heroicon-o-clock class="w-4 h-4 mr-2 text-gray-400" /> Novo Horário
+                                <x-icon name="heroicon-o-clock" class="w-4 h-4 mr-2 text-gray-400" /> Novo Horário
                             </h3>
                             <div class="flex gap-4 mb-5">
                                 <div class="flex-1">
@@ -233,7 +233,7 @@
 
                     {{-- Botão Salvar --}}
                     <x-button variant="primary" type="submit" class="w-full sm:w-auto h-11 px-8 text-base shadow-md">
-                        <x-heroicon-o-check-circle class="w-5 h-5 mr-2" /> Salvar Planejamento
+                        <x-icon name="heroicon-o-check"-circle class="w-5 h-5 mr-2" /> Salvar Planejamento
                     </x-button>
                 </div>
             </form>
@@ -267,7 +267,7 @@
                     onEnd: function () {
                         const rows = tbody.querySelectorAll('tr[data-horario-id]');
                         const ids = Array.from(rows).map(row => row.getAttribute('data-horario-id'));
-                        
+
                         fetch('{{ route("planejamento.reordenar") }}', {
                             method: 'POST',
                             headers: {

@@ -38,7 +38,7 @@
                         ? 'text-primary-600 border-b-2 border-primary-600 font-bold'
                         : 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent'"
                     class="px-6 py-3 text-sm flex items-center transition-colors focus:outline-none">
-                    <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                    <x-icon name="heroicon-o-arrow-up-tray" class="w-5 h-5 mr-2" />
                     Importar Usuarios (Planilha)
                 </button>
                 <button type="button"
@@ -47,7 +47,7 @@
                         ? 'text-emerald-600 border-b-2 border-emerald-600 font-bold'
                         : 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent'"
                     class="px-6 py-3 text-sm flex items-center transition-colors focus:outline-none">
-                    <x-heroicon-o-user-plus class="w-5 h-5 mr-2" />
+                    <x-icon name="heroicon-o-user"-plus class="w-5 h-5 mr-2" />
                     Vincular Aluno
                 </button>
             </div>
@@ -67,13 +67,13 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-t-4 border-gray-600">
                     <form action="{{ route('importar.preview') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        
+
                         <div class="grid grid-cols-2 gap-8">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Destino (Turma, Eletiva ou Clube)</label>
                                 <select name="destino" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Selecione o destino...</option>
-                                    
+
                                     @if($turmas->count() > 0)
                                         <optgroup label="Turmas Regulares">
                                             @foreach($turmas as $turma)
@@ -119,7 +119,7 @@
                         </div>
                     </form>
                 </div>
-                
+
                 <div class="mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline text-sm">Caso você não esteja visualizando nenhuma turma, lembre-se que antes de realizar este procedimento é necessário o cadastramento das turmas.</span>
                 </div>
@@ -159,7 +159,7 @@
                                 <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">Destino (Turma, Eletiva ou Clube)</label>
                                 <select name="destino" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
                                     <option value="">Selecione o destino...</option>
-                                    
+
                                     @if($turmas->count() > 0)
                                         <optgroup label="Turmas Regulares">
                                             @foreach($turmas as $turma)
@@ -227,7 +227,7 @@
                                             <button type="button"
                                                     @click="removeAluno(aluno.id)"
                                                     class="flex-shrink-0 ml-2 inline-flex text-emerald-600 hover:bg-emerald-200 hover:text-emerald-900 rounded p-0.5 transition-colors">
-                                                <x-heroicon-o-x-mark class="w-3 h-3" />
+                                                <x-icon name="heroicon-o-x-mark" class="w-3 h-3" />
                                             </button>
                                         </span>
                                     </template>
@@ -260,7 +260,7 @@
                             <x-button variant="primary" type="submit"
                                       class="!bg-emerald-600 hover:!bg-emerald-700 w-full sm:w-auto h-11 justify-center border-none mt-7"
                                       x-bind:disabled="selectedIds.length === 0">
-                                <x-heroicon-o-plus class="w-5 h-5 mr-1" /> Vincular
+                                <x-icon name="heroicon-o-plus" class="w-5 h-5 mr-1" /> Vincular
                             </x-button>
                         </div>
                     </form>

@@ -5,7 +5,7 @@
                 {{ __('Gestão de Funcionários') }}
             </h2>
             <x-button variant="primary" onclick="window.location='{{ route('users.create') }}'" class="w-full sm:w-auto justify-center">
-                <x-heroicon-o-user-plus class="w-5 h-5 mr-2" /> Novo Usuário
+                <x-icon name="heroicon-o-user"-plus class="w-5 h-5 mr-2" /> Novo Usuário
             </x-button>
         </div>
     </x-slot>
@@ -108,21 +108,21 @@
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <div class="flex justify-center items-center gap-2">
                                     <a href="{{ route('users.show', $user->id) }}" class="text-primary-600 hover:text-primary-900 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-md transition-colors" title="Ver Detalhes">
-                                        <x-heroicon-o-eye class="w-4 h-4" />
+                                        <x-icon name="heroicon-o-eye" class="w-4 h-4" />
                                     </a>
                                     <a href="{{ route('users.edit', $user->id) }}" class="text-amber-600 hover:text-amber-900 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-md transition-colors" title="Editar">
-                                        <x-heroicon-o-pencil-square class="w-4 h-4" />
+                                        <x-icon name="heroicon-o-pencil-square" class="w-4 h-4" />
                                     </a>
-                                    
+
                                     @if(auth()->id() !== $user->id)
                                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ $user->ativo ? 'Desativar este funcionário?' : 'Reativar este funcionário?' }}')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="{{ $user->ativo ? 'text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100' : 'text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100' }} px-3 py-1.5 rounded-md transition-colors" title="{{ $user->ativo ? 'Desativar' : 'Reativar' }}">
                                             @if($user->ativo)
-                                                <x-heroicon-o-no-symbol class="w-4 h-4" />
+                                                <x-icon name="heroicon-o-no-symbol" class="w-4 h-4" />
                                             @else
-                                                <x-heroicon-o-check-circle class="w-4 h-4" />
+                                                <x-icon name="heroicon-o-check"-circle class="w-4 h-4" />
                                             @endif
                                         </button>
                                     </form>
@@ -133,7 +133,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg bg-gray-50">
-                                <x-heroicon-o-users class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                                <x-icon name="heroicon-o-users" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                 <p class="text-base font-bold text-gray-500 mb-1">Nenhum funcionário encontrado.</p>
                                 <p class="text-sm font-medium">Tente alterar os filtros ou cadastrar um novo funcionário.</p>
                             </td>

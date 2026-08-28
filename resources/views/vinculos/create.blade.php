@@ -19,11 +19,11 @@
         <!-- TABS -->
         <div class="flex mb-6 border-b border-gray-200">
             <a href="{{ route('importar.index', ['turma_id' => request('turma_id')]) }}" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent px-6 py-3 font-bold text-sm flex items-center transition-colors">
-                <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                <x-icon name="heroicon-o-arrow-up-tray" class="w-5 h-5 mr-2" />
                 Importar Usuarios (Planilha)
             </a>
             <a href="{{ route('vinculo.create', ['turma_id' => request('turma_id')]) }}" class="text-primary-600 border-b-2 border-primary-600 px-6 py-3 font-bold text-sm flex items-center transition-colors">
-                <x-heroicon-o-link class="w-5 h-5 mr-2" />
+                <x-icon name="heroicon-o-link" class="w-5 h-5 mr-2" />
                 Alocar Alunos sem Turma
             </a>
         </div>
@@ -106,7 +106,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-76db40">
-                            <x-heroicon-o-link class="w-4 h-4 mr-2" />
+                            <x-icon name="heroicon-o-link" class="w-4 h-4 mr-2" />
                             Vincular Aluno
                         </x-button>
                     </div>

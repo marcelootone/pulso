@@ -13,7 +13,7 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto" x-data="{ tipoUsuario: '{{ old('tipo_usuario', \App\Models\User::TIPO_ESTUDANTE) }}' }">
-        
+
         <!-- ALERTA DE DUPLICATA -->
         <div class="mb-6">
             <x-alert type="info">
@@ -26,11 +26,11 @@
         <!-- TABS -->
         <div class="flex mb-6 border-b border-gray-200">
             <a href="{{ route('users.create') }}" class="text-primary-600 border-b-2 border-primary-600 px-6 py-3 font-bold text-sm flex items-center transition-colors">
-                <x-heroicon-o-user-plus class="w-5 h-5 mr-2" />
+                <x-icon name="heroicon-o-user"-plus class="w-5 h-5 mr-2" />
                 Criar Manualmente
             </a>
             <a href="{{ route('importar.index') }}" class="text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent px-6 py-3 font-bold text-sm flex items-center transition-colors">
-                <x-heroicon-o-arrow-up-tray class="w-5 h-5 mr-2" />
+                <x-icon name="heroicon-o-arrow-up-tray" class="w-5 h-5 mr-2" />
                 Importar Planilha (Estudantes)
             </a>
         </div>
@@ -68,11 +68,11 @@
                 <x-card class="border-t-4 border-t-emerald-500">
                     <x-slot name="header">
                         <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                            <x-heroicon-o-identification class="w-5 h-5 mr-2 text-emerald-500" />
+                            <x-icon name="heroicon-o-identification" class="w-5 h-5 mr-2 text-emerald-500" />
                             Tipo de Perfil e Documentos
                         </h3>
                     </x-slot>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Tipo de Usuário <span class="text-red-500">*</span></label>
@@ -101,11 +101,11 @@
                 <x-card class="border-t-4 border-t-primary-500">
                     <x-slot name="header">
                         <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                            <x-heroicon-o-user class="w-5 h-5 mr-2 text-primary-500" />
+                            <x-icon name="heroicon-o-user" class="w-5 h-5 mr-2 text-primary-500" />
                             Dados Pessoais
                         </h3>
                     </x-slot>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                         <div class="col-span-1 md:col-span-2">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nome Completo <span class="text-red-500">*</span></label>
@@ -124,7 +124,7 @@
                             <x-input type="date" name="nascimento" x-bind:required="tipoUsuario === '{{ \App\Models\User::TIPO_ESTUDANTE }}'" value="{{ old('nascimento') }}" max="{{ date('Y-m-d') }}" class="w-full" />
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Telefone</label>
@@ -157,7 +157,7 @@
                     <x-card class="border-t-4 border-t-amber-500">
                         <x-slot name="header">
                             <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <x-heroicon-o-users class="w-5 h-5 mr-2 text-amber-500" />
+                                <x-icon name="heroicon-o-users" class="w-5 h-5 mr-2 text-amber-500" />
                                 Dados de Filiação
                             </h3>
                         </x-slot>
@@ -171,7 +171,7 @@
                                 <x-input type="text" name="tel_pai" value="{{ old('tel_pai') }}" oninput="this.value = this.value.replace(/[^0-9\(\)\-\+\s]/g, '')" class="w-full" />
                             </div>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Nome Mãe</label>
@@ -190,7 +190,7 @@
                     <x-card class="border-t-4 border-t-cyan-500">
                         <x-slot name="header">
                             <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <x-heroicon-o-academic-cap class="w-5 h-5 mr-2 text-cyan-500" />
+                                <x-icon name="heroicon-o-academic-cap" class="w-5 h-5 mr-2 text-cyan-500" />
                                 Enturmação
                             </h3>
                         </x-slot>
@@ -210,7 +210,7 @@
                             </div>
                             <div class="w-full md:w-1/2">
                                 <div class="bg-cyan-50 text-cyan-800 p-4 rounded-xl border border-cyan-100 text-sm font-medium flex items-start">
-                                    <x-heroicon-o-information-circle class="w-5 h-5 mr-2 shrink-0 text-cyan-600" />
+                                    <x-icon name="heroicon-o-information-circle" class="w-5 h-5 mr-2 shrink-0 text-cyan-600" />
                                     Caso opte por não vincular o estudante agora, o mesmo pode ser feito posteriormente no módulo Acadêmico > Turmas > Matricular Aluno > Alocar Alunos sem Turma
                                 </div>
                             </div>
@@ -223,17 +223,17 @@
                     <x-card class="border-t-4 border-t-red-500 bg-gray-50/50">
                         <x-slot name="header">
                             <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                                <x-heroicon-o-key class="w-5 h-5 mr-2 text-red-500" />
+                                <x-icon name="heroicon-o-key" class="w-5 h-5 mr-2 text-red-500" />
                                 Credenciais de Acesso
                             </h3>
                         </x-slot>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">E-mail de Acesso <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <x-heroicon-o-envelope class="h-5 w-5 text-red-300" />
+                                        <x-icon name="heroicon-o-envelope" class="h-5 w-5 text-red-300" />
                                     </div>
                                     <x-input type="email" name="email" autocomplete="off" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="usuario@escola.com.br" class="pl-10 w-full !bg-white focus:!ring-red-500 focus:!border-red-500" />
                                 </div>
@@ -243,15 +243,15 @@
                                 <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Senha <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <x-heroicon-o-lock-closed class="h-5 w-5 text-yellow-500" />
+                                        <x-icon name="heroicon-o-lock-closed" class="h-5 w-5 text-yellow-500" />
                                     </div>
                                     <x-input x-bind:type="showPass ? 'text' : 'password'" name="password" autocomplete="new-password" x-bind:required="tipoUsuario !== '{{ \App\Models\User::TIPO_ESTUDANTE }}'" placeholder="Senha segura" class="pl-10 pr-10 w-full !bg-white focus:!ring-yellow-500 focus:!border-yellow-500" />
                                     <button type="button" @click="showPass = !showPass" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors focus:outline-none">
                                         <template x-if="!showPass">
-                                            <x-heroicon-o-eye class="h-5 w-5" />
+                                            <x-icon name="heroicon-o-eye" class="h-5 w-5" />
                                         </template>
                                         <template x-if="showPass">
-                                            <x-heroicon-o-eye-slash class="h-5 w-5" />
+                                            <x-icon name="heroicon-o-eye"-slash class="h-5 w-5" />
                                         </template>
                                     </button>
                                 </div>
@@ -259,13 +259,13 @@
                         </div>
                     </x-card>
                 </div>
-                
+
                 <div class="flex justify-end pt-4">
                     <x-button variant="secondary" type="button" onclick="window.location='{{ route('users.index') }}'" class="mr-3">
                         Cancelar
                     </x-button>
                     <x-button variant="primary" type="submit" class="h-11 px-8">
-                        <x-heroicon-o-check-circle class="w-5 h-5 mr-2" />
+                        <x-icon name="heroicon-o-check"-circle class="w-5 h-5 mr-2" />
                         Cadastrar Usuário
                     </x-button>
                 </div>

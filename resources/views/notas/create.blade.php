@@ -13,15 +13,15 @@
     </x-slot>
 
     <div class="max-w-5xl mx-auto">
-        
+
         <x-card class="mb-8 border-l-4 border-l-purple-500 bg-purple-50">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div>
                     <h3 class="text-2xl font-black text-purple-900">{{ $avaliacao->nome }} <span class="text-lg text-purple-600 font-bold ml-2">({{ $avaliacao->periodo }})</span></h3>
                     <p class="text-sm font-semibold text-purple-700 mt-1 flex items-center">
-                        <x-heroicon-o-academic-cap class="w-4 h-4 mr-1" /> Turma: {{ $turma->serie }}º {{ $turma->complemento }} 
-                        <span class="mx-2">&bull;</span> 
-                        <x-heroicon-o-book-open class="w-4 h-4 mr-1" /> Disciplina: {{ $avaliacao->disciplina }}
+                        <x-icon name="heroicon-o-academic-cap" class="w-4 h-4 mr-1" /> Turma: {{ $turma->serie }}º {{ $turma->complemento }}
+                        <span class="mx-2">&bull;</span>
+                        <x-icon name="heroicon-o-book-open" class="w-4 h-4 mr-1" /> Disciplina: {{ $avaliacao->disciplina }}
                     </p>
                 </div>
                 <div class="text-left md:text-right bg-white px-4 py-2 rounded-lg shadow-sm border border-purple-100">
@@ -35,7 +35,7 @@
             <x-slot name="header">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-users class="w-5 h-5 mr-2 text-gray-500" />
+                        <x-icon name="heroicon-o-users" class="w-5 h-5 mr-2 text-gray-500" />
                         Lista de Alunos
                     </h3>
                     <a href="{{ route('avaliacoes.index', ['turma' => $turma->id, 'disciplina' => $avaliacao->disciplina]) }}" class="text-sm font-medium text-primary-600 hover:text-primary-800">
@@ -64,7 +64,7 @@
 
             <form id="form-1eac94" action="{{ route('notas.store', $avaliacao->id) }}" method="POST">
                 @csrf
-                
+
                 <div class="-mx-6 -my-6">
                     <x-table>
                         <x-slot name="head">
@@ -81,13 +81,13 @@
                                         <div class="text-xs text-gray-500 mt-1 font-mono">RA: {{ $aluno->ra }}</div>
                                     </td>
                                     <td class="px-6 py-4 text-center">
-                                        <x-input 
-                                            type="number" 
-                                            name="notas[{{ $aluno->id }}]" 
-                                            value="{{ $notasLancadas[$aluno->id] ?? '' }}" 
-                                            step="0.1" 
-                                            min="0" 
-                                            max="{{ $avaliacao->valor_maximo }}" 
+                                        <x-input
+                                            type="number"
+                                            name="notas[{{ $aluno->id }}]"
+                                            value="{{ $notasLancadas[$aluno->id] ?? '' }}"
+                                            step="0.1"
+                                            min="0"
+                                            max="{{ $avaliacao->valor_maximo }}"
                                             class="w-24 text-center text-lg font-bold"
                                             placeholder="--" />
                                     </td>
@@ -107,7 +107,7 @@
                     <x-slot name="footer">
                         <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
                             <x-button variant="primary" type="submit" form="form-1eac94">
-                                <x-heroicon-o-check class="w-5 h-5 mr-2" />
+                                <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" />
                                 Salvar Notas
                             </x-button>
                         </div>

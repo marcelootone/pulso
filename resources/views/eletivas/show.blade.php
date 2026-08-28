@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex items-center">
-            {{ __('Detalhes') }} - {{ $eletiva->nome }} 
+            {{ __('Detalhes') }} - {{ $eletiva->nome }}
             <span class="ml-3 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-md {{ $eletiva->tipo == 'eletiva' ? 'bg-indigo-100 text-indigo-800' : 'bg-purple-100 text-purple-800' }}">
                 {{ ucfirst($eletiva->tipo) }}
             </span>
@@ -18,7 +18,7 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto space-y-6">
-        
+
         @if (session('success'))
             <x-alert type="success" message="{{ session('success') }}" />
         @endif
@@ -32,13 +32,13 @@
             <x-card class="border-t-4 border-t-primary-500 h-full">
                 <x-slot name="header">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-information-circle class="w-5 h-5 mr-2 text-primary-500" />
+                        <x-icon name="heroicon-o-information-circle" class="w-5 h-5 mr-2 text-primary-500" />
                         Informações
                     </h3>
                 </x-slot>
                 <div class="space-y-4 text-sm">
                     <div>
-                        <strong class="block text-gray-500 uppercase tracking-wider text-xs mb-1">Descrição:</strong> 
+                        <strong class="block text-gray-500 uppercase tracking-wider text-xs mb-1">Descrição:</strong>
                         <p class="text-gray-900">{{ $eletiva->descricao ?? 'Nenhuma descrição informada.' }}</p>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div>
-                        <strong class="block text-gray-500 uppercase tracking-wider text-xs mb-1">Sistema de Notas:</strong> 
+                        <strong class="block text-gray-500 uppercase tracking-wider text-xs mb-1">Sistema de Notas:</strong>
                         <span class="font-semibold text-gray-900">{{ $eletiva->usa_nota ? 'Habilitado (Professor poderá lançar notas)' : 'Desabilitado' }}</span>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             <x-card class="border-t-4 border-t-indigo-500 h-full">
                 <x-slot name="header">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-users class="w-5 h-5 mr-2 text-indigo-500" />
+                        <x-icon name="heroicon-o-users" class="w-5 h-5 mr-2 text-indigo-500" />
                         Professores Responsáveis
                     </h3>
                 </x-slot>
@@ -84,7 +84,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-1.5 rounded-md transition-colors" title="Remover Professor">
-                                    <x-heroicon-o-trash class="w-4 h-4" />
+                                    <x-icon name="heroicon-o-trash" class="w-4 h-4" />
                                 </button>
                             </form>
                             @endcan
@@ -104,13 +104,13 @@
             <x-card class="border-t-4 border-t-emerald-500 h-full">
                 <x-slot name="header">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-user-plus class="w-5 h-5 mr-2 text-emerald-500" />
+                        <x-icon name="heroicon-o-user"-plus class="w-5 h-5 mr-2 text-emerald-500" />
                         Vincular Alunos
                     </h3>
                 </x-slot>
                 @if($eletiva->alunosAtivos->count() >= $eletiva->vagas)
                     <div class="bg-red-50 p-4 rounded-lg border border-red-200 flex items-center">
-                        <x-heroicon-o-x-circle class="w-6 h-6 text-red-500 mr-2" />
+                        <x-icon name="heroicon-o-x-circle" class="w-6 h-6 text-red-500 mr-2" />
                         <span class="text-red-700 font-bold">Limite de vagas atingido. Não é possível inscrever mais alunos.</span>
                     </div>
                 @else
@@ -139,19 +139,19 @@
                                 return this.alunos.filter(a => this.selectedIds.includes(a.id));
                             }
                         }" class="w-full">
-                            
+
                             <div class="flex flex-col sm:flex-row gap-4 items-start">
                                 <div class="flex-grow w-full relative">
                                     <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Digite os alunos a vincular</label>
-                                    
+
                                     <!-- Autocomplete Input -->
                                     <input type="text" x-model="search" x-ref="searchInput" placeholder="Buscar por nome ou RA..." autocomplete="off" class="w-full border-gray-300 rounded-md shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
-                                    
+
                                     <!-- Dropdown -->
                                     <ul x-show="search.length > 0" @click.away="search = ''" class="absolute z-50 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1" style="display: none;">
                                         <template x-for="aluno in filteredAlunos" :key="aluno.id">
                                             <li @click="selectAluno(aluno)" class="px-4 py-2 hover:bg-emerald-50 cursor-pointer text-sm">
-                                                <span x-text="aluno.nome" class="font-bold text-gray-900"></span> 
+                                                <span x-text="aluno.nome" class="font-bold text-gray-900"></span>
                                                 <span class="text-gray-500 text-xs ml-1">(RA: <span x-text="aluno.ra"></span>)</span>
                                             </li>
                                         </template>
@@ -164,7 +164,7 @@
                                             <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                                                 <span x-text="aluno.nome"></span>
                                                 <button type="button" @click="removeAluno(aluno.id)" class="flex-shrink-0 ml-2 inline-flex text-emerald-600 hover:bg-emerald-200 hover:text-emerald-900 rounded p-0.5 transition-colors">
-                                                    <x-heroicon-o-x-mark class="w-3 h-3" />
+                                                    <x-icon name="heroicon-o-x-mark" class="w-3 h-3" />
                                                 </button>
                                             </span>
                                         </template>
@@ -187,21 +187,21 @@
                                         </div>
                                     </details>
                                 </div>
-                                
+
                                 <x-button variant="primary" type="submit" class="!bg-emerald-600 hover:!bg-emerald-700 w-full sm:w-auto h-11 justify-center border-none mt-7" x-bind:disabled="selectedIds.length === 0">
-                                    <x-heroicon-o-plus class="w-5 h-5 mr-1" /> Inscrever
+                                    <x-icon name="heroicon-o-plus" class="w-5 h-5 mr-1" /> Inscrever
                                 </x-button>
                             </div>
                         </div>
                     </form>
                 @endif
             </x-card>
-            
+
             @if($eletiva->tipo === 'clube')
             <x-card class="border-t-4 border-t-purple-500 h-full">
                 <x-slot name="header">
                     <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                        <x-heroicon-o-arrows-right-left class="w-5 h-5 mr-2 text-purple-500" />
+                        <x-icon name="heroicon-o-arrows-right-left" class="w-5 h-5 mr-2 text-purple-500" />
                         Troca de Clube (Transferência)
                     </h3>
                 </x-slot>
@@ -243,11 +243,11 @@
         <x-card>
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-heroicon-o-user-group class="w-5 h-5 mr-2 text-gray-600" />
+                    <x-icon name="heroicon-o-user"-group class="w-5 h-5 mr-2 text-gray-600" />
                     Alunos Inscritos <span class="ml-2 bg-gray-200 text-gray-800 py-0.5 px-2.5 rounded-full text-xs">{{ $eletiva->alunosAtivos->count() }}</span>
                 </h3>
             </x-slot>
-            
+
             <div class="-mx-6 -my-6">
                 <x-table>
                     <x-slot name="head">
@@ -274,7 +274,7 @@
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-red-100 text-red-800" title="Removido em {{ date('d/m/Y', strtotime($aluno->pivot->data_saida)) }}">Removido</span>
                                     @endif
                                 </td>
-                                
+
                                 @can('vincular estudantes eletivas')
                                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                     @if($aluno->pivot->status == 'Ativo')
@@ -282,7 +282,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors" title="Remover Aluno">
-                                                <x-heroicon-o-trash class="w-4 h-4 inline" /> Remover
+                                                <x-icon name="heroicon-o-trash" class="w-4 h-4 inline" /> Remover
                                             </button>
                                         </form>
                                     @endif
@@ -292,7 +292,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="px-6 py-12 text-center border-dashed border-2 border-gray-200 rounded-lg">
-                                    <x-heroicon-o-users class="mx-auto h-12 w-12 text-gray-300 mb-3" />
+                                    <x-icon name="heroicon-o-users" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                     <p class="text-sm font-medium text-gray-500">Nenhum aluno inscrito nesta eletiva/clube.</p>
                                 </td>
                             </tr>

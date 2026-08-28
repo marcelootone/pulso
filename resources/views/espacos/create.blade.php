@@ -16,11 +16,11 @@
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-heroicon-o-plus-circle class="w-6 h-6 text-primary-500 mr-2" />
+                    <x-icon name="heroicon-o-plus"-circle class="w-6 h-6 text-primary-500 mr-2" />
                     Adicionar Espaço
                 </h3>
             </x-slot>
-            
+
             @if ($errors->any())
                 <div class="mb-6">
                     <x-alert type="error">
@@ -35,7 +35,7 @@
 
             <form id="form-1475a1" action="{{ route('espacos.store') }}" method="POST">
                 @csrf
-                
+
                 <div class="space-y-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
@@ -70,7 +70,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-1475a1">
-                            <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Espaço
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Espaço
                         </x-button>
                     </div>
                 </x-slot>

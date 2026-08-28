@@ -41,19 +41,19 @@
             $tab = request('tab', 'frequencia');
         @endphp
         <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-200 inline-flex space-x-1 w-full sm:w-auto">
-            <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'frequencia']) }}" 
+            <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'frequencia']) }}"
                 class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex-1 sm:flex-none text-center {{ $tab == 'frequencia' ? 'bg-primary-50 text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
                 <div class="flex items-center justify-center">
-                    <x-heroicon-o-clipboard-document-check class="w-5 h-5 mr-2" />
+                    <x-icon name="heroicon-o-clipboard-document-check" class="w-5 h-5 mr-2" />
                     Frequência
                 </div>
             </a>
-            
+
             @if($eletiva->usa_nota)
-            <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas']) }}" 
+            <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas']) }}"
                 class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex-1 sm:flex-none text-center {{ $tab == 'notas' ? 'bg-primary-50 text-primary-700 shadow-sm' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
                 <div class="flex items-center justify-center">
-                    <x-heroicon-o-document-chart-bar class="w-5 h-5 mr-2" />
+                    <x-icon name="heroicon-o-document-chart-bar" class="w-5 h-5 mr-2" />
                     Notas
                 </div>
             </a>
@@ -61,7 +61,7 @@
         </div>
 
         <x-card class="border-t-4 border-t-primary-500">
-            
+
             @if($tab == 'frequencia')
             <!-- ABA FREQUÊNCIA -->
             <x-slot name="header">
@@ -75,7 +75,7 @@
                     <x-input type="date" name="data" value="{{ $dataSelecionada }}" class="w-full sm:w-64" />
                 </div>
                 <x-button variant="secondary" type="submit" class="w-full sm:w-auto justify-center">
-                    <x-heroicon-o-arrow-path class="w-5 h-5 mr-2" /> Carregar
+                    <x-icon name="heroicon-o-arrow-path" class="w-5 h-5 mr-2" /> Carregar
                 </x-button>
             </form>
 
@@ -113,7 +113,7 @@
                             @empty
                                 <tr>
                                     <td colspan="4" class="px-6 py-12 text-center text-gray-500 italic">
-                                        <x-heroicon-o-users class="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                                        <x-icon name="heroicon-o-users" class="w-12 h-12 mx-auto text-gray-300 mb-3" />
                                         Nenhum aluno inscrito nesta disciplina.
                                     </td>
                                 </tr>
@@ -125,12 +125,12 @@
                 @if($eletiva->alunosAtivos->count() > 0)
                 <div class="mt-6 flex justify-end">
                     <x-button variant="primary" type="submit">
-                        <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Chamada
+                        <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Chamada
                     </x-button>
                 </div>
                 @endif
             </form>
-            
+
             @elseif($tab == 'notas' && $eletiva->usa_nota)
             <!-- ABA NOTAS -->
             <x-slot name="header">
@@ -139,7 +139,7 @@
 
             <form action="{{ route('eletivas.diario.notas', $eletiva->id) }}" method="POST">
                 @csrf
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-purple-50 p-6 rounded-xl mb-6 border border-purple-100">
                     <div>
                         <label class="block text-sm font-bold text-purple-900 uppercase tracking-wider mb-2">Data da Avaliação</label>
@@ -181,7 +181,7 @@
                             @empty
                                 <tr>
                                     <td colspan="2" class="px-6 py-12 text-center text-gray-500 italic">
-                                        <x-heroicon-o-users class="w-12 h-12 mx-auto text-gray-300 mb-3" />
+                                        <x-icon name="heroicon-o-users" class="w-12 h-12 mx-auto text-gray-300 mb-3" />
                                         Nenhum aluno inscrito nesta disciplina.
                                     </td>
                                 </tr>
@@ -198,13 +198,13 @@
                         </x-button>
                     @endif
                     <x-button variant="primary" type="submit">
-                        <x-heroicon-o-check class="w-5 h-5 mr-2" /> Salvar Notas
+                        <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Notas
                     </x-button>
                 </div>
                 @elseif(request('action') == 'ver')
                 <div class="mt-6 flex justify-end">
                     <x-button variant="primary" type="button" onclick="window.location='{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas']) }}'">
-                        <x-heroicon-o-plus class="w-5 h-5 mr-2" /> Lançar Nova Avaliação
+                        <x-icon name="heroicon-o-plus" class="w-5 h-5 mr-2" /> Lançar Nova Avaliação
                     </x-button>
                 </div>
                 @endif
@@ -214,7 +214,7 @@
             @if($avaliacoes->count() > 0)
             <div class="mt-12">
                 <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
-                    <x-heroicon-o-clock class="w-5 h-5 mr-2 text-gray-500" />
+                    <x-icon name="heroicon-o-clock" class="w-5 h-5 mr-2 text-gray-500" />
                     Histórico de Lançamentos
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -228,10 +228,10 @@
                             </div>
                             <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end gap-3 opacity-80 group-hover:opacity-100 transition-opacity">
                                 <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas', 'data_avaliacao' => \Carbon\Carbon::parse($aval->data)->format('Y-m-d'), 'descricao' => $aval->descricao, 'action' => 'ver']) }}" class="text-primary-600 hover:text-primary-800 text-sm font-bold flex items-center bg-primary-50 px-3 py-1.5 rounded-lg transition-colors">
-                                    <x-heroicon-o-eye class="w-4 h-4 mr-1" /> Ver Notas
+                                    <x-icon name="heroicon-o-eye" class="w-4 h-4 mr-1" /> Ver Notas
                                 </a>
                                 <a href="{{ route('eletivas.diario.show', ['id' => $eletiva->id, 'tab' => 'notas', 'data_avaliacao' => \Carbon\Carbon::parse($aval->data)->format('Y-m-d'), 'descricao' => $aval->descricao, 'action' => 'editar']) }}" class="text-amber-600 hover:text-amber-800 text-sm font-bold flex items-center bg-amber-50 px-3 py-1.5 rounded-lg transition-colors">
-                                    <x-heroicon-o-pencil-square class="w-4 h-4 mr-1" /> Editar
+                                    <x-icon name="heroicon-o-pencil-square" class="w-4 h-4 mr-1" /> Editar
                                 </a>
                             </div>
                         </div>

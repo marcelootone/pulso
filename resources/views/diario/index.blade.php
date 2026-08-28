@@ -19,7 +19,7 @@
 
         @if($minhasTurmas->isEmpty())
             <div class="text-center py-12 bg-white rounded-xl shadow-sm border border-yellow-200">
-                <x-heroicon-o-exclamation-triangle class="mx-auto h-12 w-12 text-yellow-400" />
+                <x-icon name="heroicon-o-exclamation-triangle" class="mx-auto h-12 w-12 text-yellow-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma turma atribuída</h3>
                 <p class="mt-1 text-sm text-gray-500">Você ainda não foi atribuído a nenhuma turma. Procure a Secretaria ou Coordenação.</p>
             </div>
@@ -32,9 +32,9 @@
                                 {{ $turma->serie }}º {{ $turma->complemento }}
                             </h4>
                             <p class="text-sm text-gray-500 mb-4">{{ $turma->modalidade }} &bull; {{ $turma->turno }}</p>
-                            
+
                             <div class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-md inline-flex items-center mb-6">
-                                <x-heroicon-o-book-open class="w-4 h-4 mr-1.5" />
+                                <x-icon name="heroicon-o-book-open" class="w-4 h-4 mr-1.5" />
                                 Disciplina: {{ $turma->pivot->disciplina }}
                             </div>
                         </div>
