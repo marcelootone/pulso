@@ -61,6 +61,15 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
+    - name: Test Laravel server
+      run: |
+        php artisan serve --host=127.0.0.1 --port=8000 > laravel.log 2>&1 &
+        SERVER_PID=$!
+        sleep 5
+        cat laravel.log
+        curl -v http://127.0.0.1:8000
+        kill $SERVER_PID || true
+  
       - name: Run Playwright tests
         run: npx playwright test
 
