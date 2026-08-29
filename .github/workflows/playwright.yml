@@ -79,17 +79,12 @@ jobs:
           
       - name: Debug Laravel login
         run: |
-          echo "=== /login headers ==="
-          curl -I http://127.0.0.1:8000/login || true
+          echo "=== GET /login ==="
+          curl -i http://127.0.0.1:8000/login
 
-          echo "=== /login HTML ==="
-          curl -L http://127.0.0.1:8000/login -o login.html || true
-
-          echo "=== Procurando formulário de login ==="
-          grep -n 'input.*email\|name="email"\|Login\|login' login.html || true
-
-          echo "=== Laravel log ==="
-          cat laravel.log
+          echo ""
+          echo "=== Rotas de autenticação ==="
+          php artisan route:list | grep -E "login|forgot-password|reset-password"
 
       - name: Run Playwright tests
         run: npx playwright test
