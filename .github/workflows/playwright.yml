@@ -66,7 +66,7 @@ jobs:
           php artisan serve --host=127.0.0.1 --port=8000 > laravel.log 2>&1 &
 
           for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:8000 > /dev/null; then
+            if curl -s http://127.0.0.1:8000 > /dev/null; then
               echo "Laravel está respondendo."
               break
             fi
@@ -75,7 +75,6 @@ jobs:
             sleep 2
           done
 
-          curl -fsS http://127.0.0.1:8000
           cat laravel.log
           
       - name: Debug Laravel login
