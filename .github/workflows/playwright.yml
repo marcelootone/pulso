@@ -77,6 +77,20 @@ jobs:
 
           curl -fsS http://127.0.0.1:8000
           cat laravel.log
+          
+      - name: Debug Laravel login
+        run: |
+          echo "=== /login headers ==="
+          curl -I http://127.0.0.1:8000/login || true
+
+          echo "=== /login HTML ==="
+          curl -L http://127.0.0.1:8000/login -o login.html || true
+
+          echo "=== Procurando formulário de login ==="
+          grep -n 'input.*email\|name="email"\|Login\|login' login.html || true
+
+          echo "=== Laravel log ==="
+          cat laravel.log
 
       - name: Run Playwright tests
         run: npx playwright test
