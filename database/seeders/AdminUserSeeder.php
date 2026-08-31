@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
             ['email' => 'admin@email.com'],
             [
                 'name' => 'Administrador do Sistema',
-                'password' => \Illuminate\Support\Facades\Hash::make('Admin@Sigae2026!X'),
+                'password' => \Illuminate\Support\Facades\Hash::make('Admin@Pulso2026!X'),
                 'tipo_usuario' => 'Administrador',
                 'ra' => 'ADMIN01',
             ]
