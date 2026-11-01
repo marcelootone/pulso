@@ -107,12 +107,23 @@ return [
         ],
     ],
 
+    
     [
         'label' => 'Agendamentos',
         'icon' => 'o-calendar-days',
-        'route' => 'agendamentos.index',
         'roles' => ['*'],
-        'permissions' => ['agendar espacos'],
+        'children' => [
+            [
+                'label' => 'Reserva de Espaços',
+                'route' => 'agendamentos.index',
+                'roles' => ['*'],
+            ],
+            [
+                'label' => 'Gerenciar Espaços da Escola',
+                'route' => 'espacos.index',
+                'roles' => ['*'],
+            ],
+        ],
     ],
 
     [
