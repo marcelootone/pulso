@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Gestão de Espaços') }}
             </h2>
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto justify-center">
-                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 mr-2" /> Agendamentos
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
+                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 shrink-0 mr-2" /> Agendamentos
                 </x-button>
-                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto justify-center">
-                    <x-icon name="heroicon-o-plus"-circle class="w-5 h-5 mr-2" /> Criar Espaço
+                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
+                    <x-icon name="heroicon-o-plus-circle" class="w-5 h-5 shrink-0 mr-2" /> Criar Espaço
                 </x-button>
             </div>
         </div>
