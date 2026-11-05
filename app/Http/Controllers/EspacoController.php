@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 
 class EspacoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $espacos = Espaco::all();
-        return view('espacos.index', compact('espacos'));
+        $validated = $request->validate(['tipo' => 'nullable|in:espaco,equipamento']);
+        $tipo = $validated['tipo'] ?? null;
+        $espacos = Espaco::query()
+            ->when($tipo, fn ($query) => $query->where('tipo', $tipo))
+            ->get();
+        return view('espacos.index', compact('espacos', 'tipo'));
     }
 
     public function create()

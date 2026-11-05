@@ -12,6 +12,8 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <x-filtro-tipo-recurso :action="route('agendamentos.index')" :tipo="$tipo" />
+
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 @foreach($espacos as $espaco)
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg flex flex-col justify-between border border-gray-100 hover:shadow-md transition-shadow">
@@ -40,7 +42,7 @@
             
             @if($espacos->isEmpty())
                 <div class="bg-white p-8 text-center rounded-lg shadow-sm">
-                    <p class="text-gray-500 text-lg">Nenhum espaço ou equipamento cadastrado ou ativo no momento.</p>
+                    <p class="text-gray-500 text-lg">Nenhum espaço ou equipamento ativo encontrado para o filtro selecionado.</p>
                 </div>
             @endif
         </div>

@@ -31,6 +31,7 @@
             </div>
         @endif
 
+        <x-filtro-tipo-recurso :action="route('espacos.index')" :tipo="$tipo" />
 
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
@@ -94,7 +95,7 @@
                             <td colspan="5" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
                                 <x-icon name="heroicon-o-building-office-2" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                 <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço ou equipamento encontrado.</p>
-                                <p class="text-sm font-medium">Cadastre um espaço ou equipamento para permitir agendamentos.</p>
+                                <p class="text-sm font-medium">Cadastre um espaço ou equipamento ou ajuste o filtro selecionado.</p>
                             </td>
                         </tr>
                         @endforelse
