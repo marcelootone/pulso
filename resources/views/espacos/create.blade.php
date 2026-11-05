@@ -86,7 +86,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-1475a1">
-                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Espaço
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar
                         </x-button>
                     </div>
                 </x-slot>
