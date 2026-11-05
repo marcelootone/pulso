@@ -107,12 +107,23 @@ return [
         ],
     ],
 
+    
     [
         'label' => 'Agendamentos',
         'icon' => 'o-calendar-days',
-        'route' => 'agendamentos.index',
         'roles' => ['*'],
-        'permissions' => ['agendar espacos'],
+        'children' => [
+            [
+                'label' => 'Reserva de Espaços e Equipamentos',
+                'route' => 'agendamentos.index',
+                'roles' => ['*'],
+            ],
+            [
+                'label' => 'Gerenciar Espaços e Equipamentos da Escola',
+                'route' => 'espacos.index',
+                'roles' => ['*'],
+            ],
+        ],
     ],
 
     [
@@ -136,7 +147,7 @@ return [
                 'permissions' => ['gerenciar professores'],
             ],
             [
-                'label' => 'Espaços',
+                'label' => 'Espaços e Equipamentos',
                 'route' => 'espacos.index',
                 'roles' => ['Administrador', 'Gestor', 'Secretaria'],
                 'permissions' => ['gerenciar espacos'],

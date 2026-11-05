@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Reserva: {{ $espaco->nome }}
             </h2>
-            <a href="{{ route('agendamentos.index') }}" class="text-sm text-blue-600 hover:underline font-bold">⬅ Voltar aos Espaços</a>
+            <a href="{{ route('agendamentos.index') }}" class="text-sm text-blue-600 hover:underline font-bold">⬅ Voltar aos Espaços e Equipamentos</a>
         </div>
     </x-slot>
 
@@ -55,7 +55,7 @@
                     @if($agendamentos->isEmpty())
                         <div class="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                             <p class="text-gray-500">Nenhum horário reservado para este dia.</p>
-                            <p class="text-sm font-bold text-green-600 mt-1">Sala 100% Livre!</p>
+                            <p class="text-sm font-bold text-green-600 mt-1">Disponível durante todo o dia!</p>
                         </div>
                     @else
                         <div class="space-y-3">
