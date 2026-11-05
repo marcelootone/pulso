@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Criar Novo Espaço') }}
+        {{ __('Criar Espaço ou Equipamento') }}
     </x-slot>
 
     <x-slot name="breadcrumb">
         <x-breadcrumb :items="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Módulos Adicionais', 'url' => '#'],
-            ['label' => 'Espaços', 'url' => route('espacos.index')],
-            ['label' => 'Novo Espaço']
+            ['label' => 'Espaços e Equipamentos', 'url' => route('espacos.index')],
+            ['label' => 'Novo Cadastro']
         ]" />
     </x-slot>
 
@@ -17,7 +17,7 @@
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
                     <x-icon name="heroicon-o-plus"-circle class="w-6 h-6 text-primary-500 mr-2" />
-                    Adicionar Espaço
+                    Adicionar Espaço ou Equipamento
                 </h3>
             </x-slot>
 
@@ -73,8 +73,8 @@
                                 </svg>
                             </div>
                             <div class="ml-3 flex flex-col">
-                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors">Espaço Ativo</span>
-                                <span class="text-xs font-medium text-gray-500 mt-0.5">Permitir que este espaço seja reservado em agendamentos.</span>
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors">Ativo</span>
+                                <span class="text-xs font-medium text-gray-500 mt-0.5">Permitir reservas deste espaço ou equipamento.</span>
                             </div>
                         </label>
                     </div>

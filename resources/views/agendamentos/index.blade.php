@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Reserva de Espaços') }}
+                {{ __('Reserva de Espaços e Equipamentos') }}
             </h2>
             <a href="{{ route('espacos.index') }}" class="text-sm text-gray-700 hover:text-blue-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors border border-gray-300">
-                ⚙️ Gerenciar Espaços da Escola
+                ⚙️ Gerenciar Espaços e Equipamentos da Escola
             </a>
         </div>
     </x-slot>
@@ -35,7 +35,7 @@
             
             @if($espacos->isEmpty())
                 <div class="bg-white p-8 text-center rounded-lg shadow-sm">
-                    <p class="text-gray-500 text-lg">Nenhum espaço cadastrado ou ativo no momento.</p>
+                    <p class="text-gray-500 text-lg">Nenhum espaço ou equipamento cadastrado ou ativo no momento.</p>
                 </div>
             @endif
         </div>

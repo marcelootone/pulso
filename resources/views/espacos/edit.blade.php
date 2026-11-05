@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Editar Espaço') }}: {{ $espaco->nome }}
+        {{ __('Editar Espaço ou Equipamento') }}: {{ $espaco->nome }}
     </x-slot>
 
     <x-slot name="breadcrumb">
         <x-breadcrumb :items="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Módulos Adicionais', 'url' => '#'],
-            ['label' => 'Espaços', 'url' => route('espacos.index')],
-            ['label' => 'Editar Espaço']
+            ['label' => 'Espaços e Equipamentos', 'url' => route('espacos.index')],
+            ['label' => 'Editar Espaço ou Equipamento']
         ]" />
     </x-slot>
 
@@ -81,9 +81,9 @@
                                 </svg>
                             </div>
                             <div class="ml-3 flex flex-col">
-                                <span class="text-sm font-bold text-gray-900 group-hover:text-amber-700 transition-colors">Espaço Ativo</span>
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-amber-700 transition-colors">Ativo</span>
                                 <span class="text-xs font-medium text-gray-500 mt-1 leading-relaxed max-w-lg">
-                                    Desmarque para inativar. O espaço não aparecerá mais como opção para novos agendamentos, mas o histórico de reservas já feitas será mantido.
+                                    Desmarque para inativar. O espaço ou equipamento não aparecerá mais como opção para novos agendamentos, mas o histórico de reservas já feitas será mantido.
                                 </span>
                             </div>
                         </label>

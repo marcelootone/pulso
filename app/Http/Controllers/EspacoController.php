@@ -36,7 +36,7 @@ class EspacoController extends Controller
             'status' => $request->boolean('status'),
         ]);
 
-        return redirect()->route('espacos.index')->with('success', 'Espaço criado com sucesso!');
+        return redirect()->route('espacos.index')->with('success', 'Cadastro criado com sucesso!');
     }
 
     public function edit(Espaco $espaco)
@@ -62,6 +62,6 @@ class EspacoController extends Controller
             'status' => $request->boolean('status'),
         ]);
 
-        return redirect()->route('espacos.index')->with('success', 'Espaço atualizado com sucesso!');
+        return redirect()->route('espacos.index')->with('success', 'Cadastro atualizado com sucesso!');
     }
 }
