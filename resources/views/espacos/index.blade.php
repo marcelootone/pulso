@@ -44,6 +44,7 @@
                 <x-table>
                     <x-slot name="head">
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Capacidade</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
@@ -59,8 +60,11 @@
                                     {{ $espaco->nome }}
                                 </div>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-gray-600">
+                                {{ $espaco->tipo === 'equipamento' ? 'Equipamento' : 'Espaço' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center font-medium text-gray-600">
-                                @if($espaco->capacidade)
+                                @if($espaco->tipo === 'espaco' && $espaco->capacidade)
                                     <span class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-sm border border-gray-200">
                                         {{ $espaco->capacidade }} pessoas
                                     </span>
@@ -87,7 +91,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
                                 <x-icon name="heroicon-o-building-office-2" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                 <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço ou equipamento encontrado.</p>
                                 <p class="text-sm font-medium">Cadastre um espaço ou equipamento para permitir agendamentos.</p>
