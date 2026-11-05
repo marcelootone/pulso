@@ -16,7 +16,7 @@
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-icon name="heroicon-o-plus"-circle class="w-6 h-6 text-primary-500 mr-2" />
+                    <x-icon name="heroicon-o-plus-circle" class="w-6 h-6 text-primary-500 mr-2" />
                     Adicionar Espaço ou Equipamento
                 </h3>
             </x-slot>

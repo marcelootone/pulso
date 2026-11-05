@@ -8,7 +8,7 @@
                 <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
                     <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 shrink-0 mr-2" /> Agendamentos
                 </x-button>
-                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
+                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto shrink-0 justify-center">
                     <x-icon name="heroicon-o-plus-circle" class="w-5 h-5 shrink-0 mr-2" /> Criar Espaço ou Equipamento
                 </x-button>
             </div>

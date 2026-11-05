@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Reserva de Espaços e Equipamentos') }}
             </h2>
@@ -14,7 +14,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-filtro-tipo-recurso :action="route('agendamentos.index')" :tipo="$tipo" />
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($espacos as $espaco)
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg flex flex-col justify-between border border-gray-100 hover:shadow-md transition-shadow">
                         <div class="p-6">
