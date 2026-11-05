@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Espaco extends Model
 {
-    protected $fillable = ['nome', 'capacidade', 'status'];
+    protected $fillable = ['nome', 'tipo', 'capacidade', 'status'];
 
     public function agendamentos()
     {

@@ -44,19 +44,31 @@
                 </div>
             @endif
 
-            <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST">
+            <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST"
+                  x-data="{ tipo: @js(old('tipo', $espaco->tipo)) }">
                 @csrf
                 @method('PUT')
 
                 <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
-                        <x-input type="text" name="nome" value="{{ old('nome', $espaco->nome) }}" required class="w-full" />
+                        <label for="tipo" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">
+                            Tipo <span class="text-red-500">*</span>
+                        </label>
+                        <select id="tipo" name="tipo" x-model="tipo" required
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="espaco" @selected(old('tipo', $espaco->tipo) === 'espaco')>Espaço</option>
+                            <option value="equipamento" @selected(old('tipo', $espaco->tipo) === 'equipamento')>Equipamento</option>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
-                        <x-input type="number" name="capacidade" value="{{ old('capacidade', $espaco->capacidade) }}" min="1" class="w-full sm:w-48" />
+                        <label for="nome" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome <span class="text-red-500">*</span></label>
+                        <x-input id="nome" type="text" name="nome" value="{{ old('nome', $espaco->nome) }}" required class="w-full" />
+                    </div>
+
+                    <div x-show="tipo === 'espaco'">
+                        <label for="capacidade" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
+                        <x-input id="capacidade" x-bind:disabled="tipo !== 'espaco'" type="number" name="capacidade" value="{{ old('capacidade', $espaco->capacidade) }}" min="1" class="w-full sm:w-48" />
                     </div>
 
                     <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">

@@ -22,14 +22,18 @@ class EspacoController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
-            'capacidade' => 'nullable|integer|min:1',
+            'tipo' => 'required|in:espaco,equipamento',
+            'capacidade' => 'exclude_unless:tipo,espaco|nullable|integer|min:1',
             'status' => 'boolean',
         ]);
 
         Espaco::create([
             'nome' => $request->nome,
-            'capacidade' => $request->capacidade,
-            'status' => $request->has('status') ? true : false,
+            'tipo' => $request->tipo,
+            'capacidade' => $request->tipo === 'espaco'
+                ? $request->input('capacidade')
+                : null,
+            'status' => $request->boolean('status'),
         ]);
 
         return redirect()->route('espacos.index')->with('success', 'Espaço criado com sucesso!');
@@ -44,14 +48,18 @@ class EspacoController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
-            'capacidade' => 'nullable|integer|min:1',
+            'tipo' => 'required|in:espaco,equipamento',
+            'capacidade' => 'exclude_unless:tipo,espaco|nullable|integer|min:1',
             'status' => 'boolean',
         ]);
 
         $espaco->update([
             'nome' => $request->nome,
-            'capacidade' => $request->capacidade,
-            'status' => $request->has('status') ? true : false,
+            'tipo' => $request->tipo,
+            'capacidade' => $request->tipo === 'espaco'
+                ? $request->input('capacidade')
+                : null,
+            'status' => $request->boolean('status'),
         ]);
 
         return redirect()->route('espacos.index')->with('success', 'Espaço atualizado com sucesso!');
