@@ -4,9 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Reserva de Espaços e Equipamentos') }}
             </h2>
+            @can('gerenciar espacos')
             <a href="{{ route('espacos.index') }}" class="text-sm text-gray-700 hover:text-blue-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors border border-gray-300">
                 ⚙️ Gerenciar Espaços e Equipamentos da Escola
             </a>
+            @endcan
         </div>
     </x-slot>
 

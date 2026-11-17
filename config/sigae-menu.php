@@ -121,7 +121,7 @@ return [
             [
                 'label' => 'Gerenciar Espaços e Equipamentos da Escola',
                 'route' => 'espacos.index',
-                'roles' => ['*'],
+                'permissions' => ['gerenciar espacos'],
             ],
         ],
     ],
@@ -149,7 +149,6 @@ return [
             [
                 'label' => 'Espaços e Equipamentos',
                 'route' => 'espacos.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria'],
                 'permissions' => ['gerenciar espacos'],
             ],
 
