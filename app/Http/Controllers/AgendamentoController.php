@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AgendamentoRequest;
 use App\Models\Espaco;
 use App\Models\Agendamento;
 use App\Models\HorarioReserva;
@@ -20,9 +21,10 @@ class AgendamentoController extends Controller
         return view('agendamentos.index', compact('espacos', 'tipo'));
     }
 
-    public function create(Espaco $espaco, Request $request)
+    public function create(Espaco $espaco, AgendamentoRequest $request)
     {
-        $dataSelecionada = $request->get('data', date('Y-m-d'));
+        $dataSelecionada = $request->validated('data');
+        [$dataMinima, $dataMaxima] = $request->periodoPermitido();
         
         $agendamentos = Agendamento::with('user')
             ->where('espaco_id', $espaco->id)
@@ -33,18 +35,11 @@ class AgendamentoController extends Controller
         // RF11 - faixas de horário configuradas, disponíveis para seleção rápida na reserva.
         $horarios = HorarioReserva::where('ativo', true)->orderBy('horario_inicio')->get();
 
-        return view('agendamentos.create', compact('espaco', 'dataSelecionada', 'agendamentos', 'horarios'));
+        return view('agendamentos.create', compact('espaco', 'dataSelecionada', 'agendamentos', 'horarios', 'dataMinima', 'dataMaxima'));
     }
 
-    public function store(Request $request, Espaco $espaco)
+    public function store(AgendamentoRequest $request, Espaco $espaco)
     {
-        $request->validate([
-            'data' => 'required|date',
-            'horario_inicio' => 'required|date_format:H:i',
-            'horario_fim' => 'required|date_format:H:i|after:horario_inicio',
-            'motivo' => 'nullable|string|max:255',
-        ]);
-
         // Bloqueio de concorrência
         $conflict = Agendamento::where('espaco_id', $espaco->id)
             ->where('data', $request->data)

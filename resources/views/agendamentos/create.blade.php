@@ -37,11 +37,16 @@
             @endif
 
             <!-- Filtro de Data -->
-            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex items-center gap-4">
-                <label class="font-bold text-gray-700">Data da Reserva:</label>
-                <input type="date" value="{{ $dataSelecionada }}" 
-                       onchange="window.location.href='{{ route('agendamentos.create', $espaco->id) }}?data=' + this.value"
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4">
+                <label for="data-reserva" class="font-bold text-gray-700">Data da Reserva:</label>
+                <input id="data-reserva" type="date" value="{{ $dataSelecionada }}"
+                       min="{{ $dataMinima->toDateString() }}" max="{{ $dataMaxima->toDateString() }}"
+                       required aria-describedby="periodo-reserva"
+                       onchange="if (this.reportValidity()) window.location.href='{{ route('agendamentos.create', $espaco->id) }}?data=' + this.value"
                        class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-bold text-gray-800">
+                <p id="periodo-reserva" class="w-full text-sm text-gray-600">
+                    Você pode agendar de {{ $dataMinima->format('d/m/Y') }} até {{ $dataMaxima->format('d/m/Y') }}, inclusive (horário de Brasília).
+                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
