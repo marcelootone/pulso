@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Editar Espaço') }}: {{ $espaco->nome }}
+        {{ __('Editar Espaço ou Equipamento') }}: {{ $espaco->nome }}
     </x-slot>
 
     <x-slot name="breadcrumb">
         <x-breadcrumb :items="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Módulos Adicionais', 'url' => '#'],
-            ['label' => 'Espaços', 'url' => route('espacos.index')],
-            ['label' => 'Editar Espaço']
+            ['label' => 'Espaços e Equipamentos', 'url' => route('espacos.index')],
+            ['label' => 'Editar Espaço ou Equipamento']
         ]" />
     </x-slot>
 
@@ -44,19 +44,31 @@
                 </div>
             @endif
 
-            <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST">
+            <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST"
+                  x-data="{ tipo: @js(old('tipo', $espaco->tipo)) }">
                 @csrf
                 @method('PUT')
 
                 <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
-                        <x-input type="text" name="nome" value="{{ old('nome', $espaco->nome) }}" required class="w-full" />
+                        <label for="tipo" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">
+                            Tipo <span class="text-red-500">*</span>
+                        </label>
+                        <select id="tipo" name="tipo" x-model="tipo" required
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="espaco" @selected(old('tipo', $espaco->tipo) === 'espaco')>Espaço</option>
+                            <option value="equipamento" @selected(old('tipo', $espaco->tipo) === 'equipamento')>Equipamento</option>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
-                        <x-input type="number" name="capacidade" value="{{ old('capacidade', $espaco->capacidade) }}" min="1" class="w-full sm:w-48" />
+                        <label for="nome" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome <span class="text-red-500">*</span></label>
+                        <x-input id="nome" type="text" name="nome" value="{{ old('nome', $espaco->nome) }}" required class="w-full" />
+                    </div>
+
+                    <div x-show="tipo === 'espaco'">
+                        <label for="capacidade" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
+                        <x-input id="capacidade" x-bind:disabled="tipo !== 'espaco'" type="number" name="capacidade" value="{{ old('capacidade', $espaco->capacidade) }}" min="1" class="w-full sm:w-48" />
                     </div>
 
                     <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
@@ -69,9 +81,9 @@
                                 </svg>
                             </div>
                             <div class="ml-3 flex flex-col">
-                                <span class="text-sm font-bold text-gray-900 group-hover:text-amber-700 transition-colors">Espaço Ativo</span>
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-amber-700 transition-colors">Ativo</span>
                                 <span class="text-xs font-medium text-gray-500 mt-1 leading-relaxed max-w-lg">
-                                    Desmarque para inativar. O espaço não aparecerá mais como opção para novos agendamentos, mas o histórico de reservas já feitas será mantido.
+                                    Desmarque para inativar. O espaço ou equipamento não aparecerá mais como opção para novos agendamentos, mas o histórico de reservas já feitas será mantido.
                                 </span>
                             </div>
                         </label>
@@ -84,7 +96,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-f19850" class="!bg-amber-500 hover:!bg-amber-600 border-none">
-                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Atualizar Espaço
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar
                         </x-button>
                     </div>
                 </x-slot>

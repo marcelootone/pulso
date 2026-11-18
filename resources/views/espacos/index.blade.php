@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Gestão de Espaços') }}
+                {{ __('Gestão de Espaços e Equipamentos') }}
             </h2>
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto justify-center">
-                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 mr-2" /> Agendamentos
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
+                    <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 shrink-0 mr-2" /> Agendamentos
                 </x-button>
-                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto justify-center">
-                    <x-icon name="heroicon-o-plus"-circle class="w-5 h-5 mr-2" /> Criar Espaço
+                <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto shrink-0 justify-center">
+                    <x-icon name="heroicon-o-plus-circle" class="w-5 h-5 shrink-0 mr-2" /> Criar Espaço ou Equipamento
                 </x-button>
             </div>
         </div>
@@ -19,7 +19,7 @@
         <x-breadcrumb :items="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Módulos Adicionais', 'url' => '#'],
-            ['label' => 'Espaços']
+            ['label' => 'Espaços e Equipamentos']
         ]" />
     </x-slot>
 
@@ -31,18 +31,21 @@
             </div>
         @endif
 
+        <x-filtro-tipo-recurso :action="route('espacos.index')" :tipo="$tipo" />
+
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
                     <x-icon name="heroicon-o-building-office-2" class="w-6 h-6 text-primary-500 mr-2" />
-                    Espaços Cadastrados
+                    Espaços e Equipamentos Cadastrados
                 </h3>
             </x-slot>
 
             <div class="-mx-6 -my-6">
                 <x-table>
                     <x-slot name="head">
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome do Espaço</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Capacidade</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
@@ -58,8 +61,11 @@
                                     {{ $espaco->nome }}
                                 </div>
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-gray-600">
+                                {{ $espaco->tipo === 'equipamento' ? 'Equipamento' : 'Espaço' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center font-medium text-gray-600">
-                                @if($espaco->capacidade)
+                                @if($espaco->tipo === 'espaco' && $espaco->capacidade)
                                     <span class="bg-gray-100 text-gray-800 py-1 px-3 rounded-full text-sm border border-gray-200">
                                         {{ $espaco->capacidade }} pessoas
                                     </span>
@@ -86,10 +92,10 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
+                            <td colspan="5" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
                                 <x-icon name="heroicon-o-building-office-2" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
-                                <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço cadastrado.</p>
-                                <p class="text-sm font-medium">Crie o primeiro espaço para permitir agendamentos.</p>
+                                <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço ou equipamento encontrado.</p>
+                                <p class="text-sm font-medium">Cadastre um espaço ou equipamento ou ajuste o filtro selecionado.</p>
                             </td>
                         </tr>
                         @endforelse

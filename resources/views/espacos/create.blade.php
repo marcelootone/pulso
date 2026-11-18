@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Criar Novo Espaço') }}
+        {{ __('Criar Espaço ou Equipamento') }}
     </x-slot>
 
     <x-slot name="breadcrumb">
         <x-breadcrumb :items="[
             ['label' => 'Dashboard', 'url' => route('dashboard')],
             ['label' => 'Módulos Adicionais', 'url' => '#'],
-            ['label' => 'Espaços', 'url' => route('espacos.index')],
-            ['label' => 'Novo Espaço']
+            ['label' => 'Espaços e Equipamentos', 'url' => route('espacos.index')],
+            ['label' => 'Novo Cadastro']
         ]" />
     </x-slot>
 
@@ -16,8 +16,8 @@
         <x-card class="border-t-4 border-t-primary-500">
             <x-slot name="header">
                 <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                    <x-icon name="heroicon-o-plus"-circle class="w-6 h-6 text-primary-500 mr-2" />
-                    Adicionar Espaço
+                    <x-icon name="heroicon-o-plus-circle" class="w-6 h-6 text-primary-500 mr-2" />
+                    Adicionar Espaço ou Equipamento
                 </h3>
             </x-slot>
 
@@ -33,18 +33,34 @@
                 </div>
             @endif
 
-            <form id="form-1475a1" action="{{ route('espacos.store') }}" method="POST">
+            <form
+                id="form-1475a1"
+                action="{{ route('espacos.store') }}"
+                method="POST"
+                x-data="{ tipo: @js(old('tipo', 'espaco')) }"
+            >
                 @csrf
 
                 <div class="space-y-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome do Espaço <span class="text-red-500">*</span></label>
-                        <x-input type="text" name="nome" value="{{ old('nome') }}" required placeholder="Ex: Sala de Leitura, Laboratório de Informática..." class="w-full" />
+                        <label for="tipo" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">
+                            Tipo <span class="text-red-500">*</span>
+                        </label>
+                        <select id="tipo" name="tipo" x-model="tipo" required
+                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500">
+                            <option value="espaco" @selected(old('tipo', 'espaco') === 'espaco')>Espaço</option>
+                            <option value="equipamento" @selected(old('tipo', 'espaco') === 'equipamento')>Equipamento</option>
+                        </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
-                        <x-input type="number" name="capacidade" value="{{ old('capacidade') }}" min="1" placeholder="Ex: 40" class="w-full sm:w-48" />
+                        <label for="nome" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Nome <span class="text-red-500">*</span></label>
+                        <x-input id="nome" type="text" name="nome" value="{{ old('nome') }}" required placeholder="Ex: Sala de Leitura, Projetor..." class="w-full" />
+                    </div>
+
+                    <div x-show="tipo === 'espaco'">
+                        <label for="capacidade" class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">Capacidade (Pessoas)</label>
+                        <x-input id="capacidade" x-bind:disabled="tipo !== 'espaco'" type="number" name="capacidade" value="{{ old('capacidade') }}" min="1" placeholder="Ex: 40" class="w-full sm:w-48" />
                     </div>
 
                     <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
@@ -57,8 +73,8 @@
                                 </svg>
                             </div>
                             <div class="ml-3 flex flex-col">
-                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors">Espaço Ativo</span>
-                                <span class="text-xs font-medium text-gray-500 mt-0.5">Permitir que este espaço seja reservado em agendamentos.</span>
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-700 transition-colors">Ativo</span>
+                                <span class="text-xs font-medium text-gray-500 mt-0.5">Permitir reservas deste espaço ou equipamento.</span>
                             </div>
                         </label>
                     </div>
@@ -70,7 +86,7 @@
                             Cancelar
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-1475a1">
-                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar Espaço
+                            <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar
                         </x-button>
                     </div>
                 </x-slot>
