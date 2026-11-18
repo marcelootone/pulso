@@ -1,18 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Reserva de Espaços') }}
+                {{ __('Reserva de Espaços e Equipamentos') }}
             </h2>
             <a href="{{ route('espacos.index') }}" class="text-sm text-gray-700 hover:text-blue-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors border border-gray-300">
-                ⚙️ Gerenciar Espaços da Escola
+                ⚙️ Gerenciar Espaços e Equipamentos da Escola
             </a>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <x-filtro-tipo-recurso :action="route('agendamentos.index')" :tipo="$tipo" />
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($espacos as $espaco)
                     <div class="bg-white overflow-hidden shadow-sm rounded-lg flex flex-col justify-between border border-gray-100 hover:shadow-md transition-shadow">
                         <div class="p-6">
@@ -20,9 +22,14 @@
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             </div>
                             <h3 class="text-lg font-bold text-gray-900 mb-1">{{ $espaco->nome }}</h3>
-                            <p class="text-sm text-gray-500 mb-4">
-                                Capacidade: {{ $espaco->capacidade ? $espaco->capacidade . ' pessoas' : 'Não definida' }}
+                            <p class="text-sm font-medium text-gray-700 mb-2">
+                                {{ $espaco->tipo === 'equipamento' ? 'Equipamento' : 'Espaço' }}
                             </p>
+                            @if($espaco->tipo === 'espaco')
+                                <p class="text-sm text-gray-500 mb-4">
+                                    Capacidade: {{ $espaco->capacidade ? $espaco->capacidade . ' pessoas' : 'Não definida' }}
+                                </p>
+                            @endif
                         </div>
                         <div class="p-4 bg-gray-50 border-t border-gray-100">
                             <a href="{{ route('agendamentos.create', $espaco->id) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded transition-colors">
@@ -35,7 +42,7 @@
             
             @if($espacos->isEmpty())
                 <div class="bg-white p-8 text-center rounded-lg shadow-sm">
-                    <p class="text-gray-500 text-lg">Nenhum espaço cadastrado ou ativo no momento.</p>
+                    <p class="text-gray-500 text-lg">Nenhum espaço ou equipamento ativo encontrado para o filtro selecionado.</p>
                 </div>
             @endif
         </div>
