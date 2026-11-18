@@ -22,7 +22,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Implicitly grant "Super Admin" role all permissions
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
-        Gate::before(function ($user, $ability) {
+        Gate::before(function ($user, $ability, $arguments) {
+            // A edição de reservas deve respeitar o horário de início, inclusive para a gestão.
+            if ($ability === 'update' && ($arguments[0] ?? null) instanceof \App\Models\Agendamento) {
+                return null;
+            }
+
             return $user->hasRole([\App\Models\User::TIPO_GESTOR, \App\Models\User::TIPO_ADMINISTRADOR]) || in_array($user->tipo_usuario, [\App\Models\User::TIPO_GESTOR, \App\Models\User::TIPO_ADMINISTRADOR]) ? true : null;
         });
     }

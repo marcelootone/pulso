@@ -153,8 +153,13 @@ Route::middleware(['auth'])->group(function () {
     // Espaços - Visualizar e Agendamentos em si (Todos)
     Route::get('espacos', [\App\Http\Controllers\EspacoController::class, 'index'])->name('espacos.index');
     Route::get('/agendamentos', [\App\Http\Controllers\AgendamentoController::class, 'index'])->name('agendamentos.index');
+    Route::get('/agendamentos/{espaco}/agenda', [\App\Http\Controllers\AgendamentoController::class, 'agenda'])->name('agendamentos.agenda');
     Route::get('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'create'])->name('agendamentos.create');
     Route::post('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'store'])->name('agendamentos.store');
+    Route::get('/agendamentos/{agendamento}/editar', [\App\Http\Controllers\AgendamentoController::class, 'edit'])
+        ->middleware('can:update,agendamento')->name('agendamentos.edit');
+    Route::put('/agendamentos/{agendamento}', [\App\Http\Controllers\AgendamentoController::class, 'update'])
+        ->middleware('can:update,agendamento')->name('agendamentos.update');
 
 
 

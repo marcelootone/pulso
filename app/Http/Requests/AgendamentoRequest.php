@@ -4,12 +4,15 @@ namespace App\Http\Requests;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class AgendamentoRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $agendamento = $this->route('agendamento');
+
+        return ! $agendamento || $this->user()->can('update', $agendamento);
     }
 
     public function periodoPermitido(): array
@@ -33,7 +36,7 @@ class AgendamentoRequest extends FormRequest
             'data' => ['required', 'date_format:Y-m-d', 'after_or_equal:'.$inicio->toDateString(), 'before_or_equal:'.$fim->toDateString()],
         ];
 
-        if ($this->isMethod('POST')) {
+        if ($this->isMethod('POST') || $this->isMethod('PUT')) {
             $rules += [
                 'horario_inicio' => 'required|date_format:H:i',
                 'horario_fim' => 'required|date_format:H:i|after:horario_inicio',
@@ -54,8 +57,26 @@ class AgendamentoRequest extends FormRequest
         ];
     }
 
+    public function after(): array
+    {
+        return [function (Validator $validator) {
+            if (! $this->isMethod('PUT') || $validator->errors()->isNotEmpty()) {
+                return;
+            }
+
+            $inicio = CarbonImmutable::parse($this->input('data').' '.$this->input('horario_inicio'), config('app.timezone'));
+            if (! $inicio->isFuture()) {
+                $validator->errors()->add('horario_inicio', 'O novo horário de início deve ser posterior ao horário atual.');
+            }
+        }];
+    }
+
     protected function getRedirectUrl(): string
     {
+        if ($this->route('agendamento')) {
+            return route('agendamentos.edit', $this->route('agendamento'));
+        }
+
         // Retorna ao formulário sem a data inválida, evitando ciclos de redirecionamento.
         return route('agendamentos.create', ['espaco' => $this->route('espaco')]);
     }

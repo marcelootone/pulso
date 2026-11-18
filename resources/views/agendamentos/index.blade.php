@@ -34,8 +34,8 @@
                             @endif
                         </div>
                         <div class="p-4 bg-gray-50 border-t border-gray-100">
-                            <a href="{{ route('agendamentos.create', $espaco->id) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded transition-colors">
-                                Abrir / Reservar
+                            <a href="{{ route('agendamentos.agenda', $espaco->id) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded transition-colors">
+                                Ver agenda
                             </a>
                         </div>
                     </div>

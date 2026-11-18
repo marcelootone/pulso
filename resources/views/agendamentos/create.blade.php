@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Reserva: {{ $espaco->nome }}
             </h2>
-            <a href="{{ route('agendamentos.index') }}" class="text-sm text-blue-600 hover:underline font-bold">⬅ Voltar aos Espaços e Equipamentos</a>
+            <a href="{{ route('agendamentos.agenda', $espaco) }}" class="text-sm text-blue-600 hover:underline font-bold">⬅ Voltar à agenda</a>
         </div>
     </x-slot>
 
@@ -45,7 +45,7 @@
                        onchange="if (this.reportValidity()) window.location.href='{{ route('agendamentos.create', $espaco->id) }}?data=' + this.value"
                        class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 font-bold text-gray-800">
                 <p id="periodo-reserva" class="w-full text-sm text-gray-600">
-                    Você pode agendar de {{ $dataMinima->format('d/m/Y') }} até {{ $dataMaxima->format('d/m/Y') }}, inclusive (horário de Brasília).
+                    Você pode agendar de {{ $dataMinima->format('d/m/Y') }} até {{ $dataMaxima->format('d/m/Y') }} (horário de Brasília).
                 </p>
             </div>
 
@@ -70,6 +70,13 @@
                                         <span class="font-bold text-gray-800 text-lg">
                                             {{ \Carbon\Carbon::parse($agendamento->horario_inicio)->format('H:i') }} às {{ \Carbon\Carbon::parse($agendamento->horario_fim)->format('H:i') }}
                                         </span>
+                                        @can('update', $agendamento)
+                                            <a href="{{ route('agendamentos.edit', $agendamento) }}"
+                                               aria-label="Editar reserva das {{ \Carbon\Carbon::parse($agendamento->horario_inicio)->format('H:i') }}"
+                                               class="ml-3 shrink-0 rounded-md px-3 py-2 text-sm font-semibold text-primary-700 bg-primary-50 hover:bg-primary-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary-600">
+                                                Editar
+                                            </a>
+                                        @endcan
                                     </div>
                                     <span class="text-sm text-gray-600 flex items-center gap-1">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
