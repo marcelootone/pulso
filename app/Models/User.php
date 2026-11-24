@@ -23,6 +23,7 @@ class User extends Authenticatable
     const TIPO_GESTOR = 'Gestor';
     const TIPO_COORDENADOR = 'Coordenador';
     const TIPO_SECRETARIA = 'Secretaria';
+    const TIPO_PEDAGOGO = 'Pedagogo';
     const TIPO_PROF_ESPECIAL = 'Professor Educação Especial';
     const TIPO_PROF_ESTUDO_ORIENTADO = 'Professor de Estudo Orientado';
     const TIPO_ADMINISTRADOR = 'Administrador';

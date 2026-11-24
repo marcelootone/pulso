@@ -16,7 +16,7 @@ class AgendamentoPolicy
             return false;
         }
 
-        $gestao = [User::TIPO_SECRETARIA, User::TIPO_GESTOR, User::TIPO_ADMINISTRADOR];
+        $gestao = [User::TIPO_SECRETARIA, User::TIPO_PEDAGOGO, User::TIPO_GESTOR, User::TIPO_ADMINISTRADOR];
 
         return (int) $agendamento->user_id === (int) $user->id
             || in_array($user->tipo_usuario, $gestao, true)

@@ -88,6 +88,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'consultar estudo orientado'
         ]);
 
+        $rolePedagogo = Role::firstOrCreate(['name' => User::TIPO_PEDAGOGO, 'guard_name' => 'web']);
+        $rolePedagogo->syncPermissions($roleSecretaria->permissions);
+
         // COORDENADOR
         $roleCoordenador = Role::firstOrCreate(['name' => User::TIPO_COORDENADOR, 'guard_name' => 'web']);
         $roleCoordenador->syncPermissions([

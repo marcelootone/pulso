@@ -65,6 +65,7 @@ class AgendamentoEdicaoTest extends TestCase
             [User::TIPO_COORDENADOR, false, false],
             [User::TIPO_ESTUDANTE, false, false],
             [User::TIPO_SECRETARIA, false, true],
+            [User::TIPO_PEDAGOGO, false, true],
             [User::TIPO_GESTOR, false, true],
             [User::TIPO_ADMINISTRADOR, false, true],
         ];
@@ -90,7 +91,7 @@ class AgendamentoEdicaoTest extends TestCase
 
     public static function gestao(): array
     {
-        return [[User::TIPO_SECRETARIA], [User::TIPO_GESTOR], [User::TIPO_ADMINISTRADOR]];
+        return [[User::TIPO_SECRETARIA], [User::TIPO_PEDAGOGO], [User::TIPO_GESTOR], [User::TIPO_ADMINISTRADOR]];
     }
 
     public function test_autor_nao_edita_reserva_encerrada(): void

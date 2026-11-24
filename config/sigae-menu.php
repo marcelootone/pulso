@@ -20,18 +20,18 @@ return [
     [
         'label' => 'Acadêmico',
         'icon' => 'o-academic-cap',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
         'children' => [
             [
                 'label' => 'Turmas',
                 'route' => 'turmas.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
                 'permissions' => ['gerenciar turmas', 'acessar turmas vinculadas'],
             ],
             [
                 'label' => 'Alunos',
                 'route' => 'alunos.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
                 'permissions' => ['gerenciar estudantes', 'ver estudantes'],
             ],
 
@@ -42,7 +42,7 @@ return [
     [
         'label' => 'Pedagógico',
         'icon' => 'o-book-open',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
         'children' => [
             [
                 'label' => 'Meu Diário',
@@ -53,7 +53,7 @@ return [
             [
                 'label' => 'Frequência Escolar',
                 'route' => 'frequencia.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
                 'permissions' => ['ver frequencia geral', 'acompanhar frequencia'],
             ],
         ],
@@ -71,19 +71,19 @@ return [
         'label' => 'Eletivas e Clubes',
         'icon' => 'o-puzzle-piece',
         'route' => 'eletivas.index',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
         'permissions' => ['gerenciar eletivas', 'acessar proprias eletivas'],
     ],
 
     [
         'label' => 'Estudo Orientado',
         'icon' => 'o-light-bulb',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
         'children' => [
             [
                 'label' => 'Solicitações',
                 'route' => 'estudo-orientado.solicitacoes.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador', 'Professor', 'Professor Educação Especial'],
                 'permissions' => ['criar solicitacao estudo orientado', 'consultar estudo orientado', 'analisar solicitacao estudo orientado'],
             ],
             [
@@ -130,20 +130,20 @@ return [
         'label' => 'Relatórios',
         'icon' => 'o-document-chart-bar',
         'route' => 'relatorios.index',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
         'permissions' => ['ver relatorios administrativos', 'ver relatorios pedagogicos'],
     ],
 
     [
         'label' => 'Central de Cadastros',
         'icon' => 'o-server-stack',
-        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador'],
+        'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
         'permissions' => ['gerenciar professores', 'gerenciar espacos', 'gerenciar estudantes'],
         'children' => [
             [
                 'label' => 'Funcionários',
                 'route' => 'users.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
                 'permissions' => ['gerenciar professores'],
             ],
             [
@@ -155,14 +155,14 @@ return [
             [
                 'label' => 'Horários de Reserva',
                 'route' => 'horarios.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo'],
                 'permissions' => ['gerenciar horarios'],
             ],
 
             [
                 'label' => 'Importar Estudantes Planilha',
                 'route' => 'importar.index',
-                'roles' => ['Administrador', 'Gestor', 'Secretaria'],
+                'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo'],
                 'permissions' => ['gerenciar estudantes'],
             ],
         ],
