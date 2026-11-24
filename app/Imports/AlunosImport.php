@@ -3,8 +3,6 @@
 namespace App\Imports;
 
 use App\Models\Aluno;
-use App\Models\User; // Importado para criar o login
-use Illuminate\Support\Facades\Hash; // Importado para criptografar a senha
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -41,16 +39,7 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyR
             return null;
         }
 
-        // --- LÓGICA DE CRIAÇÃO DE LOGIN (OPÇÃO A) ---
-        
-        // 1. Gera a senha limpando a data de nascimento (ex: 15/05/2010 vira 15052010)
         $dataNascimento = $row[2] ?? '';
-        $senhaPadrao = preg_replace('/[^0-9]/', '', $dataNascimento); 
-        
-        // Caso a planilha esteja sem data, define uma senha de segurança
-        if(empty($senhaPadrao)) {
-            $senhaPadrao = 'mudar123';
-        }
 
         // Converte a data de nascimento para o banco de dados (YYYY-MM-DD)
         $nascimento_db = null;
@@ -66,30 +55,11 @@ class AlunosImport implements ToModel, WithStartRow, WithValidation, SkipsEmptyR
             }
         }
 
-        // 2. Cria ou Atualiza a conta de acesso na tabela 'users'
-        User::updateOrCreate(
-            ['ra' => $row[0]], // Busca pelo RA único
-            [
-                'name'         => trim($row[1]),
-                'email'        => null,
-                'password'     => Hash::make($senhaPadrao), // Senha criptografada
-                'tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE,
-                'nascimento'   => $nascimento_db,
-                'sexo'         => isset($row[3]) ? strtoupper(trim($row[3])) : null,
-                'telefone'     => $row[4] ?? null,
-                'cpf'          => null,
-                'cidade'       => null,
-                'rua'          => null,
-                'numero'       => null,
-                'bairro'       => null,
-            ]
-        );
-
-        // 3. Cria ou Atualiza o registro do aluno na tabela 'alunos'
         return Aluno::updateOrCreate(
             ['ra' => $row[0]], 
             [
                 'turma_id'   => $this->turma_id,
+                'user_id'    => null,
                 'nome'       => trim($row[1]),
                 'nascimento' => $nascimento_db,
                 'sexo'       => isset($row[3]) ? strtoupper(trim($row[3])) : null,

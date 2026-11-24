@@ -119,9 +119,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'criar solicitacao estudo orientado'
         ]);
 
-        // ESTUDANTE (Base)
-        $roleEstudante = Role::firstOrCreate(['name' => User::TIPO_ESTUDANTE, 'guard_name' => 'web']);
-        // O estudante, por enquanto, tem acessos de leitura básicos baseados no seu RA e Auth default
+        Role::where('name', User::TIPO_ESTUDANTE)->where('guard_name', 'web')->get()->each->delete();
 
         // Tipos específicos
         $roleProfEspecial = Role::firstOrCreate(['name' => User::TIPO_PROF_ESPECIAL, 'guard_name' => 'web']);
