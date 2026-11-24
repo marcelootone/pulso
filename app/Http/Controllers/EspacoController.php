@@ -68,4 +68,11 @@ class EspacoController extends Controller
 
         return redirect()->route('espacos.index')->with('success', 'Cadastro atualizado com sucesso!');
     }
+
+    public function destroy(Espaco $espaco)
+    {
+        $espaco->delete();
+
+        return redirect()->route('espacos.index')->with('success', 'Espaço ou equipamento excluído com sucesso!');
+    }
 }

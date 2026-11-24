@@ -139,7 +139,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('espacos/{espaco}/edit', [\App\Http\Controllers\EspacoController::class, 'edit'])->name('espacos.edit');
         Route::put('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update'])->name('espacos.update');
         Route::patch('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update']);
-        // Route::delete('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'destroy'])->name('espacos.destroy'); // Destroy estava excetuado antes
+        Route::delete('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'destroy'])->name('espacos.destroy');
     });
 
     // Horários de reserva (RF11) - Configurar/gerenciar faixas de horário dos espaços
