@@ -63,7 +63,6 @@ class AgendamentoEdicaoTest extends TestCase
             [User::TIPO_PROFESSOR, true, true],
             [User::TIPO_PROFESSOR, false, false],
             [User::TIPO_COORDENADOR, false, false],
-            [User::TIPO_ESTUDANTE, false, false],
             [User::TIPO_SECRETARIA, false, true],
             [User::TIPO_PEDAGOGO, false, true],
             [User::TIPO_GESTOR, false, true],

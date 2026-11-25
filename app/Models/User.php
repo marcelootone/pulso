@@ -18,7 +18,6 @@ use Spatie\Permission\Traits\HasRoles;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
-    const TIPO_ESTUDANTE = 'Estudante';
     const TIPO_PROFESSOR = 'Professor';
     const TIPO_GESTOR = 'Gestor';
     const TIPO_COORDENADOR = 'Coordenador';

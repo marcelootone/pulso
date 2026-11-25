@@ -17,9 +17,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        // Pega apenas usuários que NÃO são estudantes e NÃO são administradores (o admin do sistema)
+        // Pega todos os usuários, exceto o administrador do sistema
         $query = \App\Models\User::whereNotIn('tipo_usuario', [
-            \App\Models\User::TIPO_ESTUDANTE,
             \App\Models\User::TIPO_ADMINISTRADOR
         ]);
 
@@ -43,10 +42,6 @@ class UserController extends Controller
     public function show($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        
-        if ($user->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            return redirect()->route('users.index')->with('error', 'Para visualizar estudantes, vá para a gestão de turmas.');
-        }
 
         return view('users.show', compact('user'));
     }
@@ -119,10 +114,6 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        
-        if ($user->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            return redirect()->route('users.index')->with('error', 'Para editar estudantes, vá para a gestão de turmas.');
-        }
 
         return view('users.edit', compact('user'));
     }

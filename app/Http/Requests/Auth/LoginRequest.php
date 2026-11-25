@@ -50,15 +50,6 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        if (Auth::user()->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            Auth::logout();
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
-        }
-
         RateLimiter::clear($this->throttleKey());
     }
 

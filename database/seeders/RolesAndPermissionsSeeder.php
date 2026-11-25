@@ -122,7 +122,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'criar solicitacao estudo orientado'
         ]);
 
-        Role::where('name', User::TIPO_ESTUDANTE)->where('guard_name', 'web')->get()->each->delete();
+        Role::where('name', 'Estudante')->where('guard_name', 'web')->get()->each->delete();
 
         // Tipos específicos
         $roleProfEspecial = Role::firstOrCreate(['name' => User::TIPO_PROF_ESPECIAL, 'guard_name' => 'web']);
