@@ -18,6 +18,13 @@ return [
     ],
 
     [
+        'label' => 'Agenda',
+        'icon' => 'o-calendar-days',
+        'route' => 'agenda.index',
+        'roles' => ['*'],
+    ],
+
+    [
         'label' => 'Acadêmico',
         'icon' => 'o-academic-cap',
         'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Coordenador', 'Professor', 'Professor Educação Especial', 'Professor de Estudo Orientado'],
