@@ -16,13 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    @unlessrole('Estudante')
-                        <x-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
-                            {{ __('Turmas') }}
-                        </x-nav-link>
-                    @endunlessrole
+                    <x-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
+                        {{ __('Turmas') }}
+                    </x-nav-link>
                     
-                    @hasrole('Administrador|Gestor|Secretaria|Coordenador')
+                    @hasrole('Administrador|Gestor|Secretaria|Pedagogo|Coordenador')
                         <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                             {{ __('Funcionários') }}
                         </x-nav-link>
@@ -109,13 +107,11 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @unlessrole('Estudante')
-                <x-responsive-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
-                    {{ __('Turmas') }}
-                </x-responsive-nav-link>
-            @endunlessrole
+            <x-responsive-nav-link :href="route('turmas.index')" :active="request()->routeIs('turmas.*')">
+                {{ __('Turmas') }}
+            </x-responsive-nav-link>
             
-            @hasrole('Administrador|Gestor|Secretaria|Coordenador')
+            @hasrole('Administrador|Gestor|Secretaria|Pedagogo|Coordenador')
                 <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.*')">
                     {{ __('Funcionários') }}
                 </x-responsive-nav-link>

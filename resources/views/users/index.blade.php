@@ -51,6 +51,7 @@
                         <option value="{{ \App\Models\User::TIPO_GESTOR }}" {{ request('tipo_usuario') == \App\Models\User::TIPO_GESTOR ? 'selected' : '' }}>Gestor(a)</option>
                         <option value="{{ \App\Models\User::TIPO_COORDENADOR }}" {{ request('tipo_usuario') == \App\Models\User::TIPO_COORDENADOR ? 'selected' : '' }}>Coordenador(a)</option>
                         <option value="{{ \App\Models\User::TIPO_SECRETARIA }}" {{ request('tipo_usuario') == \App\Models\User::TIPO_SECRETARIA ? 'selected' : '' }}>Secretaria</option>
+                        <option value="{{ \App\Models\User::TIPO_PEDAGOGO }}" {{ request('tipo_usuario') == \App\Models\User::TIPO_PEDAGOGO ? 'selected' : '' }}>Pedagogo</option>
                     </x-select>
                 </div>
                 @if(request('status') || request('tipo_usuario'))

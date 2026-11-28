@@ -19,13 +19,6 @@ class AcessoRestrito
             return redirect('/login');
         }
 
-        // Se o usuário for um 'Estudante', bloqueia o acesso e manda pro painel geral
-        if (Auth::user()->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            // Mais para frente, criaremos a rota '/painel-aluno'
-            return redirect('/dashboard')->with('error', 'Acesso restrito. Área exclusiva para funcionários.');
-        }
-
-        // Se não for estudante (ou seja, Secretaria, Professor, etc), deixa passar!
         return $next($request);
     }
 }

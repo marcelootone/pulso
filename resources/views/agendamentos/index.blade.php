@@ -4,9 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Reserva de Espaços e Equipamentos') }}
             </h2>
+            @can('gerenciar espacos')
             <a href="{{ route('espacos.index') }}" class="text-sm text-gray-700 hover:text-blue-600 font-bold bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors border border-gray-300">
                 ⚙️ Gerenciar Espaços e Equipamentos da Escola
             </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -32,8 +34,8 @@
                             @endif
                         </div>
                         <div class="p-4 bg-gray-50 border-t border-gray-100">
-                            <a href="{{ route('agendamentos.create', $espaco->id) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded transition-colors">
-                                Abrir / Reservar
+                            <a href="{{ route('agendamentos.agenda', $espaco->id) }}" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-black font-semibold py-2 px-4 rounded transition-colors">
+                                Ver agenda
                             </a>
                         </div>
                     </div>

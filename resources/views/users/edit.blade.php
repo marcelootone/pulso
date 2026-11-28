@@ -52,6 +52,7 @@
                             <option value="{{ \App\Models\User::TIPO_GESTOR }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_GESTOR ? 'selected' : '' }}>Gestor</option>
                             <option value="{{ \App\Models\User::TIPO_COORDENADOR }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_COORDENADOR ? 'selected' : '' }}>Coordenador</option>
                             <option value="{{ \App\Models\User::TIPO_SECRETARIA }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_SECRETARIA ? 'selected' : '' }}>Secretaria</option>
+                            <option value="{{ \App\Models\User::TIPO_PEDAGOGO }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_PEDAGOGO ? 'selected' : '' }}>Pedagogo</option>
                             <option value="{{ \App\Models\User::TIPO_PROF_ESPECIAL }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_PROF_ESPECIAL ? 'selected' : '' }}>Prof. Educ. Especial</option>
                             <option value="{{ \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO }}" {{ old('tipo_usuario', $user->tipo_usuario) == \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO ? 'selected' : '' }}>Prof. Estudo Orientado</option>
                         </x-select>

@@ -44,6 +44,11 @@
                 </div>
             @endif
 
+            <form id="form-excluir-espaco" action="{{ route('espacos.destroy', $espaco) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+            </form>
+
             <form id="form-f19850" action="{{ route('espacos.update', $espaco->id) }}" method="POST"
                   x-data="{ tipo: @js(old('tipo', $espaco->tipo)) }">
                 @csrf
@@ -94,6 +99,9 @@
                     <div class="flex items-center justify-end gap-3">
                         <x-button variant="secondary" type="button" onclick="window.location='{{ route('espacos.index') }}'">
                             Cancelar
+                        </x-button>
+                        <x-button variant="danger" type="submit" form="form-excluir-espaco" onclick="return confirm('Tem certeza que deseja excluir este espaço ou equipamento? Os agendamentos vinculados também serão excluídos.');">
+                            <x-icon name="heroicon-o-trash" class="w-5 h-5 mr-2" /> Excluir
                         </x-button>
                         <x-button variant="primary" type="submit" form="form-f19850" class="!bg-amber-500 hover:!bg-amber-600 border-none">
                             <x-icon name="heroicon-o-check" class="w-5 h-5 mr-2" /> Salvar

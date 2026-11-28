@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Turma;
-use App\Models\User;
 use App\Models\Aluno;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
 
 class ImportacaoController extends Controller
 {
@@ -157,36 +155,11 @@ class ImportacaoController extends Controller
                 }
             }
 
-            // Gera a senha (remove caracteres não numéricos do nascimento)
-            $senhaPadrao = preg_replace('/[^0-9]/', '', $nascimento); 
-            if (empty($senhaPadrao)) {
-                $senhaPadrao = 'mudar123';
-            }
-
-            // Cria ou Atualiza a conta de acesso na tabela 'users'
-            $user = User::updateOrCreate(
-                ['ra' => $ra],
-                [
-                    'name'         => $nome,
-                    'email'        => null,
-                    'password'     => Hash::make($senhaPadrao),
-                    'tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE,
-                    'nascimento'   => $nascimento_db,
-                    'sexo'         => $sexo,
-                    'telefone'     => $telefone,
-                    'cpf'          => null,
-                    'cidade'       => null,
-                    'rua'          => null,
-                    'numero'       => null,
-                    'bairro'       => null,
-                ]
-            );
-
-            // Cria ou Atualiza o registro do aluno
+            // Cria ou atualiza apenas o registro acadêmico do aluno
             $aluno = Aluno::updateOrCreate(
                 ['ra' => $ra],
                 [
-                    'user_id'    => $user->id,
+                    'user_id'    => null,
                     'nome'       => $nome,
                     'nascimento' => $nascimento_db,
                     'sexo'       => $sexo,
