@@ -162,7 +162,7 @@
                                         </x-table>
                                     </div>
 
-                                    @hasanyrole('Secretaria|Coordenador|Gestor')
+                                    @hasanyrole('Secretaria|Pedagogo|Coordenador|Gestor')
                                         <x-slot name="footer">
                                             <div class="-mx-6 -my-4 bg-gray-50 px-6 py-4 border-t flex justify-end">
                                                 <x-button variant="primary" type="button" @click="formToSubmit = 'form-disciplina-{{ $index }}'; showConfirmModal = true">

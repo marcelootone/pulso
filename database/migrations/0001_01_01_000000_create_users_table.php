@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             
             // Nova coluna para gerenciar os perfis do SIGAE (Secretaria, Professor, etc.)
-            $table->string('tipo_usuario')->default('Estudante');
+            $table->string('tipo_usuario');
             
             $table->rememberToken();
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAlunoRequest;
 use App\Models\Aluno;
 use App\Models\Enturmacao;
 use Illuminate\Http\Request;
@@ -22,6 +23,19 @@ class AlunoController extends Controller
         $alunos = $this->alunoService->getAlunosPaginados(15, $request->search);
         
         return view('alunos.index', compact('alunos'));
+    }
+
+    public function create()
+    {
+        return view('alunos.create');
+    }
+
+    public function store(StoreAlunoRequest $request)
+    {
+        Aluno::create($request->validated());
+
+        return redirect()->route('alunos.create')
+            ->with('success', 'Aluno cadastrado com sucesso! A matrícula e o vínculo com turma devem ser realizados nos fluxos próprios.');
     }
 
     public function show($id)

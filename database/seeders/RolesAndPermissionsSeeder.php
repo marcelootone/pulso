@@ -88,6 +88,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'consultar estudo orientado'
         ]);
 
+        $rolePedagogo = Role::firstOrCreate(['name' => User::TIPO_PEDAGOGO, 'guard_name' => 'web']);
+        $rolePedagogo->syncPermissions($roleSecretaria->permissions);
+
         // COORDENADOR
         $roleCoordenador = Role::firstOrCreate(['name' => User::TIPO_COORDENADOR, 'guard_name' => 'web']);
         $roleCoordenador->syncPermissions([
@@ -119,9 +122,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'criar solicitacao estudo orientado'
         ]);
 
-        // ESTUDANTE (Base)
-        $roleEstudante = Role::firstOrCreate(['name' => User::TIPO_ESTUDANTE, 'guard_name' => 'web']);
-        // O estudante, por enquanto, tem acessos de leitura básicos baseados no seu RA e Auth default
+        Role::where('name', 'Estudante')->where('guard_name', 'web')->get()->each->delete();
 
         // Tipos específicos
         $roleProfEspecial = Role::firstOrCreate(['name' => User::TIPO_PROF_ESPECIAL, 'guard_name' => 'web']);

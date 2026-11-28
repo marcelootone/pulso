@@ -77,6 +77,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('turmas', [\App\Http\Controllers\TurmaController::class, 'index'])->name('turmas.index');
     Route::get('turmas/{turma}', [\App\Http\Controllers\TurmaController::class, 'show'])->name('turmas.show');
 
+    // Alunos - Cadastrar (antes da rota dinâmica alunos/{aluno})
+    Route::middleware('can:cadastrar alunos')->group(function () {
+        Route::get('alunos/create', [\App\Http\Controllers\AlunoController::class, 'create'])->name('alunos.create');
+        Route::post('alunos', [\App\Http\Controllers\AlunoController::class, 'store'])->name('alunos.store');
+    });
+
     // Alunos - Visualizar
     Route::group(['middleware' => ['permission:gerenciar estudantes|ver estudantes']], function () {
         Route::get('alunos', [\App\Http\Controllers\AlunoController::class, 'index'])->name('alunos.index');
@@ -85,10 +91,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    // Alunos - Editar/Criar/Excluir e Importar
+    // Alunos - Editar/Excluir e Importar
     Route::group(['middleware' => ['permission:gerenciar estudantes']], function () {
-        Route::get('alunos/create', [\App\Http\Controllers\AlunoController::class, 'create'])->name('alunos.create');
-        Route::post('alunos', [\App\Http\Controllers\AlunoController::class, 'store'])->name('alunos.store');
         Route::get('alunos/{aluno}/edit', [\App\Http\Controllers\AlunoController::class, 'edit'])->name('alunos.edit');
         Route::put('alunos/{aluno}', [\App\Http\Controllers\AlunoController::class, 'update'])->name('alunos.update');
         Route::patch('alunos/{aluno}', [\App\Http\Controllers\AlunoController::class, 'update']);
@@ -139,7 +143,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('espacos/{espaco}/edit', [\App\Http\Controllers\EspacoController::class, 'edit'])->name('espacos.edit');
         Route::put('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update'])->name('espacos.update');
         Route::patch('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'update']);
-        // Route::delete('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'destroy'])->name('espacos.destroy'); // Destroy estava excetuado antes
+        Route::delete('espacos/{espaco}', [\App\Http\Controllers\EspacoController::class, 'destroy'])->name('espacos.destroy');
     });
 
     // Horários de reserva (RF11) - Configurar/gerenciar faixas de horário dos espaços
@@ -153,8 +157,13 @@ Route::middleware(['auth'])->group(function () {
     // Espaços - Visualizar e Agendamentos em si (Todos)
     Route::get('espacos', [\App\Http\Controllers\EspacoController::class, 'index'])->name('espacos.index');
     Route::get('/agendamentos', [\App\Http\Controllers\AgendamentoController::class, 'index'])->name('agendamentos.index');
+    Route::get('/agendamentos/{espaco}/agenda', [\App\Http\Controllers\AgendamentoController::class, 'agenda'])->name('agendamentos.agenda');
     Route::get('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'create'])->name('agendamentos.create');
     Route::post('/agendamentos/{espaco}/reservar', [\App\Http\Controllers\AgendamentoController::class, 'store'])->name('agendamentos.store');
+    Route::get('/agendamentos/{agendamento}/editar', [\App\Http\Controllers\AgendamentoController::class, 'edit'])
+        ->middleware('can:update,agendamento')->name('agendamentos.edit');
+    Route::put('/agendamentos/{agendamento}', [\App\Http\Controllers\AgendamentoController::class, 'update'])
+        ->middleware('can:update,agendamento')->name('agendamentos.update');
 
 
 

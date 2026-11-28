@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Turma;
 use App\Services\UserService;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -17,9 +17,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        // Pega apenas usuários que NÃO são estudantes e NÃO são administradores (o admin do sistema)
+        // Pega todos os usuários, exceto o administrador do sistema
         $query = \App\Models\User::whereNotIn('tipo_usuario', [
-            \App\Models\User::TIPO_ESTUDANTE,
             \App\Models\User::TIPO_ADMINISTRADOR
         ]);
 
@@ -43,18 +42,13 @@ class UserController extends Controller
     public function show($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        
-        if ($user->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            return redirect()->route('users.index')->with('error', 'Para visualizar estudantes, vá para a gestão de turmas.');
-        }
 
         return view('users.show', compact('user'));
     }
 
     public function create()
     {
-        $turmas = Turma::where('ativa', true)->get();
-        return view('users.create', compact('turmas'));
+        return view('users.create');
     }
 
     /**
@@ -62,30 +56,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validação Comum
         $rules = [
-            'tipo_usuario' => 'required|string',
+            'tipo_usuario' => ['required', 'string', Rule::in($this->tiposDeUsuario())],
             'cpf' => 'nullable|string|unique:users,cpf',
             'nome' => 'required|string|max:255',
             'nascimento' => 'nullable|date',
             'sexo' => 'nullable|in:M,F',
             'telefone' => 'nullable|string',
-            'email' => 'nullable|email|unique:users,email',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
         ];
-
-        // Validação Dinâmica
-        $tipoIngresso = strtoupper($request->tipo_usuario);
-        if (in_array($tipoIngresso, ['ESTUDANTE', 'ALUNO'])) {
-            $rules['ra'] = 'required|string|unique:users,ra';
-            $rules['nascimento'] = 'required|date';
-            $rules['sexo'] = 'required|in:M,F';
-            $rules['telefone'] = 'required|string';
-            $rules['nome_mae'] = 'nullable|string|max:255';
-            $rules['turma_id'] = 'nullable|exists:turmas,id';
-        } else {
-            $rules['email'] = 'required|email|unique:users,email';
-            $rules['password'] = 'required|string|min:6';
-        }
 
         $messages = [
             'required' => 'O campo :attribute é obrigatório.',
@@ -104,12 +84,9 @@ class UserController extends Controller
             'email' => 'E-mail',
             'cpf' => 'CPF',
             'password' => 'Senha',
-            'ra' => 'RA',
-            'turma_id' => 'Turma',
-            'nome_mae' => 'Nome da Mãe',
         ];
 
-        $validatedData = $request->validate($rules, $messages, $attributes);
+        $request->validate($rules, $messages, $attributes);
         
         // Incluir todos os dados na requisição (incluindo endereço e filiação) para o service
         $data = $request->all();
@@ -137,13 +114,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        
-        if ($user->tipo_usuario === \App\Models\User::TIPO_ESTUDANTE) {
-            return redirect()->route('users.index')->with('error', 'Para editar estudantes, vá para a gestão de turmas.');
-        }
 
-        $turmas = Turma::where('ativa', true)->get();
-        return view('users.edit', compact('user', 'turmas'));
+        return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, $id)
@@ -176,7 +148,8 @@ class UserController extends Controller
             'password' => 'Senha',
         ];
 
-        $validatedData = $request->validate($rules, $messages, $attributes);
+        $rules['tipo_usuario'] = ['required', 'string', Rule::in($this->tiposDeUsuario())];
+        $request->validate($rules, $messages, $attributes);
         $data = $request->all();
 
         try {
@@ -185,6 +158,19 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Erro ao atualizar: ' . $e->getMessage());
         }
+    }
+
+    private function tiposDeUsuario(): array
+    {
+        return [
+            \App\Models\User::TIPO_PROFESSOR,
+            \App\Models\User::TIPO_GESTOR,
+            \App\Models\User::TIPO_COORDENADOR,
+            \App\Models\User::TIPO_SECRETARIA,
+            \App\Models\User::TIPO_PEDAGOGO,
+            \App\Models\User::TIPO_PROF_ESPECIAL,
+            \App\Models\User::TIPO_PROF_ESTUDO_ORIENTADO,
+        ];
     }
 
     public function destroy($id)

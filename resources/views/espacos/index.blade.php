@@ -8,9 +8,11 @@
                 <x-button variant="secondary" onclick="window.location='{{ route('agendamentos.index') }}'" class="w-full sm:w-auto shrink-0 whitespace-nowrap justify-center">
                     <x-icon name="heroicon-o-arrow-left" class="w-5 h-5 shrink-0 mr-2" /> Agendamentos
                 </x-button>
+                @can('gerenciar espacos')
                 <x-button variant="primary" onclick="window.location='{{ route('espacos.create') }}'" class="w-full sm:w-auto shrink-0 justify-center">
                     <x-icon name="heroicon-o-plus-circle" class="w-5 h-5 shrink-0 mr-2" /> Criar Espaço ou Equipamento
                 </x-button>
+                @endcan
             </div>
         </div>
     </x-slot>
@@ -48,7 +50,9 @@
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Capacidade</th>
                         <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        @can('gerenciar espacos')
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        @endcan
                     </x-slot>
                     <x-slot name="body">
                         @forelse($espacos as $espaco)
@@ -84,18 +88,24 @@
                                     </span>
                                 @endif
                             </td>
+                            @can('gerenciar espacos')
                             <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                                 <a href="{{ route('espacos.edit', $espaco->id) }}" class="text-primary-600 hover:text-primary-900 bg-primary-50 hover:bg-primary-100 px-3 py-1.5 rounded-md transition-colors inline-flex items-center">
                                     <x-icon name="heroicon-o-pencil-square" class="w-4 h-4 mr-1.5" /> Editar
                                 </a>
                             </td>
+                            @endcan
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
+                            <td colspan="{{ auth()->user()->can('gerenciar espacos') ? 5 : 4 }}" class="px-6 py-12 text-center text-gray-400 border-dashed border-2 border-gray-200 rounded-lg">
                                 <x-icon name="heroicon-o-building-office-2" class="mx-auto h-12 w-12 text-gray-300 mb-3" />
                                 <p class="text-base font-bold text-gray-500 mb-1">Nenhum espaço ou equipamento encontrado.</p>
-                                <p class="text-sm font-medium">Cadastre um espaço ou equipamento ou ajuste o filtro selecionado.</p>
+                                @can('gerenciar espacos')
+                                    <p class="text-sm font-medium">Cadastre um espaço ou equipamento ou ajuste o filtro selecionado.</p>
+                                @else
+                                    <p class="text-sm font-medium">Ajuste o filtro selecionado ou consulte a gestão da escola.</p>
+                                @endcan
                             </td>
                         </tr>
                         @endforelse

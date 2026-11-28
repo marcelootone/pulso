@@ -18,7 +18,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Coordenador'])) {
+        if ($user->hasRole(['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'])) {
             $dados = $this->dashboardService->getDadosGestor();
         } else {
             $dados = $this->dashboardService->getDadosProfessor($user);

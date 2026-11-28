@@ -19,7 +19,7 @@ return new class extends Migration
         // Normaliza "ESTUDANTE", "ALUNO", "Aluno" para "Estudante"
         DB::table('users')
             ->whereIn('tipo_usuario', ['ESTUDANTE', 'ALUNO', 'Aluno'])
-            ->update(['tipo_usuario' => \App\Models\User::TIPO_ESTUDANTE]);
+            ->update(['tipo_usuario' => 'Estudante']);
             
         // Normaliza "GESTOR"
         DB::table('users')
@@ -49,7 +49,7 @@ return new class extends Migration
             ->update(['tipo_usuario' => 'PROFESSOR(A)']);
             
         DB::table('users')
-            ->where('tipo_usuario', \App\Models\User::TIPO_ESTUDANTE)
+            ->where('tipo_usuario', 'Estudante')
             ->update(['tipo_usuario' => 'ESTUDANTE']);
     }
 };
