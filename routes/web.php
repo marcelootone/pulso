@@ -30,6 +30,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/agenda', [\App\Http\Controllers\AgendaController::class, 'index'])->name('agenda.index');
+    Route::post('/agenda/eventos', [\App\Http\Controllers\AgendaController::class, 'store'])->name('agenda.eventos.store');
+    Route::put('/agenda/eventos/{evento}', [\App\Http\Controllers\AgendaController::class, 'update'])
+        ->middleware('can:update,evento')->name('agenda.eventos.update');
+    Route::delete('/agenda/eventos/{evento}', [\App\Http\Controllers\AgendaController::class, 'destroy'])
+        ->middleware('can:delete,evento')->name('agenda.eventos.destroy');
+
     Route::get('/api/search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search.index');
 
     // Notificações
