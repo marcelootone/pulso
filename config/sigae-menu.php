@@ -138,8 +138,13 @@ return [
         'label' => 'Central de Cadastros',
         'icon' => 'o-server-stack',
         'roles' => ['Administrador', 'Gestor', 'Secretaria', 'Pedagogo', 'Coordenador'],
-        'permissions' => ['gerenciar professores', 'gerenciar espacos', 'gerenciar estudantes'],
+        'permissions' => ['gerenciar professores', 'gerenciar espacos', 'gerenciar estudantes', 'cadastrar alunos'],
         'children' => [
+            [
+                'label' => 'Cadastrar Aluno',
+                'route' => 'alunos.create',
+                'permissions' => ['cadastrar alunos'],
+            ],
             [
                 'label' => 'Funcionários',
                 'route' => 'users.index',
